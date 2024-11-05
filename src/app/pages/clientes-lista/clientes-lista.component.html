@@ -1,0 +1,285 @@
+<!--HEADER DA PÁGINA-->
+<div class="surface-section px-4 py-5 md:px-6 lg:px-8">
+  <ul class="list-none p-0 m-0 flex align-items-center font-medium mb-3">
+    <li>
+      <a class="text-500 no-underline line-height-3 cursor-pointer" routerLink="/pagina-inicial">Página Inicial</a>
+    </li>
+    <li class="px-2">
+      <i class="pi pi-angle-right text-500 line-height-3"></i>
+    </li>
+    <li>
+      <span class="text-900 line-height-3">Lista de Clientes</span>
+    </li>
+  </ul>
+  <div class="flex align-items-start flex-column md:justify-content-between md:flex-row">
+    <div>
+      <div class="font-medium text-3xl text-900">CLIENTES</div>
+      <div class="flex align-items-center text-700 flex-wrap">
+        <div class="mr-5 flex align-items-center mt-3">
+          <i class="pi pi-users mr-2"></i>
+          <span>{{ QClientes() }} Clientes</span>
+        </div>
+        <div class="flex align-items-center mt-3">
+          <i class="pi pi-clock mr-2"></i>
+          <span>Ultimo Cadastro: {{ UltimoCliente().nome }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-3 lg:mt-0">
+      <button pButton label="Novo Cliente" class="p-button-outlined mr-2 p-button-danger" icon="pi pi-user-plus"
+              (click)="abrirAdicionarCliente()"></button>
+    </div>
+  </div>
+</div>
+
+<!--TABELA DE CLIENTES-->
+<div class="tabela">
+  <div class="p-inputgroup">
+    <span class="p-inputgroup-addon">
+      <i class="pi pi-search"></i>
+    </span>
+    <input
+      type="text"
+      pInputText
+      placeholder="Pesquise o nome do cliente"
+      [(ngModel)]="filtro"
+    />
+  </div>
+  <p-table [value]="clientesFiltrados" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th [style]="{'text-align': 'center', 'width': '20px'}"><i class="pi pi-eye" style="font-weight: bold"></i></th>
+        <th [style]="{'min-width': '250px', 'max-width': '430px'}">Nome</th>
+        <th [style]="{'min-width': '160px'}">
+          <i class="pi pi-phone mr-2" style="font-weight: bold"></i>
+          Celular
+        </th>
+        <th [style]="{'min-width': '150px'}">
+          <i class="pi pi-envelope mr-2" style="font-weight: bold"></i>
+          Email
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-cliente>
+      <tr>
+        <td>
+          <p-button (onClick)="abrirDetalhesCliente(cliente)" styleClass="bg-red-600 border-0 w-1rem h-2rem"
+                    [style]="{'display': 'flex', 'justify-content': 'center'}">
+            <i class="pi pi-eye" [style]="{'font-size': '.9rem'}"></i>
+          </p-button>
+        </td>
+        <td style="max-width: 310px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{{ cliente.nome }}
+        </td>
+        <td>{{ cliente.celular }}</td>
+        <td>{{ cliente.email }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!--DETALHES CLIENTE-->
+<p-dialog header="Detalhes Cliente" [closable]="false" [modal]="true" [(visible)]="verDetalhesCliente"
+          [style]="{ width: '30rem' }">
+  <form [formGroup]="clienteForm">
+    <div class="flex flex-column gap-2">
+      <!--Campo nome-->
+      <div *ngIf="!editando['nome']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Nome:</strong> {{ clienteForm.get('nome')?.value }}
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="ativarEdicao('nome')">
+          <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+      <div *ngIf="editando['nome']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Nome:</strong>
+          <input formControlName="nome" placeholder="Digite o novo nome"/>
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="salvarEdicao('nome')">
+          <i class="pi pi-save" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+
+      <!--Campos especificos de PJ-->
+      <!--Campo Nome Fantasia-->
+      <ng-container *ngIf="clienteForm.get('tipoCliente')?.value === 'PJ'">
+        <div *ngIf="!editando['fantasia']" class="campo-editar">
+          <div class="campo-editar-valor">
+            <strong>Nome Fantasia:</strong> {{ clienteForm.get('fantasia')?.value }}
+          </div>
+          <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                    (onClick)="ativarEdicao('fantasia')">
+            <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+          </p-button>
+        </div>
+        <div *ngIf="editando['fantasia']" class="campo-editar">
+          <div class="campo-editar-valor">
+            <strong>Nome Fantasia:</strong>
+            <input formControlName="fantasia" placeholder="Digite o novo nome fantasia"/>
+          </div>
+          <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                    (onClick)="salvarEdicao('fantasia')">
+            <i class="pi pi-save" style="font-size: 1rem;"></i>
+          </p-button>
+        </div>
+      </ng-container>
+      <!--Campo CNPJ-->
+      <ng-container *ngIf="clienteForm.get('tipoCliente')?.value === 'PJ'">
+        <div *ngIf="!editando['cnpj']" class="campo-editar">
+          <div class="campo-editar-valor">
+            <strong>CNPJ:</strong> {{ clienteForm.get('cnpj')?.value }}
+          </div>
+          <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                    (onClick)="ativarEdicao('cnpj')">
+            <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+          </p-button>
+        </div>
+        <div *ngIf="editando['cnpj']" class="campo-editar">
+          <div class="campo-editar-valor">
+            <strong>CNPJ:</strong>
+            <input formControlName="cnpj" placeholder="Digite o novo CNPJ"/>
+          </div>
+          <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                    (onClick)="salvarEdicao('cnpj')">
+            <i class="pi pi-save" style="font-size: 1rem;"></i>
+          </p-button>
+        </div>
+      </ng-container>
+      <!--Campo IE-->
+      <ng-container *ngIf="clienteForm.get('tipoCliente')?.value === 'PJ'">
+        <div *ngIf="!editando['ie']" class="campo-editar">
+          <div class="campo-editar-valor">
+            <strong>IE:</strong> {{ clienteForm.get('ie')?.value }}
+          </div>
+          <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                    (onClick)="ativarEdicao('ie')">
+            <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+          </p-button>
+        </div>
+        <div *ngIf="editando['ie']" class="campo-editar">
+          <div class="campo-editar-valor">
+            <strong>Inscrição Estadual:</strong>
+            <input formControlName="ie" placeholder="Digite a nova Inscrição Estadual"/>
+          </div>
+          <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                    (onClick)="salvarEdicao('ie')">
+            <i class="pi pi-save" style="font-size: 1rem;"></i>
+          </p-button>
+        </div>
+      </ng-container>
+
+      <!--Campo especifico de PF-->
+      <!-- Campo CPF -->
+      <ng-container *ngIf="clienteForm.get('tipoCliente')?.value === 'PF'">
+        <div *ngIf="!editando['cpf']" class="campo-editar">
+          <div class="campo-editar-valor">
+            <strong>CPF:</strong> {{ clienteForm.get('cpf')?.value }}
+          </div>
+          <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                    (onClick)="ativarEdicao('cpf')">
+            <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+          </p-button>
+        </div>
+        <div *ngIf="editando['cpf']" class="campo-editar">
+          <div class="campo-editar-valor">
+            <strong>CPF:</strong>
+            <input formControlName="cpf" placeholder="Digite o novo CPF"/>
+          </div>
+          <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                    (onClick)="salvarEdicao('cpf')">
+            <i class="pi pi-save" style="font-size: 1rem;"></i>
+          </p-button>
+        </div>
+      </ng-container>
+
+      <!--Campos comuns-->
+      <div
+        *ngFor="let campo of ['celular', 'telefone', 'email', 'endereco', 'numero', 'bairro', 'cidade', 'observacoes']">
+        <div *ngIf="!editando[campo]" class="campo-editar">
+          <div class="campo-editar-valor">
+            <strong>{{ campo | titlecase }}:</strong> {{ clienteForm.get(campo)?.value }}
+          </div>
+          <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                    (onClick)="ativarEdicao(campo)">
+            <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+          </p-button>
+        </div>
+        <div *ngIf="editando[campo]" class="campo-editar">
+          <div class="campo-editar-valor">
+            <strong>{{ campo | titlecase }}:</strong>
+            <input [formControlName]="campo" placeholder="Digite o novo {{ campo }}"/>
+          </div>
+          <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                    (onClick)="salvarEdicao(campo)">
+            <i class="pi pi-save" style="font-size: 1rem;"></i>
+          </p-button>
+        </div>
+      </div>
+
+      <!-- Botões de ação -->
+      <div class="flex justify-content-center gap-2">
+        <p-button label="Deletar" severity="danger" (onClick)="deletarCliente()"/>
+        <p-button label="Cancelar" severity="secondary" (onClick)="fecharDetalhesCliente()"/>
+      </div>
+    </div>
+  </form>
+</p-dialog>
+
+<!--ADICIONAR CLIENTE-->
+<p-dialog
+  header="Adicionar Cliente"
+  [closable]="false"
+  [modal]="true"
+  [(visible)]="verAdicionarCliente"
+  [style]="{width: '40rem'}"
+  [breakpoints]="{'900px': '60vw', '700px': '80vw','500px': '100vw'}">
+  <form [formGroup]="clienteForm">
+    <p-tabView (onChange)="onTabChange($event.index)">
+      <p-tabPanel header="Pessoa Física" [style]="{padding: '0'}">
+        <ng-container *ngFor="let campo of pessoaFisicaCampos">
+          <div class="campo-salvar">
+            <div class="campo-salvar-valor">
+              <strong>{{ campo.label }}:</strong>
+              <input [formControlName]="campo.formControl" [placeholder]="campo.placeholder" autofocus/>
+              <p-message *ngIf="clienteForm.get(campo.formControl)?.invalid" severity="info"
+                         [text]="campo.validation"></p-message>
+            </div>
+          </div>
+        </ng-container>
+        <!-- Observações -->
+        <div class="campo-salvar">
+          <div class="campo-salvar-valor">
+            <strong>Observações:</strong>
+            <textarea formControlName="observacoes" placeholder="Digite as observações" rows="4"></textarea>
+          </div>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="Pessoa Jurídica">
+        <ng-container *ngFor="let campo of pessoaJuridicaCampos">
+          <div class="campo-salvar">
+            <div class="campo-salvar-valor">
+              <strong>{{ campo.label }}:</strong>
+              <input [formControlName]="campo.formControl" [placeholder]="campo.placeholder"/>
+              <p-message *ngIf="clienteForm.get(campo.formControl)?.invalid" severity="info"
+                         [text]="campo.validation"></p-message>
+            </div>
+          </div>
+        </ng-container>
+        <!-- Observações -->
+        <div class="campo-salvar">
+          <div class="campo-salvar-valor">
+            <strong>Observações:</strong>
+            <textarea formControlName="observacoes" placeholder="Digite as observações" rows="4"></textarea>
+          </div>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+    <div class="flex justify-content-center gap-2">
+      <p-button label="Salvar" severity="success" (onClick)="salvarCliente()"/>
+      <p-button label="Fechar" severity="secondary" (onClick)="fecharAdicionarCliente()"/>
+    </div>
+  </form>
+</p-dialog>

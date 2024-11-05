@@ -1,0 +1,72 @@
+.tabela{
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+.p-inputgroup {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.campo-editar{
+  padding: 5px 10px;
+  border-bottom: 2px solid #c9c9c9;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px;
+}
+
+.campo-salvar{
+  padding: 5px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px;
+}
+
+.campo-salvar-valor{
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  width: 100%;
+  gap: 3px;
+
+  input, textarea{
+    width: 100%;
+    max-width: 100%;
+    font-size: 12pt;
+    color: #000;
+    border-bottom: 2px solid #888888;
+    border-top: white;
+    border-left: white;
+    border-right: white;
+    outline: 0;
+  }
+
+  input{
+    height: 35px;
+  }
+
+  input:focus, textarea:focus{
+    background-color: #e5e5e5;
+  }
+}
+
+.campo-editar-valor{
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  width: 100%;
+  gap: 3px;
+
+  input{
+    width: 90%;
+    height: 35px;
+    font-size: 12pt;
+    color: #000;
+  }
+}
