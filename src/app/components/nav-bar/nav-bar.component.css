@@ -1,0 +1,17 @@
+.toolbar-horizontal{
+  display: block;
+}
+
+.toolbar-top{
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .toolbar-horizontal{
+    display: none !important;
+  }
+
+  .toolbar-top{
+    display: block !important;
+  }
+}
