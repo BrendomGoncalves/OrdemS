@@ -1,6 +1,6 @@
 import {Component, OnInit, signal} from '@angular/core';
 import {Cliente} from '../../models/cliente';
-import {ClientesService} from '../../services/clientes/clientes.service';
+import {ClientesService} from '../../services/cliente/clientes.service';
 import {RouterLink} from '@angular/router';
 import {Button, ButtonDirective} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
@@ -16,7 +16,7 @@ import {AbstractControl, ValidationErrors, AsyncValidatorFn} from '@angular/form
 import {delay, map, Observable, of} from 'rxjs';
 
 @Component({
-  selector: 'app-clientes-lista',
+  selector: 'app-cliente-lista',
   standalone: true,
   imports: [
     RouterLink,
@@ -38,15 +38,14 @@ import {delay, map, Observable, of} from 'rxjs';
   styleUrl: './clientes-lista.component.css'
 })
 export class ClientesListaComponent implements OnInit {
-  Clientes: Cliente[] = []; // Lista de clientes
-  filtro: string = ''; // Objeto pra filtrar clientes por nome
+  Clientes: Cliente[] = []; // Lista de cliente
+  filtro: string = ''; // Objeto pra filtrar cliente por nome
   clienteForm: FormGroup; // Formulário de cadastro de cliente
   editando: { [key: string]: boolean } = {}; // Objeto para controlar edição de campos
   tipoPF_PJ: string = 'PF'; // Tipo de cliente (Pessoa Física ou Jurídica)
 
   // Estatisticas
-  QClientes = signal(this.Clientes.length); // Quantidade de clientes
-  UltimoCliente = signal(this.Clientes[this.Clientes.length - 1]); // Ultimo cliente
+  QClientes = signal(this.Clientes.length); // Quantidade de cliente
 
   // DIALOGOS
   verDetalhesCliente: boolean = false; // Modal de detalhes do cliente
@@ -186,23 +185,22 @@ export class ClientesListaComponent implements OnInit {
 
   ngOnInit() {
     this.carregarClientes();
-    this.estatisticaClientes();
   }
 
-  // Utiliza o serviço de clientes para carregar a lista de clientes
+  // Utiliza o serviço de cliente para carregar a lista de cliente
   carregarClientes() {
     this.clientesService.getClientes().subscribe(clientes => {
+      this.estatisticaClientes(clientes);
       this.Clientes = clientes;
     });
   }
 
-  // Atualiza as estatisticas de clientes
-  estatisticaClientes() {
-    this.QClientes.set(this.Clientes.length);
-    this.UltimoCliente.set(this.Clientes[this.Clientes.length - 1]);
+  // Atualiza as estatisticas de cliente
+  estatisticaClientes(clientes: Cliente[]) {
+    this.QClientes.set(clientes.length);
   }
 
-  // Filtra os clientes por nome
+  // Filtra os cliente por nome
   get clientesFiltrados(): Cliente[] {
     if (!this.filtro) {
       return this.Clientes;
@@ -212,23 +210,31 @@ export class ClientesListaComponent implements OnInit {
     );
   }
 
-  // Utiliza o serviço de clientes para adicionar um novo cliente
+  // Utiliza o serviço de cliente para adicionar um novo cliente
   salvarCliente() {
     const novoCliente: Cliente = this.clienteForm.value;
-    this.clientesService.addCliente(novoCliente).then(() => {
-      this.carregarClientes();
-      this.estatisticaClientes();
-      this.fecharAdicionarCliente();
-    });
+    novoCliente.id = this.generateUniqueId();
+    this.clientesService.addCliente(novoCliente).subscribe(() => {
+        this.carregarClientes();
+        this.estatisticaClientes(this.Clientes);
+        this.fecharAdicionarCliente();
+      }
+    );
   }
 
-  // Utiliza o serviço de clientes para deletar um cliente
+  // Function to generate a unique ID
+  generateUniqueId(): string {
+    return Math.random().toString(36).substr(2, 9);
+  }
+
+  // Utiliza o serviço de cliente para deletar um cliente
   deletarCliente() {
-    const idDeletar = Number(this.clienteForm.get('id')?.value);
-    this.clientesService.deleteCliente(idDeletar).then(() => {
-      this.carregarClientes();
-      this.fecharDetalhesCliente();
-    });
+    const idDeletar = this.clienteForm.get('id')?.value;
+    this.clientesService.deleteCliente(idDeletar).subscribe(() => {
+        this.carregarClientes();
+        this.fecharDetalhesCliente();
+      }
+    );
   }
 
   // Reseta o objeto de edição
@@ -248,10 +254,11 @@ export class ClientesListaComponent implements OnInit {
     const clienteEditado = this.clienteForm.value;
     let clienteBanco: Cliente = this.Clientes.find(c => c.id === clienteEditado.id)!;
     if (clienteEditado.nome !== clienteBanco.nome) {
-      this.clientesService.updateCliente(clienteEditado.id, clienteEditado).then(() => {
-        this.editando[campo] = false;
-        this.carregarClientes();
-      });
+      this.clientesService.updateCliente(clienteEditado.id, clienteEditado).subscribe(() => {
+          this.editando[campo] = false;
+          this.carregarClientes();
+        }
+      );
     } else {
       this.editando[campo] = false;
     }
@@ -273,21 +280,6 @@ export class ClientesListaComponent implements OnInit {
   abrirDetalhesCliente(cliente: Cliente) {
     this.clienteForm.setValue({
       ...cliente
-      // id: cliente.id,
-      // nome: cliente.nome,
-      // fantasia: cliente.fantasia,
-      // cnpj: cliente.cnpj,
-      // ie: cliente.ie,
-      // cpf: cliente.cpf,
-      // celular: cliente.celular,
-      // telefone: cliente.telefone,
-      // email: cliente.email,
-      // endereco: cliente.endereco,
-      // numero: cliente.numero,
-      // bairro: cliente.bairro,
-      // cidade: cliente.cidade,
-      // observacoes: cliente.observacoes,
-      // tipoCliente: cliente.tipoCliente
     })
     this.verDetalhesCliente = true;
   }

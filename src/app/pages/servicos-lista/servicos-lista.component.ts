@@ -11,7 +11,7 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms';
-import { ServicosService } from '../../services/servicos/servicos.service';
+import { ServicosService } from '../../services/servico/servicos.service';
 import { delay, map, Observable, of } from 'rxjs';
 import {InputTextModule} from 'primeng/inputtext';
 import {PrimeTemplate} from 'primeng/api';
@@ -22,7 +22,7 @@ import {MessageModule} from 'primeng/message';
 import {TabViewModule} from 'primeng/tabview';
 
 @Component({
-  selector: 'app-servicos-lista',
+  selector: 'app-servico-lista',
   standalone: true,
   imports: [
     ButtonDirective,
@@ -52,7 +52,6 @@ export class ServicosListaComponent implements OnInit {
 
   // Estatisticas
   QServicos = signal(this.Servicos.length); // Quantidade de serviços
-  UltimoServico = signal(this.Servicos[this.Servicos.length - 1]); // Último serviço cadastrado
 
   // Dialogos
   verDetalhesServico: boolean = false; // Dialogo para ver detalhes de um serviço
@@ -72,23 +71,22 @@ export class ServicosListaComponent implements OnInit {
 
   ngOnInit() {
     this.carregarServicos();
-    this.estatisticaServicos();
   }
 
-  // Utiliza o serviço de clientes para carregar a lista de clientes
+  // Utiliza o serviço de cliente para carregar a lista de cliente
   carregarServicos() {
     this.servicoService.getServicos().subscribe(servicos => {
+      this.estatisticaServicos(servicos);
       this.Servicos = servicos;
     });
   }
 
-  // Atualiza as estatisticas de clientes
-  estatisticaServicos() {
-    this.QServicos.set(this.Servicos.length);
-    this.UltimoServico.set(this.Servicos[this.Servicos.length - 1]);
+  // Atualiza as estatisticas de cliente
+  estatisticaServicos(servicos: Servico[]) {
+    this.QServicos.set(servicos.length);
   }
 
-  // Filtra os clientes por nome
+  // Filtra os cliente por nome
   get servicosFiltrados(): Servico[] {
     if (!this.filtro) {
       return this.Servicos;
@@ -98,20 +96,26 @@ export class ServicosListaComponent implements OnInit {
     );
   }
 
-  // Utiliza o serviço de clientes para adicionar um novo cliente
+  // Utiliza o serviço de cliente para adicionar um novo cliente
   salvarServico() {
     const novoServico: Servico = this.servicoForm.value;
-    this.servicoService.addServico(novoServico).then(() => {
+    novoServico.id = this.generateUniqueId();
+    this.servicoService.addServico(novoServico).subscribe(() => {
       this.carregarServicos();
-      this.estatisticaServicos();
+      this.estatisticaServicos(this.Servicos);
       this.fecharAdicionarServico();
     });
   }
 
-  // Utiliza o serviço de clientes para deletar um cliente
+  // Function to generate a unique ID
+  generateUniqueId(): string {
+    return Math.random().toString(36).substr(2, 9);
+  }
+
+  // Utiliza o serviço de cliente para deletar um cliente
   deletarServico() {
-    const idDeletar = Number(this.servicoForm.get('id')?.value);
-    this.servicoService.deleteServico(idDeletar).then(() => {
+    const idDeletar = this.servicoForm.get('id')?.value;
+    this.servicoService.deleteServico(idDeletar).subscribe(() => {
       this.carregarServicos();
       this.fecharDetalhesServico();
     });
@@ -134,7 +138,7 @@ export class ServicosListaComponent implements OnInit {
     const servicoEditado = this.servicoForm.value;
     let servicoBanco: Servico = this.Servicos.find(c => c.id === servicoEditado.id)!;
     if (servicoEditado.nome !== servicoBanco.nome) {
-      this.servicoService.updateServico(servicoEditado.id, servicoEditado).then(() => {
+      this.servicoService.updateServico(servicoEditado.id, servicoEditado).subscribe(() => {
         this.editando[campo] = false;
         this.carregarServicos();
       });
@@ -158,12 +162,7 @@ export class ServicosListaComponent implements OnInit {
   // Abre o modal de detalhes do cliente
   abrirDetalhesServico(servico: Servico) {
     this.servicoForm.setValue({
-      id: servico.id,
-      nome: servico.nome,
-      categoria: servico.categoria.nome,
-      precoVenda: servico.precoVenda,
-      observacoes: servico.observacoes,
-      dataCadastro: servico.dataCadastro
+      ...servico
     });
     this.verDetalhesServico = true;
   }

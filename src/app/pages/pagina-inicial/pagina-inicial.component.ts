@@ -1,9 +1,9 @@
 import {Component, LOCALE_ID, OnInit} from '@angular/core';
 import {RouterLink} from '@angular/router';
-import {ClientesService} from '../../services/clientes/clientes.service';
+import {ClientesService} from '../../services/cliente/clientes.service';
 import {DatePipe, NgIf, registerLocaleData, TitleCasePipe} from '@angular/common';
 import localePt from '@angular/common/locales/pt';
-import {ServicosService} from '../../services/servicos/servicos.service';
+import {ServicosService} from '../../services/servico/servicos.service';
 
 registerLocaleData(localePt, 'pt-BR');
 
@@ -25,7 +25,6 @@ export class PaginaInicialComponent implements OnInit {
   quantidadeClientes: number = 0;
   quantidadeClientesMes: number = 0;
   quantidadeServicos: number = 0;
-  ultimoServico: string = 'Nenhum serviço cadastrado';
 
   constructor(private clienteService: ClientesService, private servicoService: ServicosService) {}
 
@@ -44,24 +43,9 @@ export class PaginaInicialComponent implements OnInit {
         this.quantidadeServicos = quantidade;
       });
     });
-
-    // Último serviço cadastrado
-    this.servicoService.getUltimoServico().subscribe((servico) => {
-      if(servico){
-        this.ultimoServico = servico;
-      }
-    });
-    this.servicoService.servicoListUpdate$.subscribe(() => {
-      this.servicoService.getUltimoServico().subscribe((servico) => {
-        if(servico){
-          this.ultimoServico = servico;
-        }
-      });
-    });
   }
-
   atualizarEstatisticasClientes(){
-    // Quantidade de clientes cadastrados no mês
+    // Quantidade de cliente cadastrados no mês
     this.clienteService.getQuantidadeClientesMes().subscribe((quantidade) => {
       this.quantidadeClientesMes = quantidade;
     });
@@ -71,7 +55,7 @@ export class PaginaInicialComponent implements OnInit {
       });
     });
 
-    // Quantidade de clientes cadastrados
+    // Quantidade de cliente cadastrados
     this.clienteService.getQuantidadeClientes().subscribe((quantidade) => {
       this.quantidadeClientes = quantidade;
     });
