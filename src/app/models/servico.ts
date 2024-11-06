@@ -1,7 +1,7 @@
 import {Categoria} from './categoria';
 
 export interface Servico{
-  id: number
+  id: string
   nome: string
   categoria: Categoria
   precoVenda: number

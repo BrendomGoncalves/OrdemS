@@ -1,5 +1,5 @@
 export abstract class Cliente {
-  id?: number;
+  id?: string;
   nome: string;
   fantasia: string;
   cnpj: string;
