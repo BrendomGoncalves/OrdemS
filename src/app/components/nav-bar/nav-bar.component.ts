@@ -3,6 +3,7 @@ import {ToolbarModule} from 'primeng/toolbar';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {SidebarModule} from 'primeng/sidebar';
 import {Button} from 'primeng/button';
+import {TooltipModule} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-nav-bar',
@@ -12,7 +13,8 @@ import {Button} from 'primeng/button';
     RouterLink,
     SidebarModule,
     Button,
-    RouterLinkActive
+    RouterLinkActive,
+    TooltipModule
   ],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.css'
