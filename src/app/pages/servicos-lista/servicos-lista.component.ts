@@ -162,7 +162,8 @@ export class ServicosListaComponent implements OnInit {
   // Abre o modal de detalhes do cliente
   abrirDetalhesServico(servico: Servico) {
     this.servicoForm.setValue({
-      ...servico
+      ...servico,
+      categoria: servico.categoria.nome,
     });
     this.verDetalhesServico = true;
   }
