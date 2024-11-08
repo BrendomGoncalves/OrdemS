@@ -1,6 +1,10 @@
 export interface Produto{
-  id: number
+  id: string
   nome: string
-  quantidade: number
-  preco: number
+  unidadeVenda: string
+  precoCompra: number
+  precoVenda: number
+  lucro: number
+  estoque: number
+  observacoes: string
 }
