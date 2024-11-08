@@ -1,1 +1,164 @@
-<p>categorias-lista works!</p>
+<!--HEADER DA PÁGINA-->
+<div class="surface-section px-4 py-5 md:px-6 lg:px-8">
+  <ul class="list-none p-0 m-0 flex align-items-center font-medium mb-3">
+    <li>
+      <a class="text-500 no-underline line-height-3 cursor-pointer" routerLink="/pagina-inicial">Página Inicial</a>
+    </li>
+    <li class="px-2">
+      <i class="pi pi-angle-right text-500 line-height-3"></i>
+    </li>
+    <li>
+      <span class="text-900 line-height-3">Lista de Categorias</span>
+    </li>
+  </ul>
+  <div class="flex align-items-start flex-column md:justify-content-between md:flex-row">
+    <div>
+      <div class="font-medium text-3xl text-900">CATEGORIAS</div>
+      <div class="flex align-items-center text-700 flex-wrap">
+        <div class="mr-5 flex align-items-center mt-3">
+          <i class="pi pi-users mr-2"></i>
+          <span>{{ QCategorias() }} Categorias</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-3 lg:mt-0">
+      <button pButton label="Novo Serviço" class="p-button-outlined mr-2 p-button-danger" icon="pi pi-user-plus"
+              (click)="abrirAdicionarCategoria()"></button>
+    </div>
+  </div>
+</div>
+
+<!--TABELA DE CATEGORIAS-->
+<div class="tabela">
+  <div class="p-inputgroup">
+    <span class="p-inputgroup-addon">
+      <i class="pi pi-search"></i>
+    </span>
+    <input
+      type="text"
+      pInputText
+      placeholder="Pesquise o nome da categoria"
+      [(ngModel)]="filtro"
+    />
+  </div>
+  <p-table [value]="categoriasFiltrados" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th [style]="{'text-align': 'center', 'width': '20px'}"><i class="pi pi-file-edit" style="font-weight: bold"></i></th>
+        <th [style]="{'min-width': '100px', 'max-width': '200px'}">Nome</th>
+        <th [style]="{'min-width': '100px', 'max-width': '300px'}">Descrição</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-categoria>
+      <tr>
+        <td>
+          <p-button (onClick)="abrirDetalhesCategoria(categoria)" styleClass="bg-red-600 border-0 w-1rem h-2rem"
+                    [style]="{'display': 'flex', 'justify-content': 'center'}">
+            <i class="pi pi-pencil" [style]="{'font-size': '.9rem'}"></i>
+          </p-button>
+        </td>
+        <td style="max-width: 200px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{{ categoria.nome }}</td>
+        <td>{{ categoria.descricao }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!--DETALHES CATEGORIA-->
+<p-dialog header="Detalhes Serviço" [closable]="false" [modal]="true" [(visible)]="verDetalhesCategoria"
+          [style]="{ width: '30rem' }">
+  <form [formGroup]="categoriaForm">
+    <div class="flex flex-column gap-2">
+      <div *ngIf="!editando['nome']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Nome:</strong> {{ categoriaForm.get('nome')?.value }}
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="ativarEdicao('nome')">
+          <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+      <div *ngIf="editando['nome']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Nome:</strong>
+          <input formControlName="nome" placeholder="Digite o novo nome"/>
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="salvarEdicao('nome')">
+          <i class="pi pi-save" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+
+      <div *ngIf="!editando['descricao']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Descrição:</strong> {{ categoriaForm.get('descricao')?.value }}
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="ativarEdicao('descricao')">
+          <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+      <div *ngIf="editando['descricao']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Descrição:</strong>
+          <input formControlName="descricao" placeholder="Digite a nova descrição"/>
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="salvarEdicao('descricao')">
+          <i class="pi pi-save" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+
+      <!-- Botões de ação -->
+      <div class="flex justify-content-center gap-2">
+        <p-button label="Deletar" severity="danger" (onClick)="deletarCategoria()"/>
+        <p-button label="Cancelar" severity="secondary" (onClick)="fecharDetalhesCategoria()"/>
+      </div>
+    </div>
+  </form>
+</p-dialog>
+
+<!--ADICIONAR CATEGORIA-->
+<p-dialog
+  header="Adicionar Categoria"
+  [closable]="false"
+  [modal]="true"
+  [(visible)]="verAdicionarCategoria"
+  [style]="{width: '40rem'}"
+  [breakpoints]="{'900px': '60vw', '700px': '80vw','500px': '100vw'}">
+  <form [formGroup]="categoriaForm">
+    <!--Nome-->
+    <div class="campo-salvar">
+      <div class="campo-salvar-valor">
+        <strong>Nome:</strong>
+        <input formControlName="nome" placeholder="Digite o nome" autofocus/>
+        <p-message *ngIf="categoriaForm.get('nome')?.invalid" severity="info"
+                   text="Precisa ter ao mesno 3 caracteres"></p-message>
+      </div>
+    </div>
+    <div class="campo-salvar">
+      <div class="campo-salvar-valor">
+        <strong>Descrição:</strong>
+        <input formControlName="descricao" placeholder="Digite a descrição" autofocus/>
+        <p-message *ngIf="categoriaForm.get('descricao')?.invalid" severity="info"
+                   text="Precisa ter ao mesno 3 caracteres"></p-message>
+      </div>
+    </div>
+<!--    <div class="campo-salvar">-->
+<!--      <div class="campo-salvar-valor">-->
+<!--        <strong>Preço:</strong>-->
+<!--        <input formControlName="precoVenda" placeholder="Digite o preço" autofocus/>-->
+<!--        <p-message *ngIf="servicoForm.get('precoVenda')?.invalid" severity="info"-->
+<!--                   text="Precisa ser maior ou igual a 0"></p-message>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="campo-salvar">-->
+<!--      <div class="campo-salvar-valor">-->
+<!--        <strong>Observações:</strong>-->
+<!--        <input formControlName="observacoes" placeholder="Digite as observações" autofocus/>-->
+<!--        <p-message *ngIf="servicoForm.get('observacoes')?.invalid" severity="info"-->
+<!--                   text="Precisa ter ao mesno 3 caracteres"></p-message>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="flex justify-content-center gap-2">
+      <p-button label="Salvar" severity="success" (onClick)="salvarCategoria()"/>
+      <p-button label="Fechar" severity="secondary" (onClick)="fecharAdicionarCategoria()"/>
+    </div>
+  </form>
+</p-dialog>
