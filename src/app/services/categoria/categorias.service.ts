@@ -44,10 +44,4 @@ export class CategoriasService {
   deleteCategoria(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-
-  getQuantidadeCategorias(): Observable<number> {
-    return this.http.get<Categoria[]>(this.apiUrl).pipe(
-      map(categorias => categorias.length)
-    );
-  }
 }

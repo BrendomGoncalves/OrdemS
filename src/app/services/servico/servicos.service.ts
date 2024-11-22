@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Servico} from '../../models/servico';
-import {map, Observable, Subject} from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 
@@ -9,9 +9,6 @@ import {HttpClient} from '@angular/common/http';
 })
 export class ServicosService {
   private apiUrl = `${environment.apiUrl}/servicos`;
-
-  private servicoListUpdateSource = new Subject<void>();
-  servicoListUpdate$ = this.servicoListUpdateSource.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -31,7 +28,6 @@ export class ServicosService {
         if(servicoAdicionado.id !== undefined) {
           servicoAdicionado.id = servicoAdicionado.id.toString();
         }
-        this.servicoListUpdateSource.next();
         return servicoAdicionado;
       })
     )
@@ -40,23 +36,12 @@ export class ServicosService {
   updateServico(id: number | undefined, servico: Servico): Observable<Servico>{
     return this.http.put<Servico>(`${this.apiUrl}/${id}`, servico).pipe(
       map(servicoAtualizado => {
-        this.servicoListUpdateSource.next();
         return servicoAtualizado;
       })
     );
   }
 
   deleteServico(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
-      map(() => {
-        this.servicoListUpdateSource.next();
-      })
-    );
-  }
-
-  getQuantidadeServicos(): Observable<number> {
-    return this.http.get<Servico[]>(this.apiUrl).pipe(
-      map(servicos => servicos.length)
-    );
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

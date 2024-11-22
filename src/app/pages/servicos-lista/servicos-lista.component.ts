@@ -16,7 +16,7 @@ import { delay, map, Observable, of } from 'rxjs';
 import {InputTextModule} from 'primeng/inputtext';
 import {PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
-import {CurrencyPipe, NgForOf, NgIf, TitleCasePipe} from '@angular/common';
+import {CurrencyPipe, NgIf} from '@angular/common';
 import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
 import {TabViewModule} from 'primeng/tabview';
@@ -35,9 +35,7 @@ import {TabViewModule} from 'primeng/tabview';
     FormsModule,
     CurrencyPipe,
     DialogModule,
-    NgForOf,
     NgIf,
-    TitleCasePipe,
     MessageModule,
     TabViewModule
   ],
