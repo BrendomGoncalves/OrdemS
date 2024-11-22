@@ -1,0 +1,227 @@
+<!--HEADER DA PÁGINA-->
+<div class="surface-section px-4 py-5 md:px-6 lg:px-8">
+  <ul class="list-none p-0 m-0 flex align-items-center font-medium mb-3">
+    <li>
+      <a class="text-500 no-underline line-height-3 cursor-pointer" routerLink="/pagina-inicial">Página Inicial</a>
+    </li>
+    <li class="px-2">
+      <i class="pi pi-angle-right text-500 line-height-3"></i>
+    </li>
+    <li>
+      <span class="text-900 line-height-3 cursor-pointer" routerLink="/produtos">Lista de Produto</span>
+    </li>
+    <li class="px-2">
+      <i class="pi pi-angle-right text-500 line-height-3"></i>
+    </li>
+    <li>
+      <span class="text-900 line-height-3 cursor-pointer font-bold" routerLink="/produtos">Venda de Produto</span>
+    </li>
+  </ul>
+  <div class="flex align-items-start flex-column md:justify-content-between md:flex-row">
+    <div>
+      <div class="font-medium text-3xl text-900">
+        FORMULÁRIO DE VENDA
+      </div>
+      <!--      <div class="flex align-items-center text-700 flex-wrap">-->
+      <!--        <div class="mr-5 flex align-items-center mt-3">-->
+      <!--          <i class="pi pi-users mr-2"></i>-->
+      <!--          <span>{{ QProdutos() }} Produtos</span>-->
+      <!--        </div>-->
+      <!--      </div>-->
+    </div>
+    <!--    <div class="flex mt-3 gap-3 lg:mt-0">-->
+    <!--      <button pButton-->
+    <!--              label="Realizar Venda"-->
+    <!--              class="p-button-outlined p-button-warning"-->
+    <!--              icon="pi pi-credit-card" routerLink="/venda-produto"></button>-->
+    <!--      <button pButton-->
+    <!--              label="Novo Produto"-->
+    <!--              class="p-button-outlined mr-2 p-button-danger"-->
+    <!--              icon="pi pi-user-plus"-->
+    <!--              (click)="abrirAdicionarProduto()"></button>-->
+    <!--    </div>-->
+    <!--  </div>-->
+  </div>
+</div>
+
+<!--CONTENT VENDA DE PRODUTO-->
+<div class="card flex justify-content-center">
+  <p-stepper [style]="{fontSize: '1.4rem'}">
+    <p-stepperPanel header="Produto">
+      <ng-template pTemplate="content" let-nextCallback="nextCallback">
+        <div class="flex flex-column h-30rem" style="width: calc(100vw - 100px);max-width: 1400px">
+          <div
+            class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium flex-column">
+            <p-listbox
+              [options]="produtos"
+              [(ngModel)]="produtosSelecionados"
+              [multiple]="true"
+              optionLabel="nome"
+              [filter]="true"
+              [style]="{ width: '35rem', fontSize: '1.3rem' }"
+              [listStyle]="{'min-height': '300px'}"/>
+            <div class="card w-full p-3">
+              <div class="flex flex-row justify-content-between pl-3 pr-3">
+                <h4>Produtos Selecionados</h4>
+                <h4>Quantidade</h4>
+              </div>
+              <p-accordion *ngIf="produtosSelecionados.length > 0">
+                <div *ngFor="let produto of produtosSelecionados" class="flex flex-row gap-1">
+                  <p-accordionTab [header]="produto.nome" class="w-full">
+                    <div class="flex flex-column">
+                      <div class="flex flex-row align-items-center gap-2">
+                        <label class="text-black font-bold bg-gray-200 p-2 border-round">Preço:</label>
+                        <p>{{ produto.precoVenda | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</p>
+                      </div>
+                      <div class="flex flex-row align-items-center gap-2">
+                        <label class="font-bold bg-gray-200 p-2 border-round">Quantidade:</label>
+                        <p>{{ produto.estoque }} {{ produto.unidadeVenda }}</p>
+                      </div>
+                      <div class="flex flex-row align-items-center gap-2">
+                        <label class="font-bold bg-gray-200 p-2 border-round">Observações:</label>
+                        <p>{{ produto.observacoes }}</p>
+                      </div>
+                    </div>
+                  </p-accordionTab>
+                  <div class="flex flex-row align-items-center gap-3">
+                    <p-button (click)="aumentarQuantidade(produto.id)" outlined severity="secondary" icon="pi pi-plus"
+                              [style]="{fontSize: '.5rem'}"/>
+                    <p class="w-2rem h-2rem flex align-items-center justify-content-center"
+                       style="font-size: 1.3rem">{{ produto.quantidadeVenda || '00' }}</p>
+                    <p-button (click)="diminuirQuantidade(produto.id)" outlined severity="secondary" icon="pi pi-minus"
+                              [style]="{fontSize: '.5rem'}"/>
+                  </div>
+                </div>
+              </p-accordion>
+              <p *ngIf="produtosSelecionados.length == 0">Nenhum produto selecionado</p>
+            </div>
+          </div>
+          <div class="flex gap-2 align-content-end justify-content-end p-2 w-full">
+            <p-button
+              (click)="limparProdutosSelecionados()"
+              [disabled]="produtosSelecionados.length == 0"
+              icon="pi pi-trash"
+              label="Limpar"/>
+            <p-button
+              label="Próximo"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              [disabled]="produtosSelecionados.length == 0"
+              (onClick)="nextCallback.emit()"/>
+          </div>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel header="Cliente">
+      <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
+        <div class="flex flex-column h-30rem" style="width: calc(100vw - 100px);max-width: 1400px">
+          <div
+            class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-around align-items-center font-medium flex-column">
+            <p-dropdown
+              [options]="clientes"
+              [(ngModel)]="clienteSelecionado"
+              (onClear)="limparClienteSelecionado()"
+              optionLabel="nome"
+              [filter]="true"
+              filterBy="nome"
+              [showClear]="true"
+              styleClass="w-30rem h-4rem align-items-center"
+              placeholder="Selecione o cliente">
+              <ng-template pTemplate="selectedItem" let-opcaoSelecionada>
+                <div class="flex align-items-center gap-2">
+                  <div>{{ opcaoSelecionada.nome }}</div>
+                </div>
+              </ng-template>
+              <ng-template let-cliente pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                  <div>{{ cliente.nome }}</div>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <div class="card w-full p-3">
+              <h4>Cliente Selecionado</h4>
+              <p-accordion [activeIndex]="0">
+                <p-accordionTab [header]="clienteSelecionado.nome" *ngIf="clienteSelecionado.nome != ''">
+                  <div class="flex flex-column">
+                    <div class="flex flex-row align-items-center gap-2" *ngIf="clienteSelecionado.tipoCliente == 'PJ'">
+                      <label class="text-black font-bold bg-gray-200 p-2 border-round">Nome Fantasia:</label>
+                      <p>{{ clienteSelecionado.fantasia }}</p>
+                    </div>
+                    <div class="flex flex-row align-items-center gap-2" *ngIf="clienteSelecionado.tipoCliente == 'PJ'">
+                      <label class="font-bold bg-gray-200 p-2 border-round">CNPJ:</label>
+                      <p>{{ clienteSelecionado.cnpj }}</p>
+                    </div>
+                    <div class="flex flex-row align-items-center gap-2" *ngIf="clienteSelecionado.tipoCliente == 'PJ'">
+                      <label class="font-bold bg-gray-200 p-2 border-round">IE:</label>
+                      <p>{{ clienteSelecionado.ie }}</p>
+                    </div>
+                    <div class="flex flex-row align-items-center gap-2" *ngIf="clienteSelecionado.tipoCliente == 'PF'">
+                      <label class="font-bold bg-gray-200 p-2 border-round">CPF:</label>
+                      <p>{{ clienteSelecionado.cpf }}</p>
+                    </div>
+                    <div class="flex flex-row align-items-center gap-2">
+                      <label class="font-bold bg-gray-200 p-2 border-round">Celular:</label>
+                      <p>{{ clienteSelecionado.celular }}</p>
+                    </div>
+                    <div class="flex flex-row align-items-center gap-2">
+                      <label class="font-bold bg-gray-200 p-2 border-round">Telefone:</label>
+                      <p>{{ clienteSelecionado.telefone }}</p>
+                    </div>
+                    <div class="flex flex-row align-items-center gap-2">
+                      <label class="font-bold bg-gray-200 p-2 border-round">E-mail:</label>
+                      <p>{{ clienteSelecionado.email }}</p>
+                    </div>
+                    <div class="flex flex-row align-items-center gap-2">
+                      <label class="font-bold bg-gray-200 p-2 border-round">Endereço:</label>
+                      <p>{{ clienteSelecionado.endereco }}</p>
+                    </div>
+                    <div class="flex flex-row align-items-center gap-2">
+                      <label class="font-bold bg-gray-200 p-2 border-round">Número:</label>
+                      <p>{{ clienteSelecionado.numero }}</p>
+                    </div>
+                    <div class="flex flex-row align-items-center gap-2">
+                      <label class="font-bold bg-gray-200 p-2 border-round">Cidade:</label>
+                      <p>{{ clienteSelecionado.cidade }}</p>
+                    </div>
+                    <div class="flex flex-row align-items-center gap-2">
+                      <label class="font-bold bg-gray-200 p-2 border-round">Observações:</label>
+                      <p>{{ clienteSelecionado.observacoes }}</p>
+                    </div>
+                  </div>
+                </p-accordionTab>
+              </p-accordion>
+              <p *ngIf="clienteSelecionado.nome == ''">Nenhum cliente selecionado</p>
+            </div>
+          </div>
+          <div class="flex pt-4 w-full justify-content-between">
+            <p-button
+              label="Back"
+              icon="pi pi-arrow-left"
+              (onClick)="prevCallback.emit()"/>
+            <p-button
+              label="Next"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              (onClick)="nextCallback.emit()"/>
+          </div>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel header="Header III">
+      <ng-template pTemplate="content" let-prevCallback="prevCallback">
+        <div class="flex flex-column h-30rem" style="width: calc(100vw - 100px);max-width: 1400px">
+          <div
+            class="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium p-7">
+            CONTEUDO
+          </div>
+        </div>
+        <div class="flex pt-4 justify-content-start">
+          <p-button
+            label="Back"
+            icon="pi pi-arrow-left"
+            (onClick)="prevCallback.emit()"/>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+  </p-stepper>
+</div>
