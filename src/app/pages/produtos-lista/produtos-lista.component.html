@@ -1,1 +1,307 @@
-<p>produtos-lista works!</p>
+<!--HEADER DA PÁGINA-->
+<div class="surface-section px-4 py-5 md:px-6 lg:px-8">
+  <ul class="list-none p-0 m-0 flex align-items-center font-medium mb-3">
+    <li>
+      <a class="text-500 no-underline line-height-3 cursor-pointer" routerLink="/pagina-inicial">Página Inicial</a>
+    </li>
+    <li class="px-2">
+      <i class="pi pi-angle-right text-500 line-height-3"></i>
+    </li>
+    <li>
+      <span class="text-900 line-height-3 font-bold">Lista de Produtos</span>
+    </li>
+  </ul>
+  <div class="flex align-items-start flex-column md:justify-content-between md:flex-row">
+    <div>
+      <div class="font-medium text-3xl text-900">PRODUTOS</div>
+      <div class="flex align-items-center text-700 flex-wrap">
+        <div class="mr-5 flex align-items-center mt-3">
+          <i class="pi pi-users mr-2"></i>
+          <span>{{ QProdutos() }} Produtos</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex mt-3 gap-3 lg:mt-0">
+      <button pButton
+              label="Realizar Venda"
+              class="p-button-outlined p-button-warning"
+              icon="pi pi-credit-card" routerLink="/venda-produto"></button>
+      <button pButton
+              label="Novo Produto"
+              class="p-button-outlined mr-2 p-button-danger"
+              icon="pi pi-user-plus"
+              (click)="abrirAdicionarProduto()"></button>
+    </div>
+  </div>
+</div>
+
+<!--TABELA DE PRODUTOS-->
+<div class="tabela">
+  <div class="p-inputgroup">
+    <span class="p-inputgroup-addon">
+      <i class="pi pi-search"></i>
+    </span>
+    <input
+      type="text"
+      pInputText
+      placeholder="Pesquise o nome do produto"
+      [(ngModel)]="filtro"/>
+  </div>
+  <p-table [value]="produtosFiltrados" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th [style]="{'text-align': 'center', 'width': '20px'}"><i class="pi pi-eye" style="font-weight: bold"></i></th>
+        <th [style]="{'min-width': '200px'}">Nome</th>
+        <th [style]="{'min-width': '100px'}">Estoque</th>
+        <th [style]="{'min-width': '100px'}">Preço de Compra</th>
+        <th [style]="{'min-width': '100px'}">Preço de Venda</th>
+        <th [style]="{'min-width': '100px'}">Lucro (%)</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-produto>
+      <tr>
+        <td>
+          <p-button (onClick)="abrirDetalhesProduto(produto)" styleClass="bg-red-600 border-0 w-1rem h-2rem"
+                    [style]="{'display': 'flex', 'justify-content': 'center'}">
+            <i class="pi pi-eye" [style]="{'font-size': '.9rem'}"></i>
+          </p-button>
+        </td>
+        <td style="max-width: 310px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
+          {{ produto.nome }}
+        </td>
+        <td>{{ produto.estoque }}</td>
+        <td>{{ produto.precoCompra | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+        <td>{{ produto.precoVenda | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+        <td>{{ (produto.lucro / produto.precoCompra) | percent }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!--DETALHES PRODUTO-->
+<p-dialog header="Detalhes Produto" [closable]="false" [modal]="true" [(visible)]="verDetalhesProduto"
+          [style]="{ width: '30rem' }">
+  <form [formGroup]="produtoForm">
+    <div class="flex flex-column gap-2">
+      <!-- Nome -->
+      <div *ngIf="!editando['nome']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Nome:</strong> {{ produtoForm.get('nome')?.value }}
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="ativarEdicao('nome')">
+          <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+      <div *ngIf="editando['nome']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Nome:</strong>
+          <input formControlName="nome" placeholder="Digite o novo nome"/>
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="salvarEdicao('nome')">
+          <i class="pi pi-save" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+
+      <!-- UnidadeVenda -->
+      <div *ngIf="!editando['unidadeVenda']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Unidade de Venda:</strong> {{ produtoForm.get('unidadeVenda')?.value }}
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="ativarEdicao('unidadeVenda')">
+          <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+      <div *ngIf="editando['unidadeVenda']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Preço Venda:</strong>
+          <input formControlName="unidadeVenda" placeholder="Digite a nova unidade de venda"/>
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="salvarEdicao('unidadeVenda')">
+          <i class="pi pi-save" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+
+      <!-- Estoque -->
+      <div *ngIf="!editando['estoque']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Estoque:</strong> {{ produtoForm.get('estoque')?.value }}
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="ativarEdicao('estoque')">
+          <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+      <div *ngIf="editando['estoque']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Estoque:</strong>
+          <input formControlName="estoque" placeholder="Digite o novo preço"/>
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="salvarEdicao('estoque')">
+          <i class="pi pi-save" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+
+      <!-- Observações -->
+      <div *ngIf="!editando['observacoes']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Observações:</strong> {{ produtoForm.get('observacoes')?.value }}
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="ativarEdicao('observacoes')">
+          <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+      <div *ngIf="editando['observacoes']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Observações:</strong>
+          <input formControlName="observacoes" placeholder="Digite as novas observações"/>
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="salvarEdicao('observacoes')">
+          <i class="pi pi-save" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+
+      <!-- PrecoCompra -->
+      <div *ngIf="!editando['precoCompra']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Preço de
+            Compra:</strong> {{ produtoForm.get('precoCompra')?.value | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="ativarEdicao('precoCompra')">
+          <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+      <div *ngIf="editando['precoCompra']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Preço de Compra:</strong>
+          <input formControlName="precoCompra" placeholder="Digite o novo preço"/>
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="salvarEdicao('precoCompra')">
+          <i class="pi pi-save" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+
+      <!-- PrecoVenda -->
+      <div *ngIf="!editando['precoVenda']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Preço de
+            Venda:</strong> {{ produtoForm.get('precoVenda')?.value | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="ativarEdicao('precoVenda')">
+          <i class="pi pi-pencil" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+      <div *ngIf="editando['precoVenda']" class="campo-editar">
+        <div class="campo-editar-valor">
+          <strong>Preço de Venda:</strong>
+          <input formControlName="precoVenda" placeholder="Digite o novo preço"/>
+        </div>
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="salvarEdicao('precoVenda')">
+          <i class="pi pi-save" style="font-size: 1rem;"></i>
+        </p-button>
+      </div>
+
+      <div style="display:flex;justify-content: center;align-items: center;gap: 5px;margin: 5px 0">
+        <strong>Lucro:</strong>
+        <p style="color: green;">
+          {{ (produtoForm.get('precoVenda')?.value - produtoForm.get('precoCompra')?.value) | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
+        </p>
+      </div>
+
+      <!-- Botões de ação -->
+      <div class="flex justify-content-center gap-2">
+        <p-button label="Deletar" severity="danger" (onClick)="deletarProduto()"/>
+        <p-button label="Cancelar" severity="secondary" (onClick)="fecharDetalhesProduto()"/>
+      </div>
+    </div>
+  </form>
+</p-dialog>
+
+<!--ADICIONAR PRODUTO-->
+<p-dialog
+  header="Adicionar Produto"
+  [closable]="false"
+  [modal]="true"
+  [(visible)]="verAdicionarProduto"
+  [style]="{width: '40rem'}"
+  [breakpoints]="{'900px': '60vw', '700px': '80vw','500px': '100vw'}">
+  <form [formGroup]="produtoForm">
+    <!--Nome-->
+    <div class="campo-salvar">
+      <div class="campo-salvar-valor">
+        <strong>Nome:</strong>
+        <input formControlName="nome" placeholder="Digite o nome" autofocus/>
+        <p-message *ngIf="produtoForm.get('nome')?.invalid" severity="info"
+                   text="Precisa ter ao mesno 3 caracteres"></p-message>
+      </div>
+    </div>
+    <!--Unidade de Venda-->
+    <div class="campo-salvar">
+      <div class="campo-salvar-valor">
+        <strong>Unidade de Venda:</strong>
+        <input formControlName="unidadeVenda" placeholder="Digite a unidade de venda" autofocus/>
+        <p-message *ngIf="produtoForm.get('unidadeVenda')?.invalid && produtoForm.get('unidadeVenda')?.touched"
+                   severity="info"
+                   text="A unidade é obrigatória, use apenas LETRAS"></p-message>
+      </div>
+    </div>
+    <!--Estoque-->
+    <div class="campo-salvar">
+      <div class="campo-salvar-valor">
+        <strong>Estoque:</strong>
+        <input formControlName="estoque" placeholder="Digite o estoque" autofocus/>
+        <p-message *ngIf="produtoForm.get('estoque')?.invalid" severity="info"
+                   text="Precisa ser maior ou igual a 0"></p-message>
+      </div>
+    </div>
+    <!--Observações-->
+    <div class="campo-salvar">
+      <div class="campo-salvar-valor">
+        <strong>Observações:</strong>
+        <input formControlName="observacoes" placeholder="Digite as observações" autofocus/>
+        <p-message *ngIf="produtoForm.get('observacoes')?.invalid" severity="info"
+                   text="Precisa ter ao mesno 3 caracteres"></p-message>
+      </div>
+    </div>
+    <!--Preço de Compra-->
+    <div class="campo-salvar">
+      <div class="campo-salvar-valor">
+        <strong>Preço de Compra:</strong>
+        <input formControlName="precoCompra" placeholder="Digite o preço" autofocus/>
+        <p-message *ngIf="produtoForm.get('precoCompra')?.invalid" severity="info"
+                   text="Precisa ser maior ou igual a 0"></p-message>
+      </div>
+    </div>
+    <!--Preço de Venda-->
+    <div class="campo-salvar">
+      <div class="campo-salvar-valor">
+        <strong>Preço de Venda:</strong>
+        <input formControlName="precoVenda" placeholder="Digite o preço" autofocus/>
+        <p-message *ngIf="produtoForm.get('precoVenda')?.invalid" severity="info"
+                   text="Precisa ser maior ou igual a 0"></p-message>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content: center;align-items: center;gap: 5px;margin: 5px 0">
+      <strong>Lucro:</strong>
+      <p style="color: green;">
+        {{ (produtoForm.get('precoVenda')?.value - produtoForm.get('precoCompra')?.value) | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
+      </p>
+    </div>
+
+    <div class="flex justify-content-center gap-2">
+      <p-button label="Salvar" severity="success" (onClick)="salvarProduto()"/>
+      <p-button label="Fechar" severity="secondary" (onClick)="fecharAdicionarProduto()"/>
+    </div>
+  </form>
+</p-dialog>
