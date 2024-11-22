@@ -6,5 +6,6 @@ export interface Produto{
   precoVenda: number
   lucro: number
   estoque: number
+  quantidadeVenda: number
   observacoes: string
 }
