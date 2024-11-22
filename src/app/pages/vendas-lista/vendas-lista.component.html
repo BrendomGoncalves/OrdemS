@@ -1,0 +1,142 @@
+<!--HEADER DA PÁGINA-->
+<div class="surface-section px-4 py-5 md:px-6 lg:px-8">
+  <ul class="list-none p-0 m-0 flex align-items-center font-medium mb-3">
+    <li>
+      <a class="text-500 no-underline line-height-3 cursor-pointer" routerLink="/pagina-inicial">Página Inicial</a>
+    </li>
+    <li class="px-2">
+      <i class="pi pi-angle-right text-500 line-height-3"></i>
+    </li>
+    <li>
+      <span class="text-900 line-height-3 cursor-pointer" routerLink="/produtos">Lista de Produto</span>
+    </li>
+    <li class="px-2">
+      <i class="pi pi-angle-right text-500 line-height-3"></i>
+    </li>
+    <li>
+      <span class="text-900 line-height-3 cursor-pointer font-bold" routerLink="/produtos">Lista de Vendas</span>
+    </li>
+  </ul>
+  <div class="flex align-items-start flex-column md:justify-content-between md:flex-row">
+    <div>
+      <div class="font-medium text-3xl text-900">VENDAS</div>
+      <div class="flex align-items-center text-700 flex-wrap">
+        <div class="mr-5 flex align-items-center mt-3">
+          <i class="pi pi-users mr-2"></i>
+          <span>{{ QVendas() }} Vendas</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex mt-3 gap-3 lg:mt-0">
+      <button pButton
+              label="Voltar"
+              class="p-button-outlined p-button-warning"
+              icon="pi pi-arrow-left"
+              routerLink="/produtos">
+      </button>
+    </div>
+  </div>
+</div>
+
+<!--TABELA DE VENDAS-->
+<div class="tabela">
+  <div class="p-inputgroup">
+    <span class="p-inputgroup-addon">
+      <i class="pi pi-search"></i>
+    </span>
+    <input
+      type="text"
+      pInputText
+      placeholder="Pesquise o nome do cliente"
+      [(ngModel)]="filtro"/>
+  </div>
+  <p-table [value]="vendasFiltradas" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th [style]="{'text-align': 'center', 'width': '20px'}"><i class="pi pi-eye" style="font-weight: bold"></i></th>
+        <th [style]="{'min-width': '250px'}">Data</th>
+        <th [style]="{'min-width': '200px'}">Cliente</th>
+        <th [style]="{'min-width': '140px'}">Quantidade de Produtos</th>
+        <th [style]="{'min-width': '100px'}">Total</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-venda>
+      <tr>
+        <td>
+          <p-button (onClick)="abrirDetalhesVenda(venda)" styleClass="bg-red-600 border-0 w-1rem h-2rem"
+                    [style]="{'display': 'flex', 'justify-content': 'center'}">
+            <i class="pi pi-eye" [style]="{'font-size': '.9rem'}"></i>
+          </p-button>
+        </td>
+        <td style="max-width: 310px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">
+          {{ venda.data | date: 'd De MMMM, y' }}
+        </td>
+        <td>{{ venda.nomeCliente }}</td>
+        <td>{{ venda.produtos.length }}</td>
+        <td>{{ venda.total | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!--DETALHES VENDA-->
+<p-dialog
+  header="Detalhes Venda"
+  [closable]="false"
+  [modal]="true"
+  [(visible)]="verDetalhesVenda"
+  [style]="{ width: '30rem' }"
+  focusOnShow="false">
+  <div class="flex flex-column gap-2">
+
+    <!-- Nome do Cliente -->
+    <div class="flex flex-row justify-content-between align-items-center border-bottom-2 m-1 border-gray-400">
+      <div class="flex flex-column justify-content-start w-full gap-2">
+        <strong>Cliente:</strong> {{ vendaSelecionada?.nomeCliente }}
+      </div>
+    </div>
+
+    <!-- Documento Cliente -->
+    <div class="flex flex-row justify-content-between align-items-center border-bottom-2 m-1 border-gray-400">
+      <div class="flex flex-column justify-content-start w-full gap-2">
+        <strong>Documento:</strong> {{ vendaSelecionada?.documentoCliente }}
+      </div>
+    </div>
+
+    <!-- Produtos -->
+    <div class="flex flex-column justify-content-between align-items-center border-bottom-2 m-1 border-gray-400">
+      <div class="flex flex-column justify-content-start w-full gap-2">
+        <strong>Produtos:</strong>
+      </div>
+      <div class="flex justify-content-start w-full gap-2 ml-3" *ngFor="let produto of vendaSelecionada?.produtos">
+        <strong>{{ produto.quantidadeVenda }}x</strong> {{ produto.nome }}
+      </div>
+    </div>
+
+    <!-- Total -->
+    <div class="flex flex-row justify-content-between align-items-center border-bottom-2 m-1 border-gray-400">
+      <div class="flex flex-column justify-content-start w-full gap-2">
+        <strong>Total:</strong> {{ vendaSelecionada?.total | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
+      </div>
+    </div>
+
+    <!-- Data -->
+    <div class="flex flex-row justify-content-between align-items-center border-bottom-2 m-1 border-gray-400">
+      <div class="flex flex-column justify-content-start w-full gap-2">
+        <strong>Data:</strong> {{ vendaSelecionada?.data | date: 'd De MMMM, y' }}
+      </div>
+    </div>
+    <!-- Hora -->
+    <div class="flex flex-row justify-content-between align-items-center border-bottom-2 m-1 border-gray-400">
+      <div class="flex flex-column justify-content-start w-full gap-2">
+        <strong>Hora:</strong> {{ vendaSelecionada?.data | date: 'HH:mm' }}
+      </div>
+    </div>
+
+    <!-- Botões de ação -->
+    <div class="flex justify-content-center gap-2">
+      <p-button label="Deletar" severity="danger" (onClick)="deletarVenda(vendaSelecionada.id)"/>
+      <p-button label="Cancelar" severity="secondary" (onClick)="fecharDetalhesVenda()"/>
+    </div>
+  </div>
+</p-dialog>
