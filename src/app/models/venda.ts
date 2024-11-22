@@ -1,10 +1,10 @@
 import {Produto} from './produto';
-import {Cliente} from './cliente';
 
 export interface Venda{
   id: string;
   produtos: Produto[];
-  cliente: Cliente;
+  nomeCliente: string;
+  documentoCliente: string;
   data: Date;
   total: number;
 }

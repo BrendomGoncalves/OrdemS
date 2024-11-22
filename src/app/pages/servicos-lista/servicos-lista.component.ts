@@ -20,6 +20,7 @@ import {CurrencyPipe, NgIf} from '@angular/common';
 import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
 import {TabViewModule} from 'primeng/tabview';
+import {generateUniqueId} from '../../ferramentas/utils';
 
 @Component({
   selector: 'app-servico-lista',
@@ -97,17 +98,12 @@ export class ServicosListaComponent implements OnInit {
   // Utiliza o serviço de cliente para adicionar um novo cliente
   salvarServico() {
     const novoServico: Servico = this.servicoForm.value;
-    novoServico.id = this.generateUniqueId();
+    novoServico.id = generateUniqueId();
     this.servicoService.addServico(novoServico).subscribe(() => {
       this.carregarServicos();
       this.estatisticaServicos(this.Servicos);
       this.fecharAdicionarServico();
     });
-  }
-
-  // Function to generate a unique ID
-  generateUniqueId(): string {
-    return Math.random().toString(36).substr(2, 9);
   }
 
   // Utiliza o serviço de cliente para deletar um cliente

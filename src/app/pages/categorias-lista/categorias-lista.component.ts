@@ -20,6 +20,7 @@ import {PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
+import {generateUniqueId} from '../../ferramentas/utils';
 
 @Component({
   selector: 'app-categorias-lista',
@@ -93,7 +94,7 @@ export class CategoriasListaComponent implements OnInit {
   // Utiliza o serviço de cliente para adicionar um novo cliente
   salvarCategoria() {
     const novaCategoria: Categoria = this.categoriaForm.value;
-    novaCategoria.id = this.generateUniqueId();
+    novaCategoria.id = generateUniqueId();
     // TODO: Fazer isso pra todos os outro (serviços e clientes)
     let categoriaBanco: Categoria = this.Categorias.find(c => c.id === novaCategoria.id)!;
     if (categoriaBanco == undefined) {
@@ -103,11 +104,6 @@ export class CategoriasListaComponent implements OnInit {
         this.fecharAdicionarCategoria();
       });
     }
-  }
-
-  // Function to generate a unique ID
-  generateUniqueId(): string {
-    return Math.random().toString(36).substr(2, 9);
   }
 
   // Utiliza o serviço de cliente para deletar um cliente

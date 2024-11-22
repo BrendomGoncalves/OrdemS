@@ -1,5 +1,5 @@
-import {MetodoPagamentoEnum} from './metodoPagamentoEnum';
-import {StatusPagamentoEnum} from './statusPagamentoEnum';
+import {MetodoPagamentoEnum} from '../enums/metodoPagamentoEnum';
+import {StatusPagamentoEnum} from '../enums/statusPagamentoEnum';
 
 export interface Pagamento{
   id: number

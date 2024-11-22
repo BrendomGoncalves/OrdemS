@@ -19,6 +19,7 @@ import {PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
+import {generateUniqueId} from '../../ferramentas/utils';
 
 @Component({
   selector: 'app-produtos-lista',
@@ -51,7 +52,7 @@ export class ProdutosListaComponent implements OnInit {
   QProdutos = signal(this.Produtos.length); // Quantidade de produtos
 
   // Dialogos
-  verDetalhesProduto: boolean = false; // Dialogo para ver detalhes de um produto
+  verDetalhesProduto: boolean = false; // Dialogo para ver mais detalhes de um produto
   verAdicionarProduto: boolean = false; // Dialogo para adicionar um produto
 
   constructor(private produtoService: ProdutosService, private fb: FormBuilder) {
@@ -91,25 +92,19 @@ export class ProdutosListaComponent implements OnInit {
     if (!this.filtro) {
       return this.Produtos;
     }
-    return this.Produtos.filter(produto =>
-      produto.nome.toLowerCase().includes(this.filtro.toLowerCase())
+    return this.Produtos.filter(produto => produto.nome.toLowerCase().includes(this.filtro.toLowerCase())
     );
   }
 
   // Utiliza o serviço de produto para adicionar um novo produto
   salvarProduto() {
     const novoProduto: Produto = this.produtoForm.value;
-    novoProduto.id = this.generateUniqueId();
+    novoProduto.id = generateUniqueId();
     this.produtoService.addProduto(novoProduto).subscribe(() => {
       this.carregarProdutos();
       this.estatisticaProdutos(this.Produtos);
       this.fecharAdicionarProduto();
     });
-  }
-
-  // Function to generate a unique ID
-  generateUniqueId(): string {
-    return Math.random().toString(36).substr(2, 9);
   }
 
   // Utiliza o serviço de produto para deletar um produto

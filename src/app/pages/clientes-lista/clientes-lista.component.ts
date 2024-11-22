@@ -14,6 +14,7 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {TabViewModule} from 'primeng/tabview';
 import {AbstractControl, ValidationErrors, AsyncValidatorFn} from '@angular/forms';
 import {delay, map, Observable, of} from 'rxjs';
+import {generateUniqueId} from '../../ferramentas/utils';
 
 @Component({
   selector: 'app-cliente-lista',
@@ -213,18 +214,13 @@ export class ClientesListaComponent implements OnInit {
   // Utiliza o serviço de cliente para adicionar um novo cliente
   salvarCliente() {
     const novoCliente: Cliente = this.clienteForm.value;
-    novoCliente.id = this.generateUniqueId();
+    novoCliente.id = generateUniqueId();
     this.clientesService.addCliente(novoCliente).subscribe(() => {
         this.carregarClientes();
         this.estatisticaClientes(this.Clientes);
         this.fecharAdicionarCliente();
       }
     );
-  }
-
-  // Function to generate a unique ID
-  generateUniqueId(): string {
-    return Math.random().toString(36).substr(2, 9);
   }
 
   // Utiliza o serviço de cliente para deletar um cliente

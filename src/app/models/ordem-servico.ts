@@ -1,6 +1,5 @@
 import {Cliente} from './cliente';
-import {Tecnico} from './tecnico';
-import {StatusEnum} from './statusEnum';
+import {StatusEnum} from '../enums/statusEnum';
 import {Servico} from './servico';
 import {Produto} from './produto';
 import {Pagamento} from './pagamento';
@@ -8,7 +7,6 @@ import {Pagamento} from './pagamento';
 export interface OrdemServico{
   id: number
   cliente: Cliente
-  tecnico: Tecnico
   dataAbertura: Date
   dataConclusao: Date
   descricaoProblema: string
