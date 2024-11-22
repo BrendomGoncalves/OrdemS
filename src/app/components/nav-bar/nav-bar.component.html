@@ -63,28 +63,52 @@
 <p-sidebar [(visible)]="sidebarVisible3" position="top" [style]="{'background-color': '#252525'}" showCloseIcon="false">
   <div class="flex flex-wrap align-items-center justify-content-center gap-4">
     <button
+      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
+      pTooltip="Página Inicial"
+      tooltipPosition="bottom"
       (click)="sidebarVisible3 = false"
-      class="p-link inline-flex justify-content-center align-items-center text-white h-4rem w-4rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
       routerLink="/pagina-inicial">
       <i class="pi pi-home text-4xl" routerLinkActive="text-red-500"></i>
     </button>
     <button
+      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
+      pTooltip="Ordem de Serviço"
+      tooltipPosition="bottom"
       (click)="sidebarVisible3 = false"
-      class="p-link inline-flex justify-content-center align-items-center text-white h-4rem w-4rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-      routerLink="/clientes">
-      <i class="pi pi-users text-4xl" routerLinkActive="text-red-500"></i>
-    </button>
-    <button
-      (click)="sidebarVisible3 = false"
-      class="p-link inline-flex justify-content-center align-items-center text-white h-4rem w-4rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
       routerLink="/os">
       <i class="pi pi-file-edit text-4xl" routerLinkActive="text-red-500"></i>
     </button>
     <button
+      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
+      pTooltip="Produtos"
+      tooltipPosition="bottom"
       (click)="sidebarVisible3 = false"
-      class="p-link inline-flex justify-content-center align-items-center text-white h-4rem w-4rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
+      routerLink="/produtos">
+      <i class="pi pi-box text-4xl" routerLinkActive="text-red-500"></i>
+    </button>
+    <button
+      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
+      pTooltip="Clientes"
+      tooltipPosition="bottom"
+      (click)="sidebarVisible3 = false"
+      routerLink="/clientes">
+      <i class="pi pi-users text-4xl" routerLinkActive="text-red-500"></i>
+    </button>
+    <button
+      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
+      pTooltip="Serviços"
+      tooltipPosition="bottom"
+      (click)="sidebarVisible3 = false"
       routerLink="/servicos">
       <i class="pi pi-desktop text-4xl" routerLinkActive="text-red-500"></i>
+    </button>
+    <button
+      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
+      pTooltip="Categorias"
+      tooltipPosition="bottom"
+      (click)="sidebarVisible3 = false"
+      routerLink="/categorias">
+      <i class="pi pi-tags text-4xl" routerLinkActive="text-red-500"></i>
     </button>
   </div>
 </p-sidebar>
