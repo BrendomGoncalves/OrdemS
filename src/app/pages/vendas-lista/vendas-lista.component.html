@@ -92,14 +92,14 @@
     <!-- Nome do Cliente -->
     <div class="flex flex-row justify-content-between align-items-center border-bottom-2 m-1 border-gray-400">
       <div class="flex flex-column justify-content-start w-full gap-2">
-        <strong>Cliente:</strong> {{ vendaSelecionada?.nomeCliente }}
+        <strong>Cliente:</strong> {{ vendaSelecionada.nomeCliente }}
       </div>
     </div>
 
     <!-- Documento Cliente -->
     <div class="flex flex-row justify-content-between align-items-center border-bottom-2 m-1 border-gray-400">
       <div class="flex flex-column justify-content-start w-full gap-2">
-        <strong>Documento:</strong> {{ vendaSelecionada?.documentoCliente }}
+        <strong>Documento:</strong> {{ vendaSelecionada.documentoCliente }}
       </div>
     </div>
 
@@ -116,20 +116,20 @@
     <!-- Total -->
     <div class="flex flex-row justify-content-between align-items-center border-bottom-2 m-1 border-gray-400">
       <div class="flex flex-column justify-content-start w-full gap-2">
-        <strong>Total:</strong> {{ vendaSelecionada?.total | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
+        <strong>Total:</strong> {{ vendaSelecionada.total | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
       </div>
     </div>
 
     <!-- Data -->
     <div class="flex flex-row justify-content-between align-items-center border-bottom-2 m-1 border-gray-400">
       <div class="flex flex-column justify-content-start w-full gap-2">
-        <strong>Data:</strong> {{ vendaSelecionada?.data | date: 'd De MMMM, y' }}
+        <strong>Data:</strong> {{ vendaSelecionada.data | date: 'd De MMMM, y' }}
       </div>
     </div>
     <!-- Hora -->
     <div class="flex flex-row justify-content-between align-items-center border-bottom-2 m-1 border-gray-400">
       <div class="flex flex-column justify-content-start w-full gap-2">
-        <strong>Hora:</strong> {{ vendaSelecionada?.data | date: 'HH:mm' }}
+        <strong>Hora:</strong> {{ vendaSelecionada.data | date: 'HH:mm' }}
       </div>
     </div>
 
