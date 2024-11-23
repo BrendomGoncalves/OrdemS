@@ -16,11 +16,12 @@ import {RouterLink} from '@angular/router';
 import {CurrencyPipe, NgIf} from '@angular/common';
 import {InputTextModule} from 'primeng/inputtext';
 import {PaginatorModule} from 'primeng/paginator';
-import {PrimeTemplate} from 'primeng/api';
+import {MessageService, PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
 import {generateUniqueId} from '../../ferramentas/utils';
+import {ToastModule} from 'primeng/toast';
 
 @Component({
   selector: 'app-categorias-lista',
@@ -29,7 +30,6 @@ import {generateUniqueId} from '../../ferramentas/utils';
     ButtonDirective,
     RouterLink,
     Button,
-    CurrencyPipe,
     InputTextModule,
     PaginatorModule,
     PrimeTemplate,
@@ -37,7 +37,8 @@ import {generateUniqueId} from '../../ferramentas/utils';
     DialogModule,
     NgIf,
     ReactiveFormsModule,
-    MessageModule
+    MessageModule,
+    ToastModule
   ],
   templateUrl: './categorias-lista.component.html',
   styleUrl: './categorias-lista.component.css'
@@ -55,10 +56,12 @@ export class CategoriasListaComponent implements OnInit {
   verDetalhesCategoria: boolean = false; // Dialogo para ver detalhes de um serviço
   verAdicionarCategoria: boolean = false; // Dialogo para adicionar um
 
-  constructor(private categoriaService: CategoriasService, private fb: FormBuilder) {
+  constructor(private categoriaService: CategoriasService,
+              private fb: FormBuilder,
+              private messageService: MessageService) {
     this.categoriaForm = this.fb.group({
       id: [''],
-      nome: ['', [Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres
+      nome: ['', [Validators.required, Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres
       descricao: ['', [Validators.minLength(3)], [this.asyncValidator()]] // Deve ter no mínimo 3 caracteres
     });
     this.resetarEdicao();
@@ -94,14 +97,34 @@ export class CategoriasListaComponent implements OnInit {
   // Utiliza o serviço de cliente para adicionar um novo cliente
   salvarCategoria() {
     const novaCategoria: Categoria = this.categoriaForm.value;
-    novaCategoria.id = generateUniqueId();
-    // TODO: Fazer isso pra todos os outro (serviços e clientes)
-    let categoriaBanco: Categoria = this.Categorias.find(c => c.id === novaCategoria.id)!;
-    if (categoriaBanco == undefined) {
-      this.categoriaService.addCategoria(novaCategoria).subscribe(() => {
-        this.carregarCategorias();
-        this.estatisticaCategoria(this.Categorias);
-        this.fecharAdicionarCategoria();
+    if (this.Categorias.find(c => c.nome === novaCategoria.nome)?.nome == novaCategoria.nome) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Categoria',
+        detail: 'Já existe essa categoria'
+      });
+      return;
+    } else if (this.categoriaForm.valid) {
+      const novaCategoria: Categoria = this.categoriaForm.value;
+      novaCategoria.id = generateUniqueId();
+      let categoriaBanco: Categoria = this.Categorias.find(c => c.id === novaCategoria.id)!;
+      if (categoriaBanco == undefined) {
+        this.categoriaService.addCategoria(novaCategoria).subscribe(() => {
+          this.carregarCategorias();
+          this.estatisticaCategoria(this.Categorias);
+          this.fecharAdicionarCategoria();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Categoria',
+            detail: 'Categoria adicionada'
+          });
+        });
+      }
+    } else {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Categoria Inválida',
+        detail: 'Verifique se os campos estão preenchidos corretamente'
       });
     }
   }
@@ -109,10 +132,23 @@ export class CategoriasListaComponent implements OnInit {
   // Utiliza o serviço de cliente para deletar um cliente
   deletarCategoria() {
     const idDeletar = this.categoriaForm.get('id')?.value;
-    this.categoriaService.deleteCategoria(idDeletar).subscribe(() => {
-      this.carregarCategorias();
-      this.fecharDetalhesCategoria();
-    });
+    if (this.Categorias.find(c => c.id === idDeletar)?.id == idDeletar) {
+      this.categoriaService.deleteCategoria(idDeletar).subscribe(() => {
+        this.carregarCategorias();
+        this.fecharDetalhesCategoria();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Categoria',
+          detail: 'Categoria deletada'
+        });
+      });
+    } else {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Categoria',
+        detail: 'Categoria não encontrada'
+      });
+    }
   }
 
   // Reseta o objeto de edição
@@ -135,6 +171,11 @@ export class CategoriasListaComponent implements OnInit {
       this.categoriaService.updateCategoria(categoriaEditado.id, categoriaEditado).subscribe(() => {
         this.editando[campo] = false;
         this.carregarCategorias();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Categoria',
+          detail: 'Categoria editada'
+        })
       });
     } else {
       this.editando[campo] = false;
@@ -174,7 +215,7 @@ export class CategoriasListaComponent implements OnInit {
       return of(control.value).pipe(
         delay(1000), // Simulate async operation
         map(value => {
-          return value === 'invalid' ? { invalidAsync: true } : null;
+          return value === 'invalid' ? {invalidAsync: true} : null;
         })
       );
     };

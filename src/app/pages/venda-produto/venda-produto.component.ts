@@ -39,27 +39,13 @@ import {VendasService} from '../../services/venda/vendas.service';
     ButtonDirective
   ],
   templateUrl: './venda-produto.component.html',
-  styleUrl: './venda-produto.component.css',
-  providers: [MessageService]
+  styleUrl: './venda-produto.component.css'
 })
 export class VendaProdutoComponent implements OnInit {
   produtos: Produto[] = [];
   clientes: Cliente[] = [];
 
   produtosSelecionados: Produto[] = [];
-  clientesSelecionados: Cliente[] = [];
-
-  produtoSelecionado: Produto = {
-    id: '',
-    nome: '',
-    unidadeVenda: '',
-    precoVenda: 0,
-    precoCompra: 0,
-    lucro: 0,
-    estoque: 0,
-    quantidadeVenda: 0,
-    observacoes: ''
-  };
   clienteSelecionado: Cliente = {
     bairro: "",
     celular: "",
@@ -78,6 +64,7 @@ export class VendaProdutoComponent implements OnInit {
     endereco: '',
     observacoes: ''
   }
+
   totalVenda: number = 0;
 
   constructor(
@@ -157,7 +144,7 @@ export class VendaProdutoComponent implements OnInit {
       this.messageService.add({
         severity: 'info',
         summary: 'Quantidade(s)',
-        detail: 'Selecione a(s) quantidade(s) na seção Produto.'
+        detail: this.produtosSelecionados.length > 1 ? 'Selecione as quantidades na seção Produtos.' : 'Selecione a quantidade na seção Produto.'
       })
     } else {
       let novaVenda: Venda = {
@@ -173,7 +160,7 @@ export class VendaProdutoComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: 'Venda',
-            detail: 'Produto(s) vendido(s)!'
+            detail: this.produtosSelecionados.length > 1 ? 'Produtos vendidos com sucesso!' : 'Produto vendido com sucesso!'
           });
           this.produtosSelecionados = [];
           this.clienteSelecionado = {

@@ -5,10 +5,11 @@ import {Button, ButtonDirective} from 'primeng/button';
 import {RouterLink} from '@angular/router';
 import {CurrencyPipe, DatePipe, NgForOf, NgIf, PercentPipe} from '@angular/common';
 import {InputTextModule} from 'primeng/inputtext';
-import {PrimeTemplate} from 'primeng/api';
+import {MessageService, PrimeTemplate} from 'primeng/api';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TableModule} from 'primeng/table';
 import {DialogModule} from 'primeng/dialog';
+import {ToastModule} from 'primeng/toast';
 
 @Component({
   selector: 'app-vendas-lista',
@@ -25,7 +26,8 @@ import {DialogModule} from 'primeng/dialog';
     FormsModule,
     DatePipe,
     DialogModule,
-    NgForOf
+    NgForOf,
+    ToastModule
   ],
   templateUrl: './vendas-lista.component.html',
   styleUrl: './vendas-lista.component.css'
@@ -48,7 +50,9 @@ export class VendasListaComponent implements OnInit {
   // Dialogos
   verDetalhesVenda: boolean = false; // Dialogo para ver mais detalhes de uma venda
 
-  constructor(private vendaService: VendasService) {}
+  constructor(
+    private vendaService: VendasService,
+    private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.carregarVendas();
@@ -73,10 +77,23 @@ export class VendasListaComponent implements OnInit {
   }
 
   deletarVenda(id: string){
-    this.vendaService.deleteVenda(id).subscribe(() => {
-      this.carregarVendas();
-      this.fecharDetalhesVenda();
-    });
+    if(this.Vendas.find(venda => venda.id === id)?.id === id) {
+      this.vendaService.deleteVenda(id).subscribe(() => {
+        this.carregarVendas();
+        this.fecharDetalhesVenda();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Venda',
+          detail: 'Venda deletada'
+        })
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Venda',
+        detail: 'Venda não encontrada'
+      })
+    }
   }
 
   abrirDetalhesVenda(venda: Venda){

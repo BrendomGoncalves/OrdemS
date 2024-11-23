@@ -1,7 +1,7 @@
-import { Component, OnInit, signal } from '@angular/core';
+import {Component, OnInit, signal} from '@angular/core';
 import {Button, ButtonDirective} from 'primeng/button';
-import { RouterLink } from '@angular/router';
-import { Servico } from '../../models/servico';
+import {RouterLink} from '@angular/router';
+import {Servico} from '../../models/servico';
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -11,16 +11,17 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms';
-import { ServicosService } from '../../services/servico/servicos.service';
-import { delay, map, Observable, of } from 'rxjs';
+import {ServicosService} from '../../services/servico/servicos.service';
+import {delay, map, Observable, of} from 'rxjs';
 import {InputTextModule} from 'primeng/inputtext';
-import {PrimeTemplate} from 'primeng/api';
+import {MessageService, PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {CurrencyPipe, NgIf} from '@angular/common';
 import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
 import {TabViewModule} from 'primeng/tabview';
 import {generateUniqueId} from '../../ferramentas/utils';
+import {ToastModule} from 'primeng/toast';
 
 @Component({
   selector: 'app-servico-lista',
@@ -38,7 +39,8 @@ import {generateUniqueId} from '../../ferramentas/utils';
     DialogModule,
     NgIf,
     MessageModule,
-    TabViewModule
+    TabViewModule,
+    ToastModule
   ],
   templateUrl: './servicos-lista.component.html',
   styleUrl: './servicos-lista.component.css'
@@ -56,7 +58,9 @@ export class ServicosListaComponent implements OnInit {
   verDetalhesServico: boolean = false; // Dialogo para ver detalhes de um serviço
   verAdicionarServico: boolean = false; // Dialogo para adicionar um
 
-  constructor(private servicoService: ServicosService, private fb: FormBuilder) {
+  constructor(private servicoService: ServicosService,
+              private fb: FormBuilder,
+              private messageService: MessageService) {
     this.servicoForm = this.fb.group({
       id: [''],
       nome: ['', [Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres
@@ -98,21 +102,53 @@ export class ServicosListaComponent implements OnInit {
   // Utiliza o serviço de cliente para adicionar um novo cliente
   salvarServico() {
     const novoServico: Servico = this.servicoForm.value;
-    novoServico.id = generateUniqueId();
-    this.servicoService.addServico(novoServico).subscribe(() => {
-      this.carregarServicos();
-      this.estatisticaServicos(this.Servicos);
-      this.fecharAdicionarServico();
-    });
+    if (this.Servicos.find(servico => servico.nome === novoServico.nome)?.nome === novoServico.nome) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Serviço',
+        detail: 'Esse serviço já existe'
+      });
+    } else if (this.servicoForm.valid) {
+      novoServico.id = generateUniqueId();
+      this.servicoService.addServico(novoServico).subscribe(() => {
+        this.carregarServicos();
+        this.estatisticaServicos(this.Servicos);
+        this.fecharAdicionarServico();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Serviço',
+          detail: 'Serviço adicionado'
+        });
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Serviço',
+        detail: 'Verifique se os campos estão preenchidos corretamente'
+      });
+    }
   }
 
   // Utiliza o serviço de cliente para deletar um cliente
   deletarServico() {
     const idDeletar = this.servicoForm.get('id')?.value;
-    this.servicoService.deleteServico(idDeletar).subscribe(() => {
-      this.carregarServicos();
-      this.fecharDetalhesServico();
-    });
+    if(this.Servicos.find(servico => servico.id === idDeletar)?.id === idDeletar) {
+      this.servicoService.deleteServico(idDeletar).subscribe(() => {
+        this.carregarServicos();
+        this.fecharDetalhesServico();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Serviço',
+          detail: 'Serviço deletado'
+        });
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Serviço',
+        detail: 'Esse serviço não existe'
+      });
+    }
   }
 
   // Reseta o objeto de edição
@@ -135,6 +171,11 @@ export class ServicosListaComponent implements OnInit {
       this.servicoService.updateServico(servicoEditado.id, servicoEditado).subscribe(() => {
         this.editando[campo] = false;
         this.carregarServicos();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Serviço',
+          detail: 'Serviço atualizado'
+        });
       });
     } else {
       this.editando[campo] = false;
@@ -175,7 +216,7 @@ export class ServicosListaComponent implements OnInit {
       return of(control.value).pipe(
         delay(1000), // Simulate async operation
         map(value => {
-          return value === 'invalid' ? { invalidAsync: true } : null;
+          return value === 'invalid' ? {invalidAsync: true} : null;
         })
       );
     };

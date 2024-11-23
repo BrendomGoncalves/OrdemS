@@ -15,11 +15,12 @@ import {Button, ButtonDirective} from 'primeng/button';
 import {RouterLink} from '@angular/router';
 import {CurrencyPipe, NgIf, PercentPipe} from '@angular/common';
 import {InputTextModule} from 'primeng/inputtext';
-import {PrimeTemplate} from 'primeng/api';
+import {MessageService, PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
 import {generateUniqueId} from '../../ferramentas/utils';
+import {ToastModule} from 'primeng/toast';
 
 @Component({
   selector: 'app-produtos-lista',
@@ -37,7 +38,8 @@ import {generateUniqueId} from '../../ferramentas/utils';
     DialogModule,
     NgIf,
     ReactiveFormsModule,
-    MessageModule
+    MessageModule,
+    ToastModule
   ],
   templateUrl: './produtos-lista.component.html',
   styleUrl: './produtos-lista.component.css'
@@ -55,10 +57,13 @@ export class ProdutosListaComponent implements OnInit {
   verDetalhesProduto: boolean = false; // Dialogo para ver mais detalhes de um produto
   verAdicionarProduto: boolean = false; // Dialogo para adicionar um produto
 
-  constructor(private produtoService: ProdutosService, private fb: FormBuilder) {
+  constructor(
+    private produtoService: ProdutosService,
+    private fb: FormBuilder,
+    private messageService: MessageService) {
     this.produtoForm = this.fb.group({
       id: [''],
-      nome: ['', [Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres
+      nome: ['', [Validators.required, Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres
       unidadeVenda: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres
       precoCompra: ['', [Validators.min(0)], [this.asyncValidator()]], // Deve ser maior ou igual a 0
       precoVenda: ['', [Validators.min(0)], [this.asyncValidator()]], // Deve ser maior ou igual a 0
@@ -99,21 +104,48 @@ export class ProdutosListaComponent implements OnInit {
   // Utiliza o serviço de produto para adicionar um novo produto
   salvarProduto() {
     const novoProduto: Produto = this.produtoForm.value;
-    novoProduto.id = generateUniqueId();
-    this.produtoService.addProduto(novoProduto).subscribe(() => {
-      this.carregarProdutos();
-      this.estatisticaProdutos(this.Produtos);
-      this.fecharAdicionarProduto();
-    });
+    if (this.Produtos.find(produto => produto.nome === novoProduto.nome)?.nome === novoProduto.nome) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Produto já cadastrado!'
+      });
+    } else if (this.produtoForm.valid) {
+      novoProduto.id = generateUniqueId();
+      this.produtoService.addProduto(novoProduto).subscribe(() => {
+        this.carregarProdutos();
+        this.estatisticaProdutos(this.Produtos);
+        this.fecharAdicionarProduto();
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Verifique se todos os campos estão preenchidos corretamente!'
+      });
+    }
   }
 
   // Utiliza o serviço de produto para deletar um produto
   deletarProduto() {
     const idDeletar = this.produtoForm.get('id')?.value;
-    this.produtoService.deleteProduto(idDeletar).subscribe(() => {
-      this.carregarProdutos();
-      this.fecharDetalhesProduto();
-    });
+    if (this.Produtos.find(produto => produto.id === idDeletar)?.id === idDeletar) {
+      this.produtoService.deleteProduto(idDeletar).subscribe(() => {
+        this.carregarProdutos();
+        this.fecharDetalhesProduto();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Produto deletado!'
+        });
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Produto não encontrado!'
+      });
+    }
   }
 
   // Reseta o objeto de edição
@@ -136,6 +168,11 @@ export class ProdutosListaComponent implements OnInit {
       this.produtoService.updateProduto(produtoEditado.id, produtoEditado).subscribe(() => {
         this.editando[campo] = false;
         this.carregarProdutos();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Produto editado!'
+        });
       });
     } else {
       this.editando[campo] = false;

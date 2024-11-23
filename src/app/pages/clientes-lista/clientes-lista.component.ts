@@ -15,6 +15,8 @@ import {TabViewModule} from 'primeng/tabview';
 import {AbstractControl, ValidationErrors, AsyncValidatorFn} from '@angular/forms';
 import {delay, map, Observable, of} from 'rxjs';
 import {generateUniqueId} from '../../ferramentas/utils';
+import {ToastModule} from 'primeng/toast';
+import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-cliente-lista',
@@ -33,7 +35,8 @@ import {generateUniqueId} from '../../ferramentas/utils';
     ReactiveFormsModule,
     MessageModule,
     RadioButtonModule,
-    TabViewModule
+    TabViewModule,
+    ToastModule
   ],
   templateUrl: './clientes-lista.component.html',
   styleUrl: './clientes-lista.component.css'
@@ -162,10 +165,13 @@ export class ClientesListaComponent implements OnInit {
     }
   ];
 
-  constructor(private clientesService: ClientesService, private fb: FormBuilder) {
+  constructor(
+    private clientesService: ClientesService,
+    private fb: FormBuilder,
+    private messageService: MessageService) {
     this.clienteForm = this.fb.group({
       id: [''],
-      nome: ['', [Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres,
+      nome: ['', [Validators.required, Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres, é obrigatório,
       fantasia: ['', [Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres,
       cnpj: ['', [Validators.minLength(18), Validators.pattern(/^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$/)], [this.asyncValidator()]], // Deve ter no mínimo 14 caracteres,
       ie: ['', [Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)], [this.asyncValidator()]], // Deve ter no mínimo 9 caracteres,
@@ -214,23 +220,51 @@ export class ClientesListaComponent implements OnInit {
   // Utiliza o serviço de cliente para adicionar um novo cliente
   salvarCliente() {
     const novoCliente: Cliente = this.clienteForm.value;
-    novoCliente.id = generateUniqueId();
-    this.clientesService.addCliente(novoCliente).subscribe(() => {
-        this.carregarClientes();
-        this.estatisticaClientes(this.Clientes);
-        this.fecharAdicionarCliente();
-      }
-    );
+    if (this.Clientes.find(cliente => cliente.cpf === novoCliente.cpf)?.cpf === novoCliente.cpf
+      || this.Clientes.find(cliente => cliente.cnpj === novoCliente.cnpj)?.cnpj === novoCliente.cnpj) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Cliente',
+        detail: 'Cliente já existe'
+      })
+    } else if (this.clienteForm.valid) {
+      novoCliente.id = generateUniqueId();
+      this.clientesService.addCliente(novoCliente).subscribe(() => {
+          this.carregarClientes();
+          this.estatisticaClientes(this.Clientes);
+          this.fecharAdicionarCliente();
+        }
+      );
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Cliente',
+        detail: 'Verifique se todos os campos estão preenchidos corretamente'
+      })
+    }
   }
 
   // Utiliza o serviço de cliente para deletar um cliente
   deletarCliente() {
     const idDeletar = this.clienteForm.get('id')?.value;
-    this.clientesService.deleteCliente(idDeletar).subscribe(() => {
-        this.carregarClientes();
-        this.fecharDetalhesCliente();
-      }
-    );
+    if(this.Clientes.find(cliente => cliente.id === idDeletar)?.id === idDeletar) {
+      this.clientesService.deleteCliente(idDeletar).subscribe(() => {
+          this.carregarClientes();
+          this.fecharDetalhesCliente();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Cliente',
+            detail: 'Cliente deletado'
+          });
+        }
+      );
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Cliente',
+        detail: 'Cliente não encontrado'
+      })
+    }
   }
 
   // Reseta o objeto de edição
@@ -253,6 +287,11 @@ export class ClientesListaComponent implements OnInit {
       this.clientesService.updateCliente(clienteEditado.id, clienteEditado).subscribe(() => {
           this.editando[campo] = false;
           this.carregarClientes();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Cliente',
+            detail: 'Cliente atualizado'
+          });
         }
       );
     } else {

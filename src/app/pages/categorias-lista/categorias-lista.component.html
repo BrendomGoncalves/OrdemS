@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="mt-3 lg:mt-0">
-      <button pButton label="Novo Serviço" class="p-button-outlined mr-2 p-button-danger" icon="pi pi-user-plus"
+      <button pButton label="Nova Categoria" class="p-button-outlined mr-2 p-button-danger" icon="pi pi-tags"
               (click)="abrirAdicionarCategoria()"></button>
     </div>
   </div>
@@ -135,30 +135,17 @@
     <div class="campo-salvar">
       <div class="campo-salvar-valor">
         <strong>Descrição:</strong>
-        <input formControlName="descricao" placeholder="Digite a descrição" autofocus/>
-        <p-message *ngIf="categoriaForm.get('descricao')?.invalid" severity="info"
+        <input formControlName="descricao" placeholder="Digite a descrição"/>
+        <p-message *ngIf="categoriaForm.get('descricao')?.invalid"
+                   severity="info"
                    text="Precisa ter ao mesno 3 caracteres"></p-message>
       </div>
     </div>
-<!--    <div class="campo-salvar">-->
-<!--      <div class="campo-salvar-valor">-->
-<!--        <strong>Preço:</strong>-->
-<!--        <input formControlName="precoVenda" placeholder="Digite o preço" autofocus/>-->
-<!--        <p-message *ngIf="servicoForm.get('precoVenda')?.invalid" severity="info"-->
-<!--                   text="Precisa ser maior ou igual a 0"></p-message>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="campo-salvar">-->
-<!--      <div class="campo-salvar-valor">-->
-<!--        <strong>Observações:</strong>-->
-<!--        <input formControlName="observacoes" placeholder="Digite as observações" autofocus/>-->
-<!--        <p-message *ngIf="servicoForm.get('observacoes')?.invalid" severity="info"-->
-<!--                   text="Precisa ter ao mesno 3 caracteres"></p-message>-->
-<!--      </div>-->
-<!--    </div>-->
     <div class="flex justify-content-center gap-2">
       <p-button label="Salvar" severity="success" (onClick)="salvarCategoria()"/>
       <p-button label="Fechar" severity="secondary" (onClick)="fecharAdicionarCategoria()"/>
     </div>
   </form>
 </p-dialog>
+
+<p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>
