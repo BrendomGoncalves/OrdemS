@@ -1,6 +1,6 @@
 <p-toolbar [style]="{ 'border-radius': '1rem', 'background-color': '#252525'}">
   <ng-template pTemplate="start">
-    <img style="cursor:pointer" src="assets/logoBranco.svg" alt="logotipo" width="80px" routerLink="/pagina-inicial"/>
+    <img alt="logotipo" routerLink="/pagina-inicial" src="assets/logoBranco.svg" class="cursor-pointer" width="80px"/>
   </ng-template>
   <ng-template pTemplate="end">
     <div class="flex flex-wrap align-items-center gap-3 toolbar-horizontal">
@@ -15,7 +15,7 @@
         class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
         pTooltip="Ordem de Serviço"
         tooltipPosition="bottom"
-        routerLink="/os">
+        routerLink="/ordens">
         <i class="pi pi-file-edit text-2xl" routerLinkActive="text-red-500"></i>
       </button>
       <button
