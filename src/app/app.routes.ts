@@ -7,6 +7,7 @@ import {CategoriasListaComponent} from './pages/categorias-lista/categorias-list
 import {ProdutosListaComponent} from './pages/produtos-lista/produtos-lista.component';
 import {VendaProdutoComponent} from './pages/venda-produto/venda-produto.component';
 import {VendasListaComponent} from './pages/vendas-lista/vendas-lista.component';
+import {OrdemListaComponent} from './pages/ordem-lista/ordem-lista.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'pagina-inicial', pathMatch: 'full' },
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'vendas', component: VendasListaComponent},
   { path: 'servicos', component: ServicosListaComponent},
   { path: 'categorias', component: CategoriasListaComponent},
-  { path: 'os', component: OrdemServicoComponent},
+  { path: 'ordem-servico', component: OrdemServicoComponent},
+  { path: 'ordens', component: OrdemListaComponent},
   { path: '**', redirectTo: 'pagina-inicial' }
 ];
