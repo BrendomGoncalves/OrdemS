@@ -6,6 +6,7 @@ import {Pagamento} from './pagamento';
 
 export interface OrdemServico{
   id: string
+  numero: string
   cliente: Cliente | null
   equipamento: string
   dataAbertura: Date | null
