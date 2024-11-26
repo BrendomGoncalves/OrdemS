@@ -5,15 +5,16 @@ import {Produto} from './produto';
 import {Pagamento} from './pagamento';
 
 export interface OrdemServico{
-  id: number
-  cliente: Cliente
-  dataAbertura: Date
-  dataConclusao: Date
+  id: string
+  cliente: Cliente | null
+  equipamento: string
+  dataAbertura: Date | null
+  dataConclusao: Date | null
   descricaoProblema: string
   descricaoSolucao: string
-  status: StatusEnum.PENDENTE
+  status: StatusEnum
   valorTotal: number
   servicos: Servico[]
   produtosUtilizados: Produto[]
-  pagamento: Pagamento
+  pagamento: Pagamento | null
 }
