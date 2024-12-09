@@ -7,4 +7,5 @@ export interface Servico{
   precoVenda: number
   observacoes: string
   dataCadastro: Date
+  quantidadeVenda: number | 1
 }
