@@ -12,7 +12,7 @@ export class CategoriasService {
 
   constructor(private http: HttpClient) {}
 
-  getCategorias(): Observable<Categoria[]> {
+  async getCategorias(): Promise<Observable<Categoria[]>> {
     return this.http.get<Categoria[]>(this.apiUrl).pipe(
       map(categorias => categorias.sort((a, b) => a.nome.localeCompare(b.nome)))
     );

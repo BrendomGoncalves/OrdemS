@@ -12,7 +12,7 @@ export class ClientesService {
 
   constructor(private http: HttpClient) {}
 
-  getClientes(): Observable<Cliente[]> {
+  async getClientes(): Promise<Observable<Cliente[]>> {
     return this.http.get<Cliente[]>(this.apiUrl).pipe(
       map(clientes => clientes.sort((a, b) => a.nome.localeCompare(b.nome)))
     );

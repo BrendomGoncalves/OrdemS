@@ -13,7 +13,7 @@ export class ProdutosService {
   constructor(private http: HttpClient) {
   }
 
-  getProdutos(): Observable<Produto[]> {
+  async getProdutos(): Promise<Observable<Produto[]>> {
     return this.http.get<Produto[]>(this.apiUrl).pipe(
       map(produtos => produtos.sort((a, b) => a.nome.localeCompare(b.nome)))
     );

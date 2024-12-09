@@ -12,7 +12,7 @@ export class ServicosService {
 
   constructor(private http: HttpClient) {}
 
-  getServicos(): Observable<Servico[]> {
+  async getServicos(): Promise<Observable<Servico[]>> {
     return this.http.get<Servico[]>(this.apiUrl).pipe(
       map(servicos => servicos.sort((a, b) => a.nome.localeCompare(b.nome)))
     );
