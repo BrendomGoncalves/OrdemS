@@ -72,13 +72,13 @@ export class ServicosListaComponent implements OnInit {
     this.resetarEdicao();
   }
 
-  ngOnInit() {
-    this.carregarServicos();
+  async ngOnInit() {
+    await this.carregarServicos();
   }
 
   // Utiliza o serviço de cliente para carregar a lista de cliente
-  carregarServicos() {
-    this.servicoService.getServicos().subscribe(servicos => {
+  async carregarServicos() {
+    (await this.servicoService.getServicos()).subscribe(servicos => {
       this.estatisticaServicos(servicos);
       this.Servicos = servicos;
     });
@@ -101,7 +101,7 @@ export class ServicosListaComponent implements OnInit {
 
   // Utiliza o serviço de cliente para adicionar um novo cliente
   salvarServico() {
-    const novoServico: Servico = this.servicoForm.value;
+    let novoServico: Servico = this.servicoForm.value;
     if (this.Servicos.find(servico => servico.nome === novoServico.nome)?.nome === novoServico.nome) {
       this.messageService.add({
         severity: 'info',
@@ -135,6 +135,7 @@ export class ServicosListaComponent implements OnInit {
     if(this.Servicos.find(servico => servico.id === idDeletar)?.id === idDeletar) {
       this.servicoService.deleteServico(idDeletar).subscribe(() => {
         this.carregarServicos();
+        this.estatisticaServicos(this.Servicos);
         this.fecharDetalhesServico();
         this.messageService.add({
           severity: 'success',

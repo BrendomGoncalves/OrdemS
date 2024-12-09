@@ -190,13 +190,13 @@ export class ClientesListaComponent implements OnInit {
     this.resetarEdicao();
   }
 
-  ngOnInit() {
-    this.carregarClientes();
+  async ngOnInit() {
+    await this.carregarClientes();
   }
 
   // Utiliza o serviço de cliente para carregar a lista de cliente
-  carregarClientes() {
-    this.clientesService.getClientes().subscribe(clientes => {
+  async carregarClientes() {
+    (await this.clientesService.getClientes()).subscribe(clientes => {
       this.estatisticaClientes(clientes);
       this.Clientes = clientes;
     });

@@ -75,13 +75,15 @@ export class VendaProdutoComponent implements OnInit {
     private messageService: MessageService) {
   }
 
-  ngOnInit() {
-    this.produtoService.getProdutos().subscribe((produtos) => {
-      this.produtos = produtos;
-    });
-    this.clienteService.getClientes().subscribe((clientes) => {
-      this.clientes = clientes;
-    });
+  async ngOnInit() {
+    (await this.produtoService.getProdutos())
+      .subscribe((produtos) => {
+        this.produtos = produtos;
+      });
+    (await this.clienteService.getClientes())
+      .subscribe((clientes) => {
+        this.clientes = clientes;
+      });
   }
 
   limparProdutosSelecionados() {

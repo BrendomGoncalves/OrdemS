@@ -67,13 +67,13 @@ export class CategoriasListaComponent implements OnInit {
     this.resetarEdicao();
   }
 
-  ngOnInit() {
-    this.carregarCategorias();
+  async ngOnInit() {
+    await this.carregarCategorias();
   }
 
   // Utiliza o serviço de categoria para carregar a lista de categorias
-  carregarCategorias() {
-    this.categoriaService.getCategorias().subscribe(categorias => {
+  async carregarCategorias() {
+    (await this.categoriaService.getCategorias()).subscribe(categorias => {
       this.estatisticaCategoria(categorias);
       this.Categorias = categorias;
     });

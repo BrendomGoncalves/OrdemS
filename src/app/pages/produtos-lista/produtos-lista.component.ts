@@ -75,13 +75,13 @@ export class ProdutosListaComponent implements OnInit {
     this.resetarEdicao();
   }
 
-  ngOnInit() {
-    this.carregarProdutos();
+  async ngOnInit() {
+    await this.carregarProdutos();
   }
 
   // Utiliza o serviço de produto para carregar a lista de produtos
-  carregarProdutos() {
-    this.produtoService.getProdutos().subscribe(produtos => {
+  async carregarProdutos() {
+    (await this.produtoService.getProdutos()).subscribe(produtos => {
       this.estatisticaProdutos(produtos);
       this.Produtos = produtos;
     });
