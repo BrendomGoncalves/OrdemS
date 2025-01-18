@@ -22,7 +22,8 @@
       </div>
     </div>
     <div class="mt-3 lg:mt-0">
-      <button pButton label="Nova Categoria" class="p-button-outlined mr-2 p-button-danger" icon="pi pi-tags" (click)="abrirAdicionarCategoria()"></button>
+      <button pButton label="Nova Categoria" class="p-button-outlined mr-2 p-button-danger" icon="pi pi-tags"
+              (click)="abrirAdicionarCategoria()"></button>
     </div>
   </div>
 </div>
@@ -33,13 +34,12 @@
     <span class="p-inputgroup-addon">
       <i class="pi pi-search"></i>
     </span>
-    <input
-      type="text"
-      pInputText
-      placeholder="Pesquise o nome da categoria"
-      [(ngModel)]="filtro"
-    />
-  </div>
+  <input
+    type="text"
+    pInputText
+    placeholder="Pesquise o nome da categoria"
+    [(ngModel)]="filtro"/>
+</div>
   <p-table [value]="categoriasFiltrados" [paginator]="true" [rows]="10">
     <ng-template pTemplate="header">
       <tr>
@@ -49,7 +49,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-categoria>
-      <tr>
+      <tr *ngIf="!carregandoDados">
         <td>
           <p-button (onClick)="abrirDetalhesCategoria(categoria)" styleClass="bg-red-600 border-0 w-1rem h-2rem"
                     [style]="{'display': 'flex', 'justify-content': 'center'}">
@@ -58,6 +58,26 @@
         </td>
         <td style="max-width: 200px;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;">{{ categoria.nome }}</td>
         <td>{{ categoria.descricao }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <tr *ngIf="carregandoDados">
+        <td><p-skeleton size="3rem"></p-skeleton></td>
+        <td><p-skeleton height="3rem"></p-skeleton></td>
+        <td><p-skeleton height="3rem"></p-skeleton></td>
+      </tr>
+      <tr *ngIf="carregandoDados">
+        <td><p-skeleton size="3rem"></p-skeleton></td>
+        <td><p-skeleton height="3rem"></p-skeleton></td>
+        <td><p-skeleton height="3rem"></p-skeleton></td>
+      </tr>
+      <tr *ngIf="carregandoDados">
+        <td><p-skeleton size="3rem"></p-skeleton></td>
+        <td><p-skeleton height="3rem"></p-skeleton></td>
+        <td><p-skeleton height="3rem"></p-skeleton></td>
+      </tr>
+      <tr *ngIf="Categorias.length === 0">
+        <td colspan="3" class="text-black-alpha-50 text-center">Nenhuma categoria cadastrada</td>
       </tr>
     </ng-template>
   </p-table>

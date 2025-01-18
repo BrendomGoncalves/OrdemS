@@ -11,7 +11,7 @@ import {DropdownModule} from 'primeng/dropdown';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ListboxModule} from 'primeng/listbox';
 import {AccordionModule} from 'primeng/accordion';
-import {CurrencyPipe, NgForOf, NgIf, TitleCasePipe} from '@angular/common';
+import {CurrencyPipe, NgForOf, NgIf} from '@angular/common';
 import {TableModule} from 'primeng/table';
 import {Venda} from '../../models/venda';
 import {ToastModule} from 'primeng/toast';

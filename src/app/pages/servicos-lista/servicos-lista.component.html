@@ -56,7 +56,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-servico>
-      <tr>
+      <tr *ngIf="!carregandoDados">
         <td>
           <p-button (onClick)="abrirDetalhesServico(servico)" styleClass="bg-red-600 border-0 w-1rem h-2rem"
                     [style]="{'display': 'flex', 'justify-content': 'center'}">
@@ -67,6 +67,31 @@
         </td>
         <td>{{ servico.categoria.nome }}</td>
         <td>{{ servico.precoVenda | currency: 'BRL' }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <tr *ngIf="carregandoDados">
+        <td><p-skeleton size="3rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+      </tr>
+      <tr *ngIf="carregandoDados">
+        <td><p-skeleton size="3rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+      </tr>
+      <tr *ngIf="carregandoDados">
+        <td><p-skeleton size="3rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+      </tr>
+      <tr *ngIf="Servicos.length === 0 && !carregandoDados">
+        <td colspan="4" class="text-center text-black-alpha-50">
+          Nenhum serviço cadastrado
+        </td>
       </tr>
     </ng-template>
   </p-table>

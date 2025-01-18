@@ -22,6 +22,9 @@ import {MessageModule} from 'primeng/message';
 import {TabViewModule} from 'primeng/tabview';
 import {generateUniqueId} from '../../ferramentas/utils';
 import {ToastModule} from 'primeng/toast';
+import {SkeletonModule} from 'primeng/skeleton';
+import {Categoria} from '../../models/categoria';
+import {CategoriasService} from '../../services/categoria/categorias.service';
 
 @Component({
   selector: 'app-servico-lista',
@@ -40,7 +43,8 @@ import {ToastModule} from 'primeng/toast';
     NgIf,
     MessageModule,
     TabViewModule,
-    ToastModule
+    ToastModule,
+    SkeletonModule
   ],
   templateUrl: './servicos-lista.component.html',
   styleUrl: './servicos-lista.component.css'
@@ -50,6 +54,7 @@ export class ServicosListaComponent implements OnInit {
   filtro: string = ''; // Objeto para filtrar serviços por nome
   servicoForm: FormGroup; // Formulário de cadastro de serviços
   editando: { [key: string]: boolean } = {}; // Objeto para controlar a edição de serviços
+  listaCategorias: Categoria[] = []; // Lista de categorias
 
   // Estatisticas
   QServicos = signal(this.Servicos.length); // Quantidade de serviços
@@ -58,8 +63,12 @@ export class ServicosListaComponent implements OnInit {
   verDetalhesServico: boolean = false; // Dialogo para ver detalhes de um serviço
   verAdicionarServico: boolean = false; // Dialogo para adicionar um
 
+  // Carregamento
+  carregandoDados: boolean = true; // Indica se os dados estão sendo carregados
+
   constructor(private servicoService: ServicosService,
               private fb: FormBuilder,
+              private categoriasService: CategoriasService,
               private messageService: MessageService) {
     this.servicoForm = this.fb.group({
       id: [''],
@@ -74,13 +83,19 @@ export class ServicosListaComponent implements OnInit {
 
   async ngOnInit() {
     await this.carregarServicos();
+    (await this.categoriasService.getCategorias()).subscribe((categorias) => {
+      this.listaCategorias = categorias
+    })
   }
 
   // Utiliza o serviço de cliente para carregar a lista de cliente
   async carregarServicos() {
     (await this.servicoService.getServicos()).subscribe(servicos => {
-      this.estatisticaServicos(servicos);
       this.Servicos = servicos;
+      setTimeout(() => {
+        this.carregandoDados = false;
+        this.estatisticaServicos(servicos);
+      }, 1500);
     });
   }
 
@@ -89,7 +104,7 @@ export class ServicosListaComponent implements OnInit {
     this.QServicos.set(servicos.length);
   }
 
-  // Filtra os cliente por nome
+  // Filtra os clientes por nome
   get servicosFiltrados(): Servico[] {
     if (!this.filtro) {
       return this.Servicos;
@@ -111,7 +126,7 @@ export class ServicosListaComponent implements OnInit {
     } else if (this.servicoForm.valid) {
       novoServico.id = generateUniqueId();
       this.servicoService.addServico(novoServico).subscribe(() => {
-        this.carregarServicos();
+        this.carregarServicos().then();
         this.estatisticaServicos(this.Servicos);
         this.fecharAdicionarServico();
         this.messageService.add({
@@ -134,7 +149,7 @@ export class ServicosListaComponent implements OnInit {
     const idDeletar = this.servicoForm.get('id')?.value;
     if(this.Servicos.find(servico => servico.id === idDeletar)?.id === idDeletar) {
       this.servicoService.deleteServico(idDeletar).subscribe(() => {
-        this.carregarServicos();
+        this.carregarServicos().then();
         this.estatisticaServicos(this.Servicos);
         this.fecharDetalhesServico();
         this.messageService.add({
@@ -171,7 +186,7 @@ export class ServicosListaComponent implements OnInit {
     if (servicoEditado.nome !== servicoBanco.nome) {
       this.servicoService.updateServico(servicoEditado.id, servicoEditado).subscribe(() => {
         this.editando[campo] = false;
-        this.carregarServicos();
+        this.carregarServicos().then();
         this.messageService.add({
           severity: 'success',
           summary: 'Serviço',

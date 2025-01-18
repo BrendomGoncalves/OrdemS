@@ -60,12 +60,14 @@
         <th [style]="{'min-width': '200px'}">Nome</th>
         <th [style]="{'min-width': '100px'}">Estoque</th>
         <th [style]="{'min-width': '100px'}">Preço de Compra</th>
+        <th [style]="{'min-width': '100px'}">Total Estoque (PC)</th>
         <th [style]="{'min-width': '100px'}">Preço de Venda</th>
+        <th [style]="{'min-width': '100px'}">Total Estoque (PV)</th>
         <th [style]="{'min-width': '100px'}">Lucro (%)</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-produto>
-      <tr>
+      <tr *ngIf="!carregandoDados">
         <td>
           <p-button (onClick)="abrirDetalhesProduto(produto)" styleClass="bg-red-600 border-0 w-1rem h-2rem"
                     [style]="{'display': 'flex', 'justify-content': 'center'}">
@@ -77,8 +79,47 @@
         </td>
         <td>{{ produto.estoque }}</td>
         <td>{{ produto.precoCompra | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+        <td>{{ produto.estoque * produto.precoCompra | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
         <td>{{ produto.precoVenda | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+        <td>{{ produto.estoque * produto.precoVenda | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
         <td>{{ (produto.lucro / produto.precoCompra) | percent }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <tr *ngIf="carregandoDados">
+        <td><p-skeleton size="3rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+      </tr>
+      <tr *ngIf="carregandoDados">
+        <td><p-skeleton size="3rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+      </tr>
+      <tr *ngIf="carregandoDados">
+        <td><p-skeleton size="3rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+      </tr>
+      <tr *ngIf="Produtos.length === 0 && !carregandoDados">
+        <td colspan="8" class="text-center text-black-alpha-50">
+          Nenhum produto cadastrado
+        </td>
       </tr>
     </ng-template>
   </p-table>
@@ -236,7 +277,7 @@
 <!--ADICIONAR PRODUTO-->
 <p-dialog
   header="Adicionar Produto"
-  [closable]="false"
+  [closable]="true"
   [modal]="true"
   [(visible)]="verAdicionarProduto"
   [style]="{width: '40rem'}"

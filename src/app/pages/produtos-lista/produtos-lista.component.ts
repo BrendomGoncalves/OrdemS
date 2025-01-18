@@ -21,6 +21,7 @@ import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
 import {generateUniqueId} from '../../ferramentas/utils';
 import {ToastModule} from 'primeng/toast';
+import {SkeletonModule} from 'primeng/skeleton';
 
 @Component({
   selector: 'app-produtos-lista',
@@ -39,7 +40,8 @@ import {ToastModule} from 'primeng/toast';
     NgIf,
     ReactiveFormsModule,
     MessageModule,
-    ToastModule
+    ToastModule,
+    SkeletonModule
   ],
   templateUrl: './produtos-lista.component.html',
   styleUrl: './produtos-lista.component.css'
@@ -56,6 +58,9 @@ export class ProdutosListaComponent implements OnInit {
   // Dialogos
   verDetalhesProduto: boolean = false; // Dialogo para ver mais detalhes de um produto
   verAdicionarProduto: boolean = false; // Dialogo para adicionar um produto
+
+  // Carregamento
+  carregandoDados: boolean = true; // Variável para controlar o carregamento de produtos
 
   constructor(
     private produtoService: ProdutosService,
@@ -82,8 +87,11 @@ export class ProdutosListaComponent implements OnInit {
   // Utiliza o serviço de produto para carregar a lista de produtos
   async carregarProdutos() {
     (await this.produtoService.getProdutos()).subscribe(produtos => {
-      this.estatisticaProdutos(produtos);
       this.Produtos = produtos;
+      setTimeout(() => {
+        this.carregandoDados = false;
+        this.estatisticaProdutos(produtos);
+      }, 1500);
     });
   }
 
@@ -113,7 +121,7 @@ export class ProdutosListaComponent implements OnInit {
     } else if (this.produtoForm.valid) {
       novoProduto.id = generateUniqueId();
       this.produtoService.addProduto(novoProduto).subscribe(() => {
-        this.carregarProdutos();
+        this.carregarProdutos().then();
         this.estatisticaProdutos(this.Produtos);
         this.fecharAdicionarProduto();
       });
@@ -131,7 +139,7 @@ export class ProdutosListaComponent implements OnInit {
     const idDeletar = this.produtoForm.get('id')?.value;
     if (this.Produtos.find(produto => produto.id === idDeletar)?.id === idDeletar) {
       this.produtoService.deleteProduto(idDeletar).subscribe(() => {
-        this.carregarProdutos();
+        this.carregarProdutos().then();
         this.fecharDetalhesProduto();
         this.messageService.add({
           severity: 'success',
@@ -167,7 +175,7 @@ export class ProdutosListaComponent implements OnInit {
     if (produtoEditado.nome !== produtoBanco.nome) {
       this.produtoService.updateProduto(produtoEditado.id, produtoEditado).subscribe(() => {
         this.editando[campo] = false;
-        this.carregarProdutos();
+        this.carregarProdutos().then();
         this.messageService.add({
           severity: 'success',
           summary: 'Sucesso',

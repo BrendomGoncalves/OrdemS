@@ -1,27 +1,24 @@
 import {Component, OnInit, signal} from '@angular/core';
 import {
-  AbstractControl,
-  AsyncValidatorFn,
   FormBuilder,
-  FormGroup,
+  FormGroup, FormsModule,
   ReactiveFormsModule,
-  ValidationErrors,
   Validators
 } from '@angular/forms';
 import {Categoria} from '../../models/categoria';
 import {CategoriasService} from '../../services/categoria/categorias.service';
-import {delay, map, Observable, of} from 'rxjs';
 import {Button, ButtonDirective} from 'primeng/button';
 import {RouterLink} from '@angular/router';
-import {CurrencyPipe, NgIf} from '@angular/common';
+import {NgIf} from '@angular/common';
 import {InputTextModule} from 'primeng/inputtext';
 import {PaginatorModule} from 'primeng/paginator';
 import {MessageService, PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
-import {generateUniqueId} from '../../ferramentas/utils';
+import {asyncValidator, generateUniqueId} from '../../ferramentas/utils';
 import {ToastModule} from 'primeng/toast';
+import {SkeletonModule} from 'primeng/skeleton';
 
 @Component({
   selector: 'app-categorias-lista',
@@ -38,7 +35,9 @@ import {ToastModule} from 'primeng/toast';
     NgIf,
     ReactiveFormsModule,
     MessageModule,
-    ToastModule
+    ToastModule,
+    FormsModule,
+    SkeletonModule
   ],
   templateUrl: './categorias-lista.component.html',
   styleUrl: './categorias-lista.component.css'
@@ -56,13 +55,16 @@ export class CategoriasListaComponent implements OnInit {
   verDetalhesCategoria: boolean = false; // Dialogo para ver detalhes de um serviço
   verAdicionarCategoria: boolean = false; // Dialogo para adicionar um
 
+  // Carregamento
+  carregandoDados = true; // Controla o carregamento de dados
+
   constructor(private categoriaService: CategoriasService,
               private fb: FormBuilder,
               private messageService: MessageService) {
     this.categoriaForm = this.fb.group({
       id: [''],
-      nome: ['', [Validators.required, Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres
-      descricao: ['', [Validators.minLength(3)], [this.asyncValidator()]] // Deve ter no mínimo 3 caracteres
+      nome: ['', [Validators.required, Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
+      descricao: ['', [Validators.minLength(3)], [asyncValidator()]] // Deve ter no mínimo 3 caracteres
     });
     this.resetarEdicao();
   }
@@ -74,8 +76,11 @@ export class CategoriasListaComponent implements OnInit {
   // Utiliza o serviço de categoria para carregar a lista de categorias
   async carregarCategorias() {
     (await this.categoriaService.getCategorias()).subscribe(categorias => {
-      this.estatisticaCategoria(categorias);
       this.Categorias = categorias;
+      setTimeout(() => {
+        this.carregandoDados = false;
+        this.estatisticaCategoria(categorias);
+      }, 1500);
     });
   }
 
@@ -84,7 +89,7 @@ export class CategoriasListaComponent implements OnInit {
     this.QCategorias.set(categorias.length);
   }
 
-  // Filtra os cliente por nome
+  // Filtra os clientes por nome
   get categoriasFiltrados(): Categoria[] {
     if (!this.filtro) {
       return this.Categorias;
@@ -104,13 +109,13 @@ export class CategoriasListaComponent implements OnInit {
         detail: 'Já existe essa categoria'
       });
       return;
-    } else if (this.categoriaForm.valid) {
+    } else if (this.categoriaForm.value.nome != '' && this.categoriaForm.value.descricao != '') {
       const novaCategoria: Categoria = this.categoriaForm.value;
       novaCategoria.id = generateUniqueId();
       let categoriaBanco: Categoria = this.Categorias.find(c => c.id === novaCategoria.id)!;
       if (categoriaBanco == undefined) {
         this.categoriaService.addCategoria(novaCategoria).subscribe(() => {
-          this.carregarCategorias();
+          this.carregarCategorias().then();
           this.estatisticaCategoria(this.Categorias);
           this.fecharAdicionarCategoria();
           this.messageService.add({
@@ -134,7 +139,7 @@ export class CategoriasListaComponent implements OnInit {
     const idDeletar = this.categoriaForm.get('id')?.value;
     if (this.Categorias.find(c => c.id === idDeletar)?.id == idDeletar) {
       this.categoriaService.deleteCategoria(idDeletar).subscribe(() => {
-        this.carregarCategorias();
+        this.carregarCategorias().then();
         this.fecharDetalhesCategoria();
         this.messageService.add({
           severity: 'success',
@@ -167,10 +172,10 @@ export class CategoriasListaComponent implements OnInit {
   salvarEdicao(campo: string) {
     const categoriaEditado = this.categoriaForm.value;
     let categoriaBanco: Categoria = this.Categorias.find(c => c.id === categoriaEditado.id)!;
-    if (categoriaEditado.nome !== categoriaBanco.nome) {
+    if (categoriaBanco) {
       this.categoriaService.updateCategoria(categoriaEditado.id, categoriaEditado).subscribe(() => {
         this.editando[campo] = false;
-        this.carregarCategorias();
+        this.carregarCategorias().then();
         this.messageService.add({
           severity: 'success',
           summary: 'Categoria',
@@ -207,17 +212,5 @@ export class CategoriasListaComponent implements OnInit {
     this.categoriaForm.reset();
     this.resetarEdicao();
     this.verDetalhesCategoria = false;
-  }
-
-  // Função de validação assíncrona
-  asyncValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      return of(control.value).pipe(
-        delay(1000), // Simulate async operation
-        map(value => {
-          return value === 'invalid' ? {invalidAsync: true} : null;
-        })
-      );
-    };
   }
 }

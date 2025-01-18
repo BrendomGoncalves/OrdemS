@@ -3,13 +3,14 @@ import {Venda} from '../../models/venda';
 import {VendasService} from '../../services/venda/vendas.service';
 import {Button, ButtonDirective} from 'primeng/button';
 import {RouterLink} from '@angular/router';
-import {CurrencyPipe, DatePipe, NgForOf, NgIf, PercentPipe} from '@angular/common';
+import {CurrencyPipe, DatePipe, NgForOf, NgIf} from '@angular/common';
 import {InputTextModule} from 'primeng/inputtext';
 import {MessageService, PrimeTemplate} from 'primeng/api';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TableModule} from 'primeng/table';
 import {DialogModule} from 'primeng/dialog';
 import {ToastModule} from 'primeng/toast';
+import {SkeletonModule} from 'primeng/skeleton';
 
 @Component({
   selector: 'app-vendas-lista',
@@ -27,7 +28,9 @@ import {ToastModule} from 'primeng/toast';
     DatePipe,
     DialogModule,
     NgForOf,
-    ToastModule
+    ToastModule,
+    NgIf,
+    SkeletonModule
   ],
   templateUrl: './vendas-lista.component.html',
   styleUrl: './vendas-lista.component.css'
@@ -50,6 +53,9 @@ export class VendasListaComponent implements OnInit {
   // Dialogos
   verDetalhesVenda: boolean = false; // Dialogo para ver mais detalhes de uma venda
 
+  // Carregamento
+  carregandoDados: boolean = true; // Variavel para mostrar se os dados estão sendo carregados
+
   constructor(
     private vendaService: VendasService,
     private messageService: MessageService) {}
@@ -60,8 +66,11 @@ export class VendasListaComponent implements OnInit {
 
   carregarVendas(){
     this.vendaService.getVendas().subscribe(vendas => {
-      this.estatisticaVendas(vendas);
       this.Vendas = vendas;
+      setTimeout(() => {
+        this.carregandoDados = false;
+        this.estatisticaVendas(vendas);
+      }, 1500);
     });
   }
 

@@ -12,11 +12,10 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {MessageModule} from 'primeng/message';
 import {RadioButtonModule} from 'primeng/radiobutton';
 import {TabViewModule} from 'primeng/tabview';
-import {AbstractControl, ValidationErrors, AsyncValidatorFn} from '@angular/forms';
-import {delay, map, Observable, of} from 'rxjs';
-import {generateUniqueId} from '../../ferramentas/utils';
+import {asyncValidator, generateUniqueId} from '../../ferramentas/utils';
 import {ToastModule} from 'primeng/toast';
 import {MessageService} from 'primeng/api';
+import {SkeletonModule} from 'primeng/skeleton';
 
 @Component({
   selector: 'app-cliente-lista',
@@ -36,14 +35,15 @@ import {MessageService} from 'primeng/api';
     MessageModule,
     RadioButtonModule,
     TabViewModule,
-    ToastModule
+    ToastModule,
+    SkeletonModule
   ],
   templateUrl: './clientes-lista.component.html',
   styleUrl: './clientes-lista.component.css'
 })
 export class ClientesListaComponent implements OnInit {
   Clientes: Cliente[] = []; // Lista de cliente
-  filtro: string = ''; // Objeto pra filtrar cliente por nome
+  filtro: string = ''; // Objeto para filtrar cliente por nome
   clienteForm: FormGroup; // Formulário de cadastro de cliente
   editando: { [key: string]: boolean } = {}; // Objeto para controlar edição de campos
   tipoPF_PJ: string = 'PF'; // Tipo de cliente (Pessoa Física ou Jurídica)
@@ -165,24 +165,27 @@ export class ClientesListaComponent implements OnInit {
     }
   ];
 
+  // Carregamento
+  carregandoDados: boolean = true;
+
   constructor(
     private clientesService: ClientesService,
     private fb: FormBuilder,
     private messageService: MessageService) {
     this.clienteForm = this.fb.group({
       id: [''],
-      nome: ['', [Validators.required, Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres, é obrigatório,
-      fantasia: ['', [Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres,
-      cnpj: ['', [Validators.minLength(18), Validators.pattern(/^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$/)], [this.asyncValidator()]], // Deve ter no mínimo 14 caracteres,
-      ie: ['', [Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)], [this.asyncValidator()]], // Deve ter no mínimo 9 caracteres,
-      cpf: ['', [Validators.minLength(11), Validators.maxLength(11), Validators.pattern(/^[0-9]{3}[0-9]{3}[0-9]{3}[0-9]{2}$/)], [this.asyncValidator()]], // Deve ter no mínimo 11 caracteres,
-      celular: ['', [Validators.minLength(13), Validators.maxLength(13), Validators.pattern(/^\([1-9]{2}\)9[0-9]{4}[0-9]{4}$/)], [this.asyncValidator()]], // Deve ter no mínimo 11 caracteres,
-      telefone: ['', [Validators.minLength(12), Validators.maxLength(12), Validators.pattern(/^\([1-9]{2}\)[0-9]{4}[0-9]{4}$/)], [this.asyncValidator()]], // Deve ter no mínimo 10 caracteres,
-      email: ['', [Validators.email], [this.asyncValidator()]], // Deve ser um email válido,
-      endereco: ['', [Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres,
-      numero: ['', [Validators.minLength(1)], [this.asyncValidator()]], // Deve ter no mínimo 1 caractere,
-      bairro: ['', [Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres,
-      cidade: ['', [Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres,
+      nome: ['', [Validators.required, Validators.minLength(3)], [asyncValidator]], // Deve ter no mínimo 3 caracteres, é obrigatório,
+      fantasia: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres,
+      cnpj: ['', [Validators.minLength(18), Validators.pattern(/^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$/)], [asyncValidator()]], // Deve ter no mínimo 14 caracteres,
+      ie: ['', [Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)], [asyncValidator()]], // Deve ter no mínimo 9 caracteres,
+      cpf: ['', [Validators.minLength(11), Validators.maxLength(11), Validators.pattern(/^[0-9]{3}[0-9]{3}[0-9]{3}[0-9]{2}$/)], [asyncValidator()]], // Deve ter no mínimo 11 caracteres,
+      celular: ['', [Validators.minLength(13), Validators.maxLength(13), Validators.pattern(/^\([1-9]{2}\)9[0-9]{4}[0-9]{4}$/)], [asyncValidator()]], // Deve ter no mínimo 11 caracteres,
+      telefone: ['', [Validators.minLength(12), Validators.maxLength(12), Validators.pattern(/^\([1-9]{2}\)[0-9]{4}[0-9]{4}$/)], [asyncValidator()]], // Deve ter no mínimo 10 caracteres,
+      email: ['', [Validators.email], [asyncValidator()]], // Deve ser um endereço eletrónico válido,
+      endereco: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres,
+      numero: ['', [Validators.minLength(1)], [asyncValidator()]], // Deve ter no mínimo 1 caractere,
+      bairro: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres,
+      cidade: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres,
       observacoes: [''],
       tipoCliente: ['PF'],
       dataCadastro: [new Date()]
@@ -197,8 +200,11 @@ export class ClientesListaComponent implements OnInit {
   // Utiliza o serviço de cliente para carregar a lista de cliente
   async carregarClientes() {
     (await this.clientesService.getClientes()).subscribe(clientes => {
-      this.estatisticaClientes(clientes);
       this.Clientes = clientes;
+      setTimeout(() => {
+        this.carregandoDados = false;
+        this.estatisticaClientes(clientes);
+      }, 1500);
     });
   }
 
@@ -207,7 +213,7 @@ export class ClientesListaComponent implements OnInit {
     this.QClientes.set(clientes.length);
   }
 
-  // Filtra os cliente por nome
+  // Filtra os clientes por nome
   get clientesFiltrados(): Cliente[] {
     if (!this.filtro) {
       return this.Clientes;
@@ -230,7 +236,7 @@ export class ClientesListaComponent implements OnInit {
     } else if (this.clienteForm.valid) {
       novoCliente.id = generateUniqueId();
       this.clientesService.addCliente(novoCliente).subscribe(() => {
-          this.carregarClientes();
+          this.carregarClientes().then();
           this.estatisticaClientes(this.Clientes);
           this.fecharAdicionarCliente();
         }
@@ -249,7 +255,7 @@ export class ClientesListaComponent implements OnInit {
     const idDeletar = this.clienteForm.get('id')?.value;
     if(this.Clientes.find(cliente => cliente.id === idDeletar)?.id === idDeletar) {
       this.clientesService.deleteCliente(idDeletar).subscribe(() => {
-          this.carregarClientes();
+          this.carregarClientes().then();
           this.fecharDetalhesCliente();
           this.messageService.add({
             severity: 'success',
@@ -286,7 +292,7 @@ export class ClientesListaComponent implements OnInit {
     if (clienteEditado.nome !== clienteBanco.nome) {
       this.clientesService.updateCliente(clienteEditado.id, clienteEditado).subscribe(() => {
           this.editando[campo] = false;
-          this.carregarClientes();
+          this.carregarClientes().then();
           this.messageService.add({
             severity: 'success',
             summary: 'Cliente',
@@ -330,17 +336,5 @@ export class ClientesListaComponent implements OnInit {
   // Recebe o index da tab
   onTabChange(index: number) {
     this.tipoPF_PJ = index === 0 ? 'PF' : 'PJ';
-  }
-
-  // Função de validação assíncrona
-  asyncValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      return of(control.value).pipe(
-        delay(1000), // Simulate async operation
-        map(value => {
-          return value === 'invalid' ? {invalidAsync: true} : null;
-        })
-      );
-    };
   }
 }
