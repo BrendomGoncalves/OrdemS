@@ -2,12 +2,12 @@ import {AbstractControl, AsyncValidatorFn, ValidationErrors} from '@angular/form
 import {delay, map, Observable, of} from 'rxjs';
 
 /**
- * Gera um id unico.
+ * Gera uma string como id unico.
  * @example const id = generateUniqueId();
- * @returns Um ID unico.
+ * @returns Um id unico.
  */
 export function generateUniqueId(): string {
-  return Math.random().toString(36).slice(2, 9);
+  return Math.random().toString(36).slice(2, 9).toUpperCase();
 }
 
 /**
