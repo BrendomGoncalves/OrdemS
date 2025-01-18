@@ -44,4 +44,20 @@ export class OrdensService {
   deleteOrdem(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  novoId() {
+    let lordens: any[] = []
+    this.getOrdens().subscribe((ordens) => {
+      lordens = ordens
+    })
+    if (lordens.length > 0) {
+      return (
+        lordens
+          .sort((a, b) => a.id
+            .localeCompare(b.id))[lordens.length - 1]
+          .id + 1)
+        .toString();
+    }
+    return "1";
+  }
 }
