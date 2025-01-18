@@ -1,1 +1,293 @@
-<p>ordem-lista works!</p>
+<!--HEADER DA PÁGINA-->
+<div class="surface-section px-4 py-5 md:px-6 lg:px-8">
+  <ul class="list-none p-0 m-0 flex align-items-center font-medium mb-3">
+    <li>
+      <a class="text-500 no-underline line-height-3 cursor-pointer" routerLink="/pagina-inicial">Página Inicial</a>
+    </li>
+    <li class="px-2">
+      <i class="pi pi-angle-right text-500 line-height-3"></i>
+    </li>
+    <li>
+      <span class="line-height-3 font-bold">Lista de Ordens de Serviço</span>
+    </li>
+  </ul>
+  <div class="flex align-items-start flex-column md:justify-content-between md:flex-row">
+    <div>
+      <div class="font-medium text-3xl text-900">ORDENS DE SERVIÇO</div>
+      <div class="flex align-items-center text-700 flex-wrap">
+        <div class="mr-5 flex align-items-center mt-3">
+          <i class="pi pi-users mr-2"></i>
+          <span>{{ QOrdens() }} Ordens</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-3 lg:mt-0">
+      <button pButton label="Nova Ordem de Serviço" class="p-button-outlined mr-2 p-button-danger"
+              icon="pi pi-file-edit"
+              routerLink="/ordem-servico"></button>
+    </div>
+  </div>
+</div>
+
+<!--ESTATISTICAS-->
+<!--<div class="flex flex-row flex-wrap justify-content-around align-items-center p-4">-->
+<!--  <p-chart type="pie"-->
+<!--           [data]="dadosPie"-->
+<!--           [options]="opcoesPie"/>-->
+<!--  <div class="bg-white border-3 border-gray-400 border-round-2xl p-1 w-15rem h-8rem">-->
+<!--    <div class="flex flex-row align-items-center gap-2">-->
+<!--      <i class="pi pi-wallet text-green-600"></i>-->
+<!--      <h3 class="text-green-600">FATURADO</h3>-->
+<!--    </div>-->
+<!--    <p class="">{{ valorTotalOrdens | currency: 'BRL':'symbol':'1.2-2':'pt-BR'}}</p>-->
+<!--  </div>-->
+<!--</div>-->
+
+<!--TABELA DE ORDENS-->
+<div class="tabela">
+  <div class="p-inputgroup">
+    <span class="p-inputgroup-addon">
+      <i class="pi pi-search"></i>
+    </span>
+    <input
+      type="text"
+      pInputText
+      placeholder="Pesquise o nome do cliente"
+      [(ngModel)]="filtro"
+    />
+  </div>
+  <p-table [value]="ordensFiltradas" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="text-center w-2rem">
+          <i class="pi pi-eye font-bold"></i>
+        </th>
+        <th class="text-left" [style]="{'min-width': '100px'}">
+          Cliente
+        </th>
+        <th class="text-center" [style]="{'min-width': '50px'}">
+          <i class="pi pi-calendar mr-1 font-bold"></i>
+          Abertura
+        </th>
+        <th class="text-center" [style]="{'min-width': '50px'}">
+          <i class="pi pi-calendar mr-1 font-bold"></i>
+          Conclusão
+        </th>
+        <th class="text-center" [style]="{'min-width': '50px'}">
+          <i class="pi pi-tag mr-1 font-bold"></i>
+          Status
+        </th>
+        <th class="text-center" [style]="{'min-width': '50px'}">
+          Valor Total
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-ordem>
+      <tr *ngIf="!carregandoDados">
+        <td>
+          <p-button (onClick)="abrirDetalhesOrdem(ordem)"
+                    styleClass="bg-red-600 border-0 w-1rem h-2rem flex justify-content-center">
+            <i class="pi pi-eye" [style]="{'font-size': '.9rem'}"></i>
+          </p-button>
+        </td>
+        <td class="white-space-nowrap text-overflow-ellipsis overflow-hidden">
+          {{ ordem.cliente.nome }}
+        </td>
+        <td class="text-center">
+          {{ ordem.dataAbertura | date: 'dd/MM/yyyy' }}
+        </td>
+        <td class="text-center">
+          {{ ordem.dataConclusao | date: 'dd/MM/yyyy' }}
+        </td>
+        @switch (ordem.status) {
+          @case ('PENDENTE') {
+            <td class="justify-content-center flex">
+              <p class="w-8rem bg-orange-400 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>
+            </td>
+          }
+          @case ('CONCLUIDO') {
+            <td class="justify-content-center flex">
+              <p class="w-8rem bg-green-600 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>
+            </td>
+          }
+          @case ('CANCELADO') {
+            <td class="justify-content-center flex">
+              <p class="w-8rem bg-red-400 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>
+            </td>
+          }
+        }
+        <td class="text-center">{{ ordem.valorTotal | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <tr *ngIf="carregandoDados">
+        <td><p-skeleton size="3rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+      </tr>
+      <tr *ngIf="carregandoDados">
+        <td><p-skeleton size="3rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+      </tr>
+      <tr *ngIf="carregandoDados">
+        <td><p-skeleton size="3rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td><p-skeleton height="4rem"></p-skeleton></td>
+      </tr>
+      <tr *ngIf="Ordens.length === 0 && !carregandoDados">
+        <td colspan="6" class="text-center text-black-alpha-50">
+          Nenhuma ordem cadastrada
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!--DETALHES ORDEM DE SERVIÇO-->
+<p-dialog header="Detalhes Ordem de Serviço #{{ ordemSelecionada.id.padStart(4, '0') }}" [closable]="false" [modal]="true" [(visible)]="verDetalhesOrdem"
+          [style]="{ width: '30rem', maxHeight: '800px', minHeight: '500px'}">
+  <div class="flex flex-column gap-4">
+    <!-- Datas de Abertura e Conclusão-->
+    <div class="flex flex-row gap-3 justify-content-around">
+      <div class="bg-red-100 p-2 flex flex-column justify-content-center align-items-center w-full gap-2">
+        <strong>Data Abertura:</strong> {{ ordemSelecionada.dataAbertura | date: 'dd/MM/yyyy' }}
+      </div>
+      <div class="bg-red-100 p-2 flex flex-column justify-content-center align-items-center w-full gap-2">
+        <strong>Data Conclusão:</strong> {{ ordemSelecionada.dataConclusao | date: 'dd/MM/yyyy' }}
+      </div>
+    </div>
+    <!-- Cliente -->
+    <div class="flex flex-column">
+      <h4 class="m-0 pb-1">Cliente:</h4>
+      <p-panel header="{{ ordemSelecionada.cliente?.nome }}" [toggleable]="true" collapsed="true">
+        <div class="flex flex-column">
+          <div class="flex flex-row align-items-center gap-2" *ngIf="ordemSelecionada.cliente?.tipoCliente == 'PJ'">
+            <label class="text-black font-bold bg-gray-200 p-2 border-round">Nome Fantasia</label>
+            <p>{{ ordemSelecionada.cliente?.fantasia }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2" *ngIf="ordemSelecionada.cliente?.tipoCliente == 'PJ'">
+            <label class="font-bold bg-gray-200 p-2 border-round">CNPJ</label>
+            <p>{{ ordemSelecionada.cliente?.cnpj }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2" *ngIf="ordemSelecionada.cliente?.tipoCliente == 'PJ'">
+            <label class="font-bold bg-gray-200 p-2 border-round">IE</label>
+            <p>{{ ordemSelecionada.cliente?.ie }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2" *ngIf="ordemSelecionada.cliente?.tipoCliente == 'PF'">
+            <label class="font-bold bg-gray-200 p-2 border-round">CPF</label>
+            <p>{{ ordemSelecionada.cliente?.cpf }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">Celular</label>
+            <p>{{ ordemSelecionada.cliente?.celular }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">Telefone</label>
+            <p>{{ ordemSelecionada.cliente?.telefone }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">E-mail</label>
+            <p>{{ ordemSelecionada.cliente?.email }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">Endereço</label>
+            <p>{{ ordemSelecionada.cliente?.endereco }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">Número</label>
+            <p>{{ ordemSelecionada.cliente?.numero }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">Cidade</label>
+            <p>{{ ordemSelecionada.cliente?.cidade }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">Observações</label>
+            <p>{{ ordemSelecionada.cliente?.observacoes }}</p>
+          </div>
+        </div>
+      </p-panel>
+    </div>
+    <!-- Equipamento -->
+    <div class="flex flex-column w-full border-bottom-1 border-gray-400">
+      <h4 class="m-0">Equipamento:</h4>
+      <p class="m-1 pl-1">{{ ordemSelecionada.equipamento }}</p>
+    </div>
+    <!-- Descrição Problema -->
+    <div class="flex flex-column w-full border-bottom-1 border-gray-400">
+      <h4 class="m-0">Problema:</h4>
+      <p class="m-1 pl-1">{{ ordemSelecionada.descricaoProblema }}</p>
+    </div>
+    <!-- Descrição Solução -->
+    <div class="flex flex-column w-full border-bottom-1 border-gray-400">
+      <h4 class="m-0">Solução:</h4>
+      <p class="m-1 pl-1">{{ ordemSelecionada.laudoTecnico }}</p>
+    </div>
+    <!-- Status -->
+    <div class="flex flex-column w-full border-bottom-1 border-gray-400">
+      <h4 class="m-0">Status:</h4>
+      <p class="m-1 pl-1">{{ ordemSelecionada.status }}</p>
+    </div>
+    <!-- Valor Total -->
+    <div class="flex flex-column w-full border-bottom-1 border-gray-400">
+      <h4 class="m-0">Valor Total:</h4>
+      <p class="m-1 pl-1">{{ ordemSelecionada.valorTotal | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</p>
+    </div>
+    <!-- Produtos Utilizados -->
+    <div class="flex flex-column justify-content-between align-items-center border-bottom-2 border-gray-400">
+      <div class="flex flex-column justify-content-start w-full gap-2">
+        <strong>Produtos:</strong>
+      </div>
+      <div *ngIf="ordemSelecionada.produtosUtilizados.length > 0; else nenhumProduto" class="flex flex-column w-full">
+        <div *ngFor="let produto of ordemSelecionada.produtosUtilizados"
+             class="flex flex-row justify-content-start w-full pl-1 m-1 gap-2">
+          {{ produto.quantidadeVenda }}x {{ produto.nome }}
+        </div>
+      </div>
+      <ng-template #nenhumProduto>
+        <div class="flex justify-content-start w-full gap-2 m-1 pl-2">Nenhum produto adicionado.</div>
+      </ng-template>
+    </div>
+    <!-- Serviço(s) -->
+    <div class="flex flex-column justify-content-between align-items-center border-bottom-2 border-gray-400">
+      <div class="flex flex-column justify-content-start w-full gap-2">
+        <strong>{{ ordemSelecionada.servicos.length > 1 ? 'Serviços:' : 'Serviço:' }}</strong>
+      </div>
+      <div *ngIf="ordemSelecionada.servicos.length > 0; else nenhumServico" class="flex flex-column w-full">
+        <div *ngFor="let servico of ordemSelecionada.servicos"
+             class="flex flex-row justify-content-start w-full gap-2 m-1 pl-1">
+          {{ servico.nome }}
+        </div>
+      </div>
+      <ng-template #nenhumServico>
+        <div class="flex justify-content-start w-full gap-2 m-1 pl-2">
+          Nenhum serviço adicionado.
+        </div>
+      </ng-template>
+    </div>
+    <!-- Pagamento -->
+    <div class="flex flex-column w-full border-bottom-1 border-gray-400">
+      <h4 class="m-0">Forma de Pagamento:</h4>
+      <p class="m-1 pl-1">{{ ordemSelecionada.pagamento.metodoPagamento }}</p>
+      <p class="m-1 pl-1">Obs: {{ ordemSelecionada.pagamento.observacoes }}</p>
+    </div>
+
+    <div class="flex justify-content-center gap-3">
+      <p-button label="Editar" severity="info" routerLink="/ordem-servico"/>
+      <p-button label="Deletar" severity="danger" (onClick)="deletarOrdem()"/>
+      <p-button label="Cancelar" severity="secondary" (onClick)="fecharDetalhesOrdem()"/>
+    </div>
+  </div>
+</p-dialog>
+
+<p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>
