@@ -1,11 +1,11 @@
 import {MetodoPagamentoEnum} from '../enums/metodoPagamentoEnum';
 import {StatusPagamentoEnum} from '../enums/statusPagamentoEnum';
+import {Desconto} from './desconto';
 
 export interface Pagamento{
-  id: string
-  valorPago: number
   dataPagamento: Date | null
   metodoPagamento: MetodoPagamentoEnum
   statusPagamento: StatusPagamentoEnum
+  descontos: Desconto[]
   observacoes: string
 }
