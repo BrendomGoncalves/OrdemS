@@ -7,5 +7,6 @@ export interface Pagamento{
   metodoPagamento: MetodoPagamentoEnum
   statusPagamento: StatusPagamentoEnum
   descontos: Desconto[]
+  descontoTotal: number
   observacoes: string
 }
