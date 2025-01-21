@@ -1,114 +1,159 @@
-<p-toolbar [style]="{ 'border-radius': '1rem', 'background-color': '#252525'}">
-  <ng-template pTemplate="start">
-    <img alt="logotipo" routerLink="/pagina-inicial" src="assets/logoBranco.svg" class="cursor-pointer" width="80px"/>
-  </ng-template>
-  <ng-template pTemplate="end">
-    <div class="flex flex-wrap align-items-center gap-3 toolbar-horizontal">
-      <button
-        class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-        pTooltip="Página Inicial"
-        tooltipPosition="bottom"
-        routerLink="/pagina-inicial">
-        <i class="pi pi-home text-2xl" routerLinkActive="text-red-500"></i>
-      </button>
-      <button
-        class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-        pTooltip="Ordem de Serviço"
-        tooltipPosition="bottom"
-        routerLink="/ordens">
-        <i class="pi pi-file-edit text-2xl" routerLinkActive="text-red-500"></i>
-      </button>
-      <button
-        class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-        pTooltip="Produtos"
-        tooltipPosition="bottom"
-        routerLink="/produtos">
-        <i class="pi pi-box text-2xl" routerLinkActive="text-red-500"></i>
-      </button>
-      <button
-        class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-        pTooltip="Clientes"
-        tooltipPosition="bottom"
-        routerLink="/clientes">
-        <i class="pi pi-users text-2xl" routerLinkActive="text-red-500"></i>
-      </button>
-      <button
-        class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-        pTooltip="Serviços"
-        tooltipPosition="bottom"
-        routerLink="/servicos">
-        <i class="pi pi-desktop text-2xl" routerLinkActive="text-red-500"></i>
-      </button>
-      <button
-        class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-        pTooltip="Categorias"
-        tooltipPosition="bottom"
-        routerLink="/categorias">
-        <i class="pi pi-tags text-2xl" routerLinkActive="text-red-500"></i>
-      </button>
-    </div>
-    <div class="toolbar-top">
-      <p-button
-        [outlined]="true"
-        label="MENU"
-        [rounded]="true"
-        severity="danger"
-        type="button"
-        (onClick)="sidebarVisible3 = true"
-        icon="pi pi-bars"/>
-    </div>
-  </ng-template>
-</p-toolbar>
-
-<p-sidebar [(visible)]="sidebarVisible3" position="top" [style]="{'background-color': '#252525'}" showCloseIcon="false">
-  <div class="flex flex-wrap align-items-center justify-content-center gap-4">
-    <button
-      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-      pTooltip="Página Inicial"
-      tooltipPosition="bottom"
-      (click)="sidebarVisible3 = false"
-      routerLink="/pagina-inicial">
-      <i class="pi pi-home text-4xl" routerLinkActive="text-red-500"></i>
-    </button>
-    <button
-      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-      pTooltip="Ordem de Serviço"
-      tooltipPosition="bottom"
-      (click)="sidebarVisible3 = false"
-      routerLink="/os">
-      <i class="pi pi-file-edit text-4xl" routerLinkActive="text-red-500"></i>
-    </button>
-    <button
-      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-      pTooltip="Produtos"
-      tooltipPosition="bottom"
-      (click)="sidebarVisible3 = false"
-      routerLink="/produtos">
-      <i class="pi pi-box text-4xl" routerLinkActive="text-red-500"></i>
-    </button>
-    <button
-      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-      pTooltip="Clientes"
-      tooltipPosition="bottom"
-      (click)="sidebarVisible3 = false"
-      routerLink="/clientes">
-      <i class="pi pi-users text-4xl" routerLinkActive="text-red-500"></i>
-    </button>
-    <button
-      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-      pTooltip="Serviços"
-      tooltipPosition="bottom"
-      (click)="sidebarVisible3 = false"
-      routerLink="/servicos">
-      <i class="pi pi-desktop text-4xl" routerLinkActive="text-red-500"></i>
-    </button>
-    <button
-      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"
-      pTooltip="Categorias"
-      tooltipPosition="bottom"
-      (click)="sidebarVisible3 = false"
-      routerLink="/categorias">
-      <i class="pi pi-tags text-4xl" routerLinkActive="text-red-500"></i>
-    </button>
+<nav class="navbar">
+  <div class="flex justify-content-center mb-5 mt-3">
+    <img alt="logotipo" routerLink="/pagina-inicial" src="assets/logoBranco.svg" class="cursor-pointer" width="60px"/>
   </div>
-</p-sidebar>
+  <ul class="navbar__menu">
+    <li class="navbar__item">
+      <a routerLink="/pagina-inicial" class="navbar__link">
+        <i class="pi pi-home text-2xl" routerLinkActive="text-red-300"></i>
+        <span>Página Inicial</span>
+      </a>
+    </li>
+    <li class="navbar__item">
+      <a routerLink="/ordens" class="navbar__link">
+        <i class="pi pi-file-edit text-2xl" routerLinkActive="text-red-300"></i>
+        <span>Ordem de Serviço</span>
+      </a>
+    </li>
+    <li class="navbar__item">
+      <a routerLink="/produtos" class="navbar__link">
+        <i class="pi pi-box text-2xl" routerLinkActive="text-red-300"></i>
+        <span>Produtos</span>
+      </a>
+    </li>
+    <li class="navbar__item">
+      <a routerLink="/clientes" class="navbar__link">
+        <i class="pi pi-users text-2xl" routerLinkActive="text-red-300"></i>
+        <span>Clientes</span>
+      </a>
+    </li>
+    <li class="navbar__item">
+      <a routerLink="/servicos" class="navbar__link">
+        <i class="pi pi-desktop text-2xl" routerLinkActive="text-red-300"></i>
+        <span>Serviços</span>
+      </a>
+    </li>
+    <li class="navbar__item">
+      <a routerLink="/categorias" class="navbar__link">
+        <i class="pi pi-tags text-2xl" routerLinkActive="text-red-300"></i>
+        <span>Categorias</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!--<p-toolbar styleClass="border-round-xl bg-black-alpha-90 xl:justify-content-around">-->
+<!--  <ng-template pTemplate="start">-->
+<!--    <img alt="logotipo" routerLink="/pagina-inicial" src="assets/logoBranco.svg" class="cursor-pointer" width="80px"/>-->
+<!--  </ng-template>-->
+<!--  <ng-template pTemplate="end">-->
+<!--    <div class="flex flex-wrap align-items-center gap-3 toolbar-horizontal">-->
+<!--      <button-->
+<!--        class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"-->
+<!--        pTooltip="Página Inicial"-->
+<!--        tooltipPosition="bottom"-->
+<!--        routerLink="/pagina-inicial">-->
+<!--        <i class="pi pi-home text-2xl" routerLinkActive="text-red-500"></i>-->
+<!--      </button>-->
+<!--      <button-->
+<!--        class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"-->
+<!--        pTooltip="Ordem de Serviço"-->
+<!--        tooltipPosition="bottom"-->
+<!--        routerLink="/ordens">-->
+<!--        <i class="pi pi-file-edit text-2xl" routerLinkActive="text-red-500"></i>-->
+<!--      </button>-->
+<!--      <button-->
+<!--        class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"-->
+<!--        pTooltip="Produtos"-->
+<!--        tooltipPosition="bottom"-->
+<!--        routerLink="/produtos">-->
+<!--        <i class="pi pi-box text-2xl" routerLinkActive="text-red-500"></i>-->
+<!--      </button>-->
+<!--      <button-->
+<!--        class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"-->
+<!--        pTooltip="Clientes"-->
+<!--        tooltipPosition="bottom"-->
+<!--        routerLink="/clientes">-->
+<!--        <i class="pi pi-users text-2xl" routerLinkActive="text-red-500"></i>-->
+<!--      </button>-->
+<!--      <button-->
+<!--        class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"-->
+<!--        pTooltip="Serviços"-->
+<!--        tooltipPosition="bottom"-->
+<!--        routerLink="/servicos">-->
+<!--        <i class="pi pi-desktop text-2xl" routerLinkActive="text-red-500"></i>-->
+<!--      </button>-->
+<!--      <button-->
+<!--        class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"-->
+<!--        pTooltip="Categorias"-->
+<!--        tooltipPosition="bottom"-->
+<!--        routerLink="/categorias">-->
+<!--        <i class="pi pi-tags text-2xl" routerLinkActive="text-red-500"></i>-->
+<!--      </button>-->
+<!--    </div>-->
+<!--    <div class="toolbar-top">-->
+<!--      <p-button-->
+<!--        [outlined]="true"-->
+<!--        label="MENU"-->
+<!--        [rounded]="true"-->
+<!--        severity="danger"-->
+<!--        type="button"-->
+<!--        (onClick)="sidebarVisible3 = true"-->
+<!--        icon="pi pi-bars"/>-->
+<!--    </div>-->
+<!--  </ng-template>-->
+<!--</p-toolbar>-->
+
+<!--<p-sidebar [(visible)]="sidebarVisible3" position="top" styleClass="bg-black-alpha-90" showCloseIcon="false">-->
+<!--  <div class="flex flex-wrap align-items-center justify-content-center gap-4">-->
+<!--    <button-->
+<!--      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"-->
+<!--      pTooltip="Página Inicial"-->
+<!--      tooltipPosition="bottom"-->
+<!--      (click)="sidebarVisible3 = false"-->
+<!--      routerLink="/pagina-inicial">-->
+<!--      <i class="pi pi-home text-4xl" routerLinkActive="text-red-500"></i>-->
+<!--    </button>-->
+<!--    <button-->
+<!--      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"-->
+<!--      pTooltip="Ordem de Serviço"-->
+<!--      tooltipPosition="bottom"-->
+<!--      (click)="sidebarVisible3 = false"-->
+<!--      routerLink="/os">-->
+<!--      <i class="pi pi-file-edit text-4xl" routerLinkActive="text-red-500"></i>-->
+<!--    </button>-->
+<!--    <button-->
+<!--      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"-->
+<!--      pTooltip="Produtos"-->
+<!--      tooltipPosition="bottom"-->
+<!--      (click)="sidebarVisible3 = false"-->
+<!--      routerLink="/produtos">-->
+<!--      <i class="pi pi-box text-4xl" routerLinkActive="text-red-500"></i>-->
+<!--    </button>-->
+<!--    <button-->
+<!--      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"-->
+<!--      pTooltip="Clientes"-->
+<!--      tooltipPosition="bottom"-->
+<!--      (click)="sidebarVisible3 = false"-->
+<!--      routerLink="/clientes">-->
+<!--      <i class="pi pi-users text-4xl" routerLinkActive="text-red-500"></i>-->
+<!--    </button>-->
+<!--    <button-->
+<!--      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"-->
+<!--      pTooltip="Serviços"-->
+<!--      tooltipPosition="bottom"-->
+<!--      (click)="sidebarVisible3 = false"-->
+<!--      routerLink="/servicos">-->
+<!--      <i class="pi pi-desktop text-4xl" routerLinkActive="text-red-500"></i>-->
+<!--    </button>-->
+<!--    <button-->
+<!--      class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200"-->
+<!--      pTooltip="Categorias"-->
+<!--      tooltipPosition="bottom"-->
+<!--      (click)="sidebarVisible3 = false"-->
+<!--      routerLink="/categorias">-->
+<!--      <i class="pi pi-tags text-4xl" routerLinkActive="text-red-500"></i>-->
+<!--    </button>-->
+<!--  </div>-->
+<!--</p-sidebar>-->
+

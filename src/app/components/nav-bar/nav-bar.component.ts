@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ToolbarModule} from 'primeng/toolbar';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {SidebarModule} from 'primeng/sidebar';
@@ -17,8 +17,8 @@ import {TooltipModule} from 'primeng/tooltip';
     TooltipModule
   ],
   templateUrl: './nav-bar.component.html',
-  styleUrl: './nav-bar.component.css'
+  styleUrl: './nav-bar.component.scss'
 })
-export class NavBarComponent {
-  sidebarVisible3: boolean = false;
+export class NavBarComponent{
+  // sidebarVisible3: boolean = false;
 }
