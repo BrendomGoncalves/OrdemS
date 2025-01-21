@@ -1,1 +1,680 @@
-<p>ordem-servico works!</p>
+<!--HEADER DA PÁGINA-->
+<div class="surface-section px-4 py-5 md:px-6 lg:px-8" xmlns="http://www.w3.org/1999/html">
+  <ul class="list-none p-0 m-0 flex align-items-center font-medium mb-3">
+    <li>
+      <a class="text-500 no-underline line-height-3 cursor-pointer" routerLink="/pagina-inicial">Página Inicial</a>
+    </li>
+    <li class="px-2">
+      <i class="pi pi-angle-right text-500 line-height-3"></i>
+    </li>
+    <li>
+      <span class="text-900 line-height-3 cursor-pointer" routerLink="/ordens">Lista de Ordens de Serviço</span>
+    </li>
+    <li class="px-2">
+      <i class="pi pi-angle-right text-500 line-height-3"></i>
+    </li>
+    <li>
+      <span class="line-height-3 font-bold">Ordem de Serviço</span>
+    </li>
+  </ul>
+  <div class="flex align-items-start flex-column md:justify-content-between md:flex-row">
+    <div>
+      <div class="font-medium text-3xl text-900">
+        ORDEM DE SERVIÇO
+      </div>
+    </div>
+    <div class="flex mt-3 gap-3 lg:mt-0">
+      <button pButton
+              label="Voltar"
+              class="p-button-outlined p-button-warning"
+              icon="pi pi-arrow-left"
+              routerLink="/ordens">
+      </button>
+    </div>
+  </div>
+</div>
+
+<!--CONTENT VENDA DE PRODUTO-->
+<div class="card flex justify-content-center" style="height: 100%">
+  <p-stepper [linear]="true">
+    <p-stepperPanel header="CLIENTE">
+      <ng-template pTemplate="content" let-nextCallback="nextCallback">
+        <div class="flex flex-column h-full" style="width: calc(100vw - 100px);max-width: 1400px">
+          <div
+            class="border-2 border-dashed surface-border border-round surface-ground p-4 flex flex-column justify-content-center gap-5 lg:flex-row">
+            <div class="flex flex-column w-full">
+              <p style="font-size: 1.2rem" class="m-0 mb-2">Cliente Selecionado:</p>
+              <p-dropdown
+                [options]="listaClientes"
+                [(ngModel)]="clienteSelecionado"
+                (onClear)="limparClienteSelecionado()"
+                optionLabel="nome"
+                [filter]="true"
+                filterBy="nome"
+                [showClear]="true"
+                styleClass="w-full h-4rem align-items-center"
+                placeholder="Selecione o cliente">
+                <ng-template pTemplate="selectedItem" let-opcaoSelecionada>
+                  <div class="flex align-items-center gap-2">
+                    <div>{{ opcaoSelecionada.nome }}</div>
+                  </div>
+                </ng-template>
+                <ng-template let-cliente pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                    <div>{{ cliente.nome }}</div>
+                  </div>
+                </ng-template>
+              </p-dropdown>
+              <div class="card w-full p-3">
+                <p-accordion>
+                  <p-accordionTab [header]="clienteSelecionado.nome" *ngIf="clienteSelecionado != null">
+                    <div class="flex flex-column">
+                      <div class="flex flex-row align-items-center gap-2"
+                           *ngIf="clienteSelecionado.tipoCliente == 'PJ'">
+                        <label class="text-black font-bold bg-gray-200 p-2 border-round">Nome Fantasia:</label>
+                        <p>{{ clienteSelecionado.fantasia }}</p>
+                      </div>
+                      <div class="flex flex-row align-items-center gap-2"
+                           *ngIf="clienteSelecionado?.tipoCliente == 'PJ'">
+                        <label class="font-bold bg-gray-200 p-2 border-round">CNPJ:</label>
+                        <p>{{ clienteSelecionado.cnpj }}</p>
+                      </div>
+                      <div class="flex flex-row align-items-center gap-2"
+                           *ngIf="clienteSelecionado?.tipoCliente == 'PJ'">
+                        <label class="font-bold bg-gray-200 p-2 border-round">IE:</label>
+                        <p>{{ clienteSelecionado.ie }}</p>
+                      </div>
+                      <div class="flex flex-row align-items-center gap-2"
+                           *ngIf="clienteSelecionado.tipoCliente == 'PF'">
+                        <label class="font-bold bg-gray-200 p-2 border-round">CPF:</label>
+                        <p>{{ clienteSelecionado.cpf }}</p>
+                      </div>
+                      <div class="flex flex-row align-items-center gap-2">
+                        <label class="font-bold bg-gray-200 p-2 border-round">Celular:</label>
+                        <p>{{ clienteSelecionado.celular }}</p>
+                      </div>
+                      <div class="flex flex-row align-items-center gap-2">
+                        <label class="font-bold bg-gray-200 p-2 border-round">Telefone:</label>
+                        <p>{{ clienteSelecionado.telefone }}</p>
+                      </div>
+                      <div class="flex flex-row align-items-center gap-2">
+                        <label class="font-bold bg-gray-200 p-2 border-round">E-mail:</label>
+                        <p>{{ clienteSelecionado.email }}</p>
+                      </div>
+                      <div class="flex flex-row align-items-center gap-2">
+                        <label class="font-bold bg-gray-200 p-2 border-round">Endereço:</label>
+                        <p>{{ clienteSelecionado.endereco }}</p>
+                      </div>
+                      <div class="flex flex-row align-items-center gap-2">
+                        <label class="font-bold bg-gray-200 p-2 border-round">Número:</label>
+                        <p>{{ clienteSelecionado.numero }}</p>
+                      </div>
+                      <div class="flex flex-row align-items-center gap-2">
+                        <label class="font-bold bg-gray-200 p-2 border-round">Cidade:</label>
+                        <p>{{ clienteSelecionado.cidade }}</p>
+                      </div>
+                      <div class="flex flex-row align-items-center gap-2">
+                        <label class="font-bold bg-gray-200 p-2 border-round">Observações:</label>
+                        <p>{{ clienteSelecionado.observacoes }}</p>
+                      </div>
+                    </div>
+                  </p-accordionTab>
+                </p-accordion>
+                <p *ngIf="clienteSelecionado == null" class="text-black-alpha-50 text-center" style="font-size: 1.2rem">
+                  Nenhum cliente selecionado</p>
+              </div>
+            </div>
+            <hr>
+            <div class="flex flex-column gap-4">
+              <!--EQUIPAMENTO-->
+              <div class="flex flex-column w-full">
+                <p style="font-size: 1.1rem" class="m-0 mb-2">Equipamento(s):</p>
+                <textarea pInputTextarea style="font-size: 1.1rem" rows="4" cols="50"
+                          [(ngModel)]="ordemServico.equipamento"></textarea>
+              </div>
+              <!--DEFEITOS RELATADOS-->
+              <div class="flex flex-column w-full">
+                <p style="font-size: 1.1rem" class="m-0 mb-2">Defeitos Relatados:</p>
+                <textarea pInputTextarea style="font-size: 1.1rem" rows="4" cols="50"
+                          [(ngModel)]="ordemServico.descricaoProblema"></textarea>
+              </div>
+
+              <!--PAGAMENTO-->
+              <p style="font-size: 1.2rem" class="m-0 mb-2 text-center font-bold">PAGAMENTO</p>
+              <div class="flex flex-column md:flex-row">
+                <!--DATA PAGAMENTO-->
+                <div class="flex flex-column">
+                  <p style="font-size: 1.1rem" class="m-0 mb-2">Data:</p>
+                  <p-calendar
+                    styleClass="w-12rem"
+                    [(ngModel)]="ordemServico.pagamento.dataPagamento"
+                    [showIcon]="true"
+                    inputId="buttondisplay"
+                    dateFormat="dd/mm/yy"
+                    [showOnFocus]="false"/>
+                </div>
+                <!--METODO E STATUS-->
+                <div class="flex flex-column justify-content-around gap-3 w-full md:flex-row">
+                  <!--METODO PAGAMENTO-->
+                  <div class="flex flex-column">
+                    <p style="font-size: 1.1rem" class="m-0 mb-2">Método:</p>
+                    <p-listbox
+                      [options]="Object.values(MetodoPagamentoEnum)"
+                      [(ngModel)]="ordemServico.pagamento.metodoPagamento"
+                      optionLabel="name"
+                      [style]="{ width: '14rem' }">
+                      <ng-template let-metodo pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                          @if (metodo == MetodoPagamentoEnum.EM_MANUTENCAO) {
+                            <i class="pi pi-clock font-bold" style="color: orange"></i>
+                            <div class="font-bold">{{ metodo }}</div>
+                          } @else if (metodo == MetodoPagamentoEnum.DINHEIRO) {
+                            <i class="pi pi-money-bill font-bold" style="color: green"></i>
+                            <div class="font-bold">{{ metodo }}</div>
+                          } @else if (metodo == MetodoPagamentoEnum.CARTAO) {
+                            <i class="pi pi-credit-card font-bold" style="color: blue"></i>
+                            <div class="font-bold">{{ metodo }}</div>
+                          } @else {
+                            <i class="pi pi-dollar font-bold" style="color: gray"></i>
+                            <div class="font-bold">{{ metodo }}</div>
+                          }
+                        </div>
+                      </ng-template>
+                    </p-listbox>
+                  </div>
+                  <!--STATUS PAGAMENTO-->
+                  <div class="flex flex-column">
+                    <p style="font-size: 1.1rem" class="m-0 mb-2">Status:</p>
+                    <p-listbox
+                      [options]="Object.values(StatusPagamentoEnum)"
+                      [(ngModel)]="ordemServico.pagamento.statusPagamento"
+                      optionLabel="name"
+                      [style]="{ width: '14rem' }">
+                      <ng-template let-status pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                          @if (status == StatusPagamentoEnum.PAGO) {
+                            <i class="pi pi-check-circle font-bold" style="color: green"></i>
+                            <div class="font-bold">{{ status }}</div>
+                          } @else if (status == StatusPagamentoEnum.EM_MANUTENCAO) {
+                            <i class="pi pi-clock font-bold" style="color: orange"></i>
+                            <div class="font-bold">{{ status }}</div>
+                          } @else {
+                            <i class="pi pi-times-circle font-bold" style="color: red"></i>
+                            <div class="font-bold">{{ status }}</div>
+                          }
+                        </div>
+                      </ng-template>
+                    </p-listbox>
+                  </div>
+                </div>
+              </div>
+              <!--OBSERVACOES-->
+              <div class="flex flex-column w-full">
+                <p style="font-size: 1.1rem" class="m-0 mb-2">Descrição:</p>
+                <textarea pInputTextarea style="font-size: 1.1rem" rows="4" cols="50"
+                          [(ngModel)]="ordemServico.pagamento.observacoes"></textarea>
+              </div>
+              <!--DESCONTOS-->
+              <div class="flex flex-column w-full">
+                <p style="font-size: 1.1rem" class="m-0 mb-2">Descontos:</p>
+                <div class="flex flex-column align-items-start gap-3 w-full md:flex-row md:align-items-center">
+                  <p-inputNumber
+                    [(ngModel)]="descontoAdicionado.valor"
+                    [showButtons]="false"
+                    inputId="stacked"
+                    mode="currency"
+                    currency="BRL"/>
+                  <textarea pInputTextarea style="font-size: 1.1rem;" rows="1" cols="40"
+                            [(ngModel)]="descontoAdicionado.descricao" placeholder="Desconto da loja"></textarea>
+                  <p-button styleClass="w-3rem h-3rem" icon="pi pi-plus" outlined (onClick)="adicionarDesconto()"
+                            [disabled]="descontoAdicionado.valor === 0"></p-button>
+                </div>
+                <div>
+                  <p-table [value]="ordemServico.pagamento.descontos"
+                           *ngIf="ordemServico.pagamento.descontos.length > 0"
+                           [style]="{'max-width': '700px'}">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th>Valor</th>
+                        <th>Descrição</th>
+                        <th class="text-center"><i class="pi pi-trash"></i></th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-desconto>
+                      <tr>
+                        <td>{{ desconto.valor | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+                        <td class="max-w-12rem overflow-hidden text-overflow-ellipsis">{{ desconto.descricao }}</td>
+                        <td class="text-center">
+                          <p-button styleClass="w-2rem h-2rem" icon="pi pi-trash" severity="danger"
+                                    (onClick)="deletarDesconto(desconto)"></p-button>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex p-3 justify-content-end w-full">
+            <p-button
+              label="Próximo"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              [disabled]="clienteSelecionado == null || ordemServico.equipamento == '' || ordemServico.descricaoProblema == ''"
+              (onClick)="nextCallback.emit(); ordemServico.cliente == null ? ordemServico.cliente = clienteSelecionado : '';"/>
+          </div>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel header="SERVIÇO">
+      <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
+        <div class="flex flex-column h-full" style="width: calc(100vw - 100px);max-width: 1400px">
+          <div
+            class="border-2 border-dashed surface-border border-round surface-ground flex justify-content-around align-items-center font-medium flex-column pt-4 gap-3">
+            <div class="flex flex-column gap-2 lg:flex-row">
+              <p-listbox
+                [options]="listaServicos"
+                [(ngModel)]="servicosSelecionados"
+                (ngModelChange)="calcularTotalServicos()"
+                [multiple]="true"
+                optionLabel="nome"
+                [filter]="true"
+                [style]="{ width: '30rem', fontSize: '1.3rem' }"
+                [listStyle]="{'min-height': '300px'}"/>
+              <div class="card w-full p-3">
+                <div class="flex flex-row justify-content-between pl-3 pr-3">
+                  <h4>Serviços Selecionados</h4>
+                  <h4 *ngIf="servicosSelecionados.length > 0">Quantidade</h4>
+                </div>
+                <p-accordion *ngIf="servicosSelecionados.length > 0">
+                  <div *ngFor="let servico of servicosSelecionados" class="flex flex-row gap-1">
+                    <p-accordionTab [header]="servico.nome" class="w-full">
+                      <div class="flex flex-column">
+                        <div class="flex flex-row align-items-center gap-2">
+                          <label class="text-black font-bold bg-gray-200 p-2 border-round">Preço:</label>
+                          <p>{{ servico.precoVenda | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</p>
+                        </div>
+                        <div class="flex flex-row align-items-center gap-2">
+                          <label class="font-bold bg-gray-200 p-2 border-round">Categoria:</label>
+                          <p>{{ servico.categoria.nome }}</p>
+                        </div>
+                        <div class="flex flex-row align-items-center gap-2">
+                          <label class="font-bold bg-gray-200 p-2 border-round">Observações:</label>
+                          <p>{{ servico.observacoes }}</p>
+                        </div>
+                      </div>
+                    </p-accordionTab>
+                    <div class="flex flex-row align-items-center gap-2">
+                      <p-button (click)="diminuirQuantidadeServico(servico.id)" outlined severity="secondary"
+                                icon="pi pi-minus" styleClass="w-2rem h-2rem"/>
+                      <p
+                        class="m-0 w-4rem h-2rem flex align-items-center justify-content-center border-1 border-gray-300 hover:border-gray-600"
+                        style="font-size: 1.3rem">{{ servico.quantidadeVenda || '0' }}</p>
+                      <p-button (click)="aumentarQuantidadeServico(servico.id)" outlined severity="secondary"
+                                icon="pi pi-plus"
+                                styleClass="w-2rem h-2rem"/>
+                    </div>
+                  </div>
+                </p-accordion>
+                <p *ngIf="servicosSelecionados.length == 0">Nenhum serviço selecionado</p>
+              </div>
+            </div>
+            <div class="w-full flex flex-row justify-content-end align-items-end p-2 border-top-1 border-gray-300">
+              <h3 class="m-0 w-5rem text-center">TOTAL:</h3>
+              <h3 class="m-0 w-8rem text-center">{{ totalServicos | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</h3>
+            </div>
+          </div>
+          <div class="flex pl-3 pr-3 pt-4 justify-content-between w-full">
+            <p-button
+              label="Voltar"
+              icon="pi pi-arrow-left"
+              iconPos="left"
+              (onClick)="prevCallback.emit()"/>
+            <p-button
+              (click)="limparServicosSelecionados()"
+              [disabled]="servicosSelecionados.length == 0"
+              icon="pi pi-trash"
+              label="Limpar Tudo"/>
+            <p-button
+              label="Próximo"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              [disabled]="servicosSelecionados.length == 0"
+              (onClick)="nextCallback.emit();ordemServico.servicos = servicosSelecionados"/>
+          </div>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel header="TECNICO">
+      <ng-template pTemplate="content" let-nextCallback="nextCallback" let-prevCallback="prevCallback">
+        <div class="flex flex-column h-full" style="width: calc(100vw - 100px);max-width: 1400px">
+          <div
+            class="border-2 border-dashed surface-border border-round surface-ground p-4 gap-5 flex flex-column lg:flex-row">
+            <div class="flex flex-column align-items-start gap-5 p-1">
+              <!--LAUDO TECNICO-->
+              <div class="flex flex-column w-full">
+                <p style="font-size: 1.2rem" class="m-0 mb-2">Laudo Técnico:</p>
+                <textarea style="font-size: 1.1rem" rows="4" cols="30"
+                          [(ngModel)]="ordemServico.laudoTecnico"></textarea>
+              </div>
+              <!--STATUS, DATA ABERTURA E DATA ENTREGA-->
+              <div class="w-full flex flex-row justify-content-around lg:flex-column gap-2">
+                <!--STATUS-->
+                <div class="flex flex-column">
+                  <p style="font-size: 1.2rem" class="m-0 mb-2">Status:</p>
+                  <p-listbox
+                    [options]="Object.values(StatusOrdemServicoEnum)"
+                    [(ngModel)]="ordemServico.status"
+                    optionLabel="name"
+                    [listStyle]="{'min-height': '12rem'}"
+                    [style]="{ width: '16rem' }">
+                    <ng-template let-s pTemplate="item">
+                      <div class="flex align-items-center gap-2">
+                        @if (s == StatusOrdemServicoEnum.CONCLUIDO) {
+                          <i class="pi pi-check-circle font-bold" style="color: green"></i>
+                          <div class="font-bold">{{ s }}</div>
+                        } @else if (s == StatusOrdemServicoEnum.EM_ANDAMENTO) {
+                          <i class="pi pi-clock font-bold" style="color: orange"></i>
+                          <div class="font-bold">{{ s }}</div>
+                        } @else if (s == StatusOrdemServicoEnum.AGUARDANDO_PECAS) {
+                          <i class="pi pi-box font-bold" style="color: blue"></i>
+                          <div class="font-bold">{{ s }}</div>
+                        } @else {
+                          <i class="pi pi-times-circle font-bold" style="color: red"></i>
+                          <div class="font-bold">{{ s }}</div>
+                        }
+                      </div>
+                    </ng-template>
+                  </p-listbox>
+                </div>
+                <!--DATA ABERTURA E DATA ENTREGA-->
+                <div class="flex flex-column lg:flex-row justify-content-around gap-3 mt-3">
+                  <!--DATA ABERTURA-->
+                  <div class="flex flex-column">
+                    <p style="font-size: 1.1rem" class="m-0 mb-2">Data de Abertura:</p>
+                    <p-calendar
+                      styleClass="w-12rem"
+                      [(ngModel)]="ordemServico.dataAbertura"
+                      [showIcon]="true"
+                      inputId="buttondisplay"
+                      dateFormat="dd/mm/yy"
+                      [showOnFocus]="false"/>
+                  </div>
+                  <!--DATA ENTREGA-->
+                  <div class="flex flex-column">
+                    <p style="font-size: 1.1rem" class="m-0 mb-2">Data de Entrega:</p>
+                    <p-calendar
+                      styleClass="w-12rem"
+                      [(ngModel)]="ordemServico.dataConclusao"
+                      [showIcon]="true"
+                      inputId="buttondisplay"
+                      dateFormat="dd/mm/yy"
+                      (onSelect)="verificarDataEntrega()"
+                      [showOnFocus]="false"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="flex flex-column w-full">
+              <div class="flex flex-column gap-2 align-items-center">
+                <p-listbox
+                  [options]="listaProdutos"
+                  [(ngModel)]="produtosSelecionados"
+                  (ngModelChange)="calcularTotalProdutos()"
+                  [multiple]="true"
+                  optionLabel="nome"
+                  [filter]="true"
+                  [style]="{ width: '30rem', fontSize: '1.3rem' }"
+                  [listStyle]="{'min-height': '300px'}"/>
+                <div class="card w-full p-3">
+                  <div class="flex flex-row justify-content-between pl-3 pr-3">
+                    <h4>Produtos Selecionados</h4>
+                    <h4 *ngIf="produtosSelecionados.length > 0">Quantidade</h4>
+                  </div>
+                  <p-accordion *ngIf="produtosSelecionados.length > 0">
+                    <div *ngFor="let produto of produtosSelecionados" class="flex flex-row gap-1">
+                      <p-accordionTab [header]="produto.nome" class="w-full">
+                        <div class="flex flex-column">
+                          <div class="flex flex-row align-items-center gap-2">
+                            <label class="text-black font-bold bg-gray-200 p-2 border-round">Preço:</label>
+                            <p>{{ produto.precoVenda | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</p>
+                          </div>
+                          <div class="flex flex-row align-items-center gap-2">
+                            <label class="font-bold bg-gray-200 p-2 border-round">Observações:</label>
+                            <p>{{ produto.observacoes }}</p>
+                          </div>
+                        </div>
+                      </p-accordionTab>
+                      <div class="flex flex-row align-items-center gap-2">
+                        <p-button (click)="diminuirQuantidadeProduto(produto.id)" outlined severity="secondary"
+                                  icon="pi pi-minus" styleClass="w-2rem h-2rem"/>
+                        <p
+                          class="m-0 w-4rem h-2rem flex align-items-center justify-content-center border-1 border-gray-300 hover:border-gray-600"
+                          style="font-size: 1.3rem">{{ produto.quantidadeVenda || '0' }}</p>
+                        <p-button (click)="aumentarQuantidadeProduto(produto.id)" outlined severity="secondary"
+                                  icon="pi pi-plus"
+                                  styleClass="w-2rem h-2rem"/>
+                      </div>
+                    </div>
+                  </p-accordion>
+                  <p *ngIf="produtosSelecionados.length == 0">Nenhum produto selecionado</p>
+                </div>
+              </div>
+              <div class="w-full flex flex-row justify-content-end align-items-end p-2 border-top-1 border-gray-300">
+                <h3 class="m-0 w-5rem text-center">TOTAL:</h3>
+                <h3 class="m-0 w-8rem text-center">{{ totalProdutos | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</h3>
+              </div>
+            </div>
+          </div>
+          <div class="flex pl-3 pr-3 pt-4 justify-content-between w-full">
+            <p-button
+              label="Voltar"
+              icon="pi pi-arrow-left"
+              iconPos="left"
+              (onClick)="prevCallback.emit()"/>
+            <p-button
+              label="Próximo"
+              icon="pi pi-arrow-right"
+              iconPos="right"
+              (onClick)="nextCallback.emit(); ordemServico.produtosUtilizados = produtosSelecionados; calcularTotal()"/>
+          </div>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel header="RESUMO">
+      <ng-template pTemplate="content" let-prevCallback="prevCallback">
+        <div class="flex flex-column h-full" style="width: calc(100vw - 100px);max-width: 1400px;">
+          <div
+            class="border-2 border-dashed surface-border border-round surface-ground flex-column flex gap-5 justify-content-center align-items-center font-medium pt-4 pb-4">
+            <div id="ordem-servico-print" class="ordem-servico text-black-alpha-90 m-0 p-4 bg-white">
+              <!--LOGOTIPO E INFORMAÇÕES DA EMPRESA-->
+              <header class="os-header flex flex-row justify-content-between mb-3">
+                <img alt="Logo da Empresa" src="assets/logoBranco.svg">
+                <!--DIV INFORMAÇÕES DA EMPRESA-->
+                <div class="p-2 flex flex-column justify-content-center align-items-end">
+                  <h2 class="m-0 mt-1 mb-1">{{ ordemServico.empresa.nome.toUpperCase() }}</h2>
+                  <p class="m-0">{{ ordemServico.empresa.tecnico }}</p>
+                  <p class="m-0">{{ ordemServico.empresa.endereco }}</p>
+                  <p class="m-0">{{ ordemServico.empresa.telefone }} / {{ ordemServico.empresa.celular }}
+                    / {{ ordemServico.empresa.email }}</p>
+                  <p class="m-0"><strong>CNPJ:</strong> {{ ordemServico.empresa.cnpj }}</p>
+                </div>
+              </header>
+              <!--DADOS DA ORDEM DE SERVIÇO-->
+              <section class="os-info w-full mb-3">
+                <h2 class="text-center">ORDEM DE SERVIÇO</h2>
+                <div class="flex flex-row justify-content-around mt-2">
+                  <p><strong>NÚMERO:</strong> #{{ ordemServico.id.padStart(5, '0') }}</p>
+                  <p><strong>EMISSÃO:</strong> {{ ordemServico.dataAbertura | date: 'dd/MM/yyyy' }}</p>
+                  <p>
+                    <strong>ENTREGA:</strong>
+                    @if (ordemServico.dataConclusao != null) {
+                      {{ ordemServico.dataConclusao | date: 'dd/MM/yyyy' }}
+                    } @else {
+                      EM MANUTENÇÃO
+                    }
+                  </p>
+                </div>
+              </section>
+              <!--DADOS DO CLIENTE, EQUIPAMENTOS E DEFEITOS RELATADOS-->
+              <section class="w-full flex flex-row">
+                <div class="border-1" style="width:60%;">
+                  <h4 class="m-0 text-center border-bottom-1 border-black-alpha-30">DADOS DO CLIENTE</h4>
+                  <p class="ml-2 mt-2 m-0">
+                    <strong>Nome:</strong> {{ ordemServico.cliente?.nome || 'Nenhum nome inserido' }}
+                  </p>
+                  <p class="ml-2 m-0">
+                    <strong>Contato:</strong>
+                    @if (ordemServico.cliente?.celular != undefined && ordemServico.cliente?.telefone != undefined) {
+                      {{ ordemServico.cliente?.celular }} / {{ ordemServico.cliente?.telefone }}
+                    } @else if (ordemServico.cliente?.celular != undefined) {
+                      {{ ordemServico.cliente?.celular }}
+                    } @else if (ordemServico.cliente?.telefone != undefined) {
+                      {{ ordemServico.cliente?.telefone }}
+                    } @else {
+                      Nenhum contato inserido
+                    }
+                  </p>
+                  <p class="ml-2 m-0">
+                    <strong>E-mail:</strong> {{ ordemServico.cliente?.email || 'Nenhum e-mail inserido' }}
+                  </p>
+                </div>
+                <div class="border-left-1" style="width:40%;">
+                  <div class="border-1">
+                    <h4 class="m-0 text-center border-bottom-1 border-black-alpha-30">EQUIPAMENTO(S)</h4>
+                    <p class="mt-1 mb-1 m-0 ml-2">
+                      {{ ordemServico.equipamento || 'Nenhum equipamento inserido' }}
+                    </p>
+                  </div>
+                  <div class="border-1">
+                    <h4 class="m-0 text-center border-bottom-1 border-black-alpha-30">DEFEITO(S) RELATADO</h4>
+                    <p class="mt-1 mb-1 m-0 ml-2">
+                      {{ ordemServico.descricaoProblema || 'Nenhum defeito relatado' }}
+                    </p>
+                  </div>
+                </div>
+              </section>
+              <!--LAUDO TÉCNICO-->
+              <section class="w-full mt-2 border-1">
+                <h4 class="m-0 text-center border-bottom-1 border-black-alpha-30">LAUDO TÉCNICO</h4>
+                <p class="m-2">{{ ordemServico.laudoTecnico || 'Nenhum laudo inserido' }}</p>
+              </section>
+              <!--SERVIÇOS-->
+              <section class="w-full mt-2 p-1">
+                <h4 class="m-0 text-center">SERVIÇOS REALIZADOS</h4>
+                <table class="border-1">
+                  <thead>
+                  <tr>
+                    <th>Descrição</th>
+                    <th class="text-center w-2rem">Quantidade</th>
+                    <th class="text-center w-10rem">Valor</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let servico of ordemServico.servicos" class="border-bottom-1">
+                    <td>{{ servico.nome }}</td>
+                    <td class="text-center">{{ servico.quantidadeVenda }}</td>
+                    <td class="text-center">{{ servico.precoVenda | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+                  </tr>
+                  <tr *ngIf="ordemServico.servicos.length == 0" class="border-bottom-1">
+                    <td colspan="2">Nenhum serviço realizado</td>
+                  </tr>
+                  <tr class="border-left-1 border-bottom-1 border-right-1 w-auto">
+                    <td class="font-bold border-right-1 text-right">TOTAL DE SERVIÇOS</td>
+                    <td class="font-bold text-center w-12rem"
+                        colspan="2">{{ totalServicos | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </section>
+              <!--PRODUTOS-->
+              <section class="w-full mt-2">
+                <h4 class="m-0 text-center">PRODUTOS UTILIZADOS</h4>
+                <table class="border-1">
+                  <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th class="text-center w-2rem">Quantidade</th>
+                    <th class="text-center w-10rem">Valor</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let produto of ordemServico.produtosUtilizados" class="border-bottom-1">
+                    <td>{{ produto.nome }}</td>
+                    <td class="text-center">{{ produto.quantidadeVenda }}</td>
+                    <td class="text-center">{{ produto.precoVenda | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+                  </tr>
+                  <tr *ngIf="ordemServico.produtosUtilizados.length == 0" class="border-bottom-1">
+                    <td colspan="2">Nenhum produto foi utilizado</td>
+                  </tr>
+                  <tr class="border-left-1 border-bottom-1 border-right-1">
+                    <td class="font-bold border-right-1 text-right">TOTAL DE PRODUTOS</td>
+                    <td class="font-bold text-center w-12rem"
+                        colspan="2">{{ totalProdutos | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </section>
+              <!--PAGAMENTO, DESCONTO E TOTAL-->
+              <section class="w-full flex flex-row justify-content-between mt-2">
+                <div class="flex flex-row gap-2" style="width: 50rem">
+                  <!--PAGAMENTO-->
+                  <div class="w-15rem border-1">
+                    <h4 class="m-0 text-center border-bottom-1 border-black-alpha-40">PAGAMENTO</h4>
+                    <p class="ml-2 mt-2 m-0">
+                      {{ ordemServico.pagamento.metodoPagamento }}
+                    </p>
+                    <p class="ml-2 mt-2 m-0" *ngIf="ordemServico.pagamento.observacoes != ''">
+                      {{ ordemServico.pagamento.observacoes }}
+                    </p>
+                  </div>
+                  <!--DESCONTOS-->
+                  <div class="w-15rem border-1">
+                    <h4 class="m-0 text-center border-bottom-1 border-black-alpha-40">DESCONTOS</h4>
+                    <p *ngFor="let desconto of ordemServico.pagamento.descontos" class="ml-2 m-1">
+                      {{ desconto.valor | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }} - {{ desconto.descricao }}
+                    </p>
+                    <p *ngIf="ordemServico.pagamento.descontos.length === 0" class="m-0 ml-2">Nenhum desconto
+                      adicionado.</p>
+                  </div>
+                </div>
+                <!--TOTAL A PAGAR-->
+                <div class="border-1" style="width: 17rem;max-height: 60px;">
+                  <h4 class="m-0 text-center border-bottom-1 border-black-alpha-40">TOTAL A PAGAR</h4>
+                  <p class="m-0 font-bold text-xl text-center">
+                    {{ ordemServico.valorTotal | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
+                  </p>
+                </div>
+              </section>
+            </div>
+            <div class="flex pl-3 pr-3 pt-4 justify-content-between w-full no-print bg-transparent cursor-auto">
+              <p-button
+                severity="danger"
+                label="Back"
+                icon="pi pi-arrow-left"
+                (onClick)="prevCallback.emit()"/>
+              <div class="flex flex-row justify-content-around w-18rem">
+                <p-button
+                  outlined
+                  severity="danger"
+                  icon="pi pi-print"
+                  (onClick)="imprimir()"
+                  label="Imprimir"/>
+                <p-button
+                  label="Salvar"
+                  icon="pi pi-check"
+                  [loading]="carregandoBotao"
+                  (onClick)="salvarOrdem()"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+  </p-stepper>
+</div>
+
+<p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>

@@ -19,6 +19,7 @@ export const routes: Routes = [
   { path: 'servicos', component: ServicosListaComponent},
   { path: 'categorias', component: CategoriasListaComponent},
   { path: 'ordem-servico', component: OrdemServicoComponent},
+  { path: 'ordem-servico/:id', component: OrdemServicoComponent},
   { path: 'ordens', component: OrdemListaComponent},
   { path: '**', redirectTo: 'pagina-inicial' }
 ];

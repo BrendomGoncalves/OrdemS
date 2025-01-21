@@ -1,0 +1,80 @@
+.ordem-servico {
+  width: 100%;
+  max-width: 1200px;
+  min-width: 900px;
+  min-height: 900px;
+  line-height: 1.6;
+}
+
+.os-header img {
+  width: 180px;
+  height: 180px;
+}
+
+.os-info {
+  h2 {
+    margin: 0;
+  }
+  p {
+    margin: 4px 0;
+  }
+}
+
+section p {
+  font-size: .9rem;
+}
+
+/* Tabelas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+}
+
+table th, table td {
+  padding: 2px 10px;
+  text-align: left;
+}
+
+table th {
+  border: 1px solid black;
+}
+
+/* Botão de Impressão */
+.no-print {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 20px;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.no-print:hover {
+  background-color: #004c99;
+}
+
+/* Estilos de Impressão */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  #ordem-servico-print, #ordem-servico-print * {
+    visibility: visible;
+  }
+
+  #ordem-servico-print {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  .no-print {
+    visibility: hidden;
+  }
+}

@@ -12,17 +12,17 @@ export class OrdensService {
 
   constructor(private http: HttpClient) {}
 
-  getOrdens(): Observable<OrdemServico[]>{
+  async getOrdens(): Promise<Observable<OrdemServico[]>>{
     return this.http.get<OrdemServico[]>(this.apiUrl).pipe(
       map(ordens => ordens.sort((a, b) => a.cliente!.nome.localeCompare(b.cliente!.nome)))
     );
   }
 
-  getOrdemById(id: string): Observable<OrdemServico> {
+  async getOrdemById(id: string): Promise<Observable<OrdemServico>> {
     return this.http.get<OrdemServico>(`${this.apiUrl}/${id}`);
   }
 
-  addOrdem(ordem: OrdemServico): Observable<OrdemServico> {
+  async addOrdem(ordem: OrdemServico): Promise<Observable<OrdemServico>> {
     return this.http.post<OrdemServico>(this.apiUrl, ordem).pipe(
       map(ordemAdicionada => {
         if(ordemAdicionada.id !== undefined) {
@@ -33,7 +33,7 @@ export class OrdensService {
     );
   }
 
-  updateOrdem(id: number | undefined, ordem: OrdemServico): Observable<OrdemServico>{
+  async updateOrdem(id: string | undefined, ordem: OrdemServico): Promise<Observable<OrdemServico>>{
     return this.http.put<OrdemServico>(`${this.apiUrl}/${id}`, ordem).pipe(
       map(ordemAtualizada => {
         return ordemAtualizada;
@@ -41,13 +41,14 @@ export class OrdensService {
     );
   }
 
-  deleteOrdem(id: string): Observable<void> {
+  async deleteOrdem(id: string): Promise<Observable<void>> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  novoId() {
-    let lordens: any[] = []
-    this.getOrdens().subscribe((ordens) => {
+  // REMOVER GERAÇÂO DE ID
+  async novoId() {
+    let lordens: OrdemServico[] = [];
+    (await this.getOrdens()).subscribe((ordens: any[]) => {
       lordens = ordens
     })
     if (lordens.length > 0) {
