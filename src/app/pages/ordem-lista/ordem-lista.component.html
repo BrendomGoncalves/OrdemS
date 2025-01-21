@@ -11,7 +11,7 @@
       <span class="line-height-3 font-bold">Lista de Ordens de Serviço</span>
     </li>
   </ul>
-  <div class="flex align-items-start flex-column md:justify-content-between md:flex-row">
+  <div class="flex align-items-start flex-column lg:justify-content-between lg:flex-row">
     <div>
       <div class="font-medium text-3xl text-900">ORDENS DE SERVIÇO</div>
       <div class="flex align-items-center text-700 flex-wrap">
@@ -22,6 +22,9 @@
       </div>
     </div>
     <div class="mt-3 lg:mt-0">
+      <button pButton label="Entrada de Equipamento" class="p-button-outlined mr-2 p-button-danger"
+              icon="pi pi-microchip"
+              routerLink="/ordem-servico"></button>
       <button pButton label="Nova Ordem de Serviço" class="p-button-outlined mr-2 p-button-danger"
               icon="pi pi-file-edit"
               routerLink="/ordem-servico"></button>
@@ -100,19 +103,19 @@
           {{ ordem.dataConclusao | date: 'dd/MM/yyyy' }}
         </td>
         @switch (ordem.status) {
-          @case ('PENDENTE') {
+          @case ('EM ANDAMENTO') {
             <td class="justify-content-center flex">
-              <p class="w-8rem bg-orange-400 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>
+              <p class="w-9rem bg-orange-400 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>
             </td>
           }
           @case ('CONCLUIDO') {
             <td class="justify-content-center flex">
-              <p class="w-8rem bg-green-600 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>
+              <p class="w-9rem bg-green-600 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>
             </td>
           }
           @case ('CANCELADO') {
             <td class="justify-content-center flex">
-              <p class="w-8rem bg-red-400 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>
+              <p class="w-9rem bg-red-400 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>
             </td>
           }
         }
@@ -154,8 +157,7 @@
 </div>
 
 <!--DETALHES ORDEM DE SERVIÇO-->
-<p-dialog header="Detalhes Ordem de Serviço #{{ ordemSelecionada.id.padStart(4, '0') }}" [closable]="false" [modal]="true" [(visible)]="verDetalhesOrdem"
-          [style]="{ width: '30rem', maxHeight: '800px', minHeight: '500px'}">
+<p-dialog header="Detalhes Ordem de Serviço #{{ ordemSelecionada.id.padStart(4, '0') }}" [resizable]="true" [closable]="false" [modal]="true" [(visible)]="verDetalhesOrdem" [style]="{ width: '32rem', maxHeight: '700px', minHeight: '300px'}">
   <div class="flex flex-column gap-4">
     <!-- Datas de Abertura e Conclusão-->
     <div class="flex flex-row gap-3 justify-content-around">
@@ -283,8 +285,8 @@
     </div>
 
     <div class="flex justify-content-center gap-3">
-      <p-button label="Editar" severity="info" routerLink="/ordem-servico"/>
-      <p-button label="Deletar" severity="danger" (onClick)="deletarOrdem()"/>
+      <p-button label="Editar" severity="info" routerLink="/ordem-servico/{{ordemSelecionada.id}}"/>
+      <p-button label="Deletar" severity="danger" (onClick)="deletarOrdem(this.ordemSelecionada.id)"/>
       <p-button label="Cancelar" severity="secondary" (onClick)="fecharDetalhesOrdem()"/>
     </div>
   </div>

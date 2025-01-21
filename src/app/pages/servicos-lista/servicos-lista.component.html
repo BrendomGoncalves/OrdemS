@@ -71,22 +71,46 @@
     </ng-template>
     <ng-template pTemplate="footer">
       <tr *ngIf="carregandoDados">
-        <td><p-skeleton size="3rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
       </tr>
       <tr *ngIf="carregandoDados">
-        <td><p-skeleton size="3rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
       </tr>
       <tr *ngIf="carregandoDados">
-        <td><p-skeleton size="3rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
       </tr>
       <tr *ngIf="Servicos.length === 0 && !carregandoDados">
         <td colspan="4" class="text-center text-black-alpha-50">
@@ -106,7 +130,8 @@
         <div class="campo-editar-valor">
           <strong>Nome:</strong> {{ servicoForm.get('nome')?.value }}
         </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="ativarEdicao('nome')">
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="ativarEdicao('nome')">
           <i class="pi pi-pencil" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -115,7 +140,8 @@
           <strong>Nome:</strong>
           <input formControlName="nome" placeholder="Digite o novo nome"/>
         </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="salvarEdicao('nome')">
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="salvarEdicao('nome')">
           <i class="pi pi-save" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -124,7 +150,8 @@
         <div class="campo-editar-valor">
           <strong>Preço Venda:</strong> {{ servicoForm.get('precoVenda')?.value | currency: 'BRL' }}
         </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="ativarEdicao('precoVenda')">
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="ativarEdicao('precoVenda')">
           <i class="pi pi-pencil" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -133,7 +160,8 @@
           <strong>Preço Venda:</strong>
           <input formControlName="precoVenda" placeholder="Digite o novo preço de venda"/>
         </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="salvarEdicao('precoVenda')">
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="salvarEdicao('precoVenda')">
           <i class="pi pi-save" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -142,7 +170,8 @@
         <div class="campo-editar-valor">
           <strong>Categoria:</strong> {{ servicoForm.get('categoria')?.value }}
         </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="ativarEdicao('categoria')">
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="ativarEdicao('categoria')">
           <i class="pi pi-pencil" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -151,7 +180,8 @@
           <strong>Categoria:</strong>
           <input formControlName="categoria" placeholder="Digite a nova categoria"/>
         </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="salvarEdicao('categoria')">
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="salvarEdicao('categoria')">
           <i class="pi pi-save" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -160,7 +190,8 @@
         <div class="campo-editar-valor">
           <strong>Observações:</strong> {{ servicoForm.get('observacoes')?.value }}
         </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="ativarEdicao('observacoes')">
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="ativarEdicao('observacoes')">
           <i class="pi pi-pencil" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -169,7 +200,8 @@
           <strong>Observações:</strong>
           <input formControlName="observacoes" placeholder="Digite as novas observações"/>
         </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="salvarEdicao('observacoes')">
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+                  (onClick)="salvarEdicao('observacoes')">
           <i class="pi pi-save" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -204,7 +236,10 @@
     <div class="campo-salvar">
       <div class="campo-salvar-valor">
         <strong>Categoria:</strong>
-        <input formControlName="categoria" placeholder="Digite a categoria" autofocus/>
+        <!--<input formControlName="categoria" placeholder="Digite a categoria" autofocus/>-->
+        <p-dropdown formControlName="categoria" [options]="listaCategorias" optionLabel="nome"
+                    placeholder="Selecione uma categoria"
+                    [showClear]="true"></p-dropdown>
         <p-message *ngIf="servicoForm.get('categoria')?.invalid" severity="info"
                    text="Precisa ter ao mesno 3 caracteres"></p-message>
       </div>

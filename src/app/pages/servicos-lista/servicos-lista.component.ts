@@ -25,6 +25,7 @@ import {ToastModule} from 'primeng/toast';
 import {SkeletonModule} from 'primeng/skeleton';
 import {Categoria} from '../../models/categoria';
 import {CategoriasService} from '../../services/categoria/categorias.service';
+import {DropdownModule} from 'primeng/dropdown';
 
 @Component({
   selector: 'app-servico-lista',
@@ -44,7 +45,8 @@ import {CategoriasService} from '../../services/categoria/categorias.service';
     MessageModule,
     TabViewModule,
     ToastModule,
-    SkeletonModule
+    SkeletonModule,
+    DropdownModule
   ],
   templateUrl: './servicos-lista.component.html',
   styleUrl: './servicos-lista.component.css'

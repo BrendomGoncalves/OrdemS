@@ -296,10 +296,12 @@
     <div class="campo-salvar">
       <div class="campo-salvar-valor">
         <strong>Unidade de Venda:</strong>
-        <input formControlName="unidadeVenda" placeholder="Digite a unidade de venda" autofocus/>
-        <p-message *ngIf="produtoForm.get('unidadeVenda')?.invalid && produtoForm.get('unidadeVenda')?.touched"
-                   severity="info"
-                   text="A unidade é obrigatória, use apenas LETRAS"></p-message>
+<!--        <input formControlName="unidadeVenda" placeholder="Digite a unidade de venda" autofocus/>-->
+        <p-dropdown formControlName="unidadeVenda" [options]="unidadesMedida" placeholder="Selecione a unidade de venda"
+                    optionLabel="label" optionValue="value"></p-dropdown>
+<!--        <p-message *ngIf="produtoForm.get('unidadeVenda')?.invalid && produtoForm.get('unidadeVenda')?.touched"-->
+<!--                   severity="info"-->
+<!--                   text="A unidade é obrigatória"></p-message>-->
       </div>
     </div>
     <!--Estoque-->

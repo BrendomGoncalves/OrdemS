@@ -22,6 +22,7 @@ import {MessageModule} from 'primeng/message';
 import {generateUniqueId} from '../../ferramentas/utils';
 import {ToastModule} from 'primeng/toast';
 import {SkeletonModule} from 'primeng/skeleton';
+import {DropdownModule} from 'primeng/dropdown';
 
 @Component({
   selector: 'app-produtos-lista',
@@ -41,7 +42,8 @@ import {SkeletonModule} from 'primeng/skeleton';
     ReactiveFormsModule,
     MessageModule,
     ToastModule,
-    SkeletonModule
+    SkeletonModule,
+    DropdownModule
   ],
   templateUrl: './produtos-lista.component.html',
   styleUrl: './produtos-lista.component.css'
@@ -51,6 +53,14 @@ export class ProdutosListaComponent implements OnInit {
   filtro: string = ''; // Objeto para filtrar produtos por nome
   produtoForm: FormGroup; // Formulário de cadastro de produtos
   editando: { [key: string]: boolean } = {}; // Objeto para controlar a edição de produtos
+  unidadesMedida: { label: string, value: string }[] = [
+    {label: 'Unidade', value: 'un'},
+    {label: 'Metro', value: 'm'},
+    {label: 'Litro', value: 'l'},
+    {label: 'Mililitro', value: 'ml'},
+    {label: 'Quilograma', value: 'kg'},
+    {label: 'Grama', value: 'g'}
+  ]; // Lista de unidades de medida
 
   // Estatisticas
   QProdutos = signal(this.Produtos.length); // Quantidade de produtos
@@ -111,7 +121,12 @@ export class ProdutosListaComponent implements OnInit {
 
   // Utiliza o serviço de produto para adicionar um novo produto
   salvarProduto() {
-    const novoProduto: Produto = this.produtoForm.value;
+    let novoProduto: Produto = this.produtoForm.value;
+
+    if(novoProduto.unidadeVenda === undefined || novoProduto.unidadeVenda === ''){
+      novoProduto.unidadeVenda = 'un';
+    }
+
     if (this.Produtos.find(produto => produto.nome === novoProduto.nome)?.nome === novoProduto.nome) {
       this.messageService.add({
         severity: 'error',

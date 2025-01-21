@@ -50,192 +50,7 @@ Chart.register(...registerables);
   styleUrl: './ordem-lista.component.css'
 })
 export class OrdemListaComponent implements OnInit {
-  Ordens: OrdemServico[] = [
-    {
-      id: '1',
-      empresa: {
-        nome: 'Oryc Info Service',
-        cnpj: '14.670.398/0001-88',
-        endereco: "Caminho 3, 31, Hernani Sá, Ilhéus - BA",
-        "tecnico": "Cyronaldo dos Santos Gonçalves",
-        telefone: '(73) 3223-3793',
-        celular: '(73) 98825-5273',
-        email: 'oryc_service@hotmail.com'
-      },
-      cliente: {
-        id: '1',
-        nome: 'João Da Silva Marineles Ferreira de Sá Pinto',
-        telefone: '123456789',
-        email: 'joao@email.com',
-        cpf: '075.123.456-78',
-        tipoCliente: 'PF',
-        observacoes: 'Informações importantes sobre o cliente',
-        cidade: 'São Paulo',
-        endereco: 'Rua dos Bobos',
-        celular: '(73)987654321',
-        ie: 'empty',
-        cnpj: 'empty',
-        fantasia: 'empty',
-        bairro: 'Lavinia',
-        numero: '123',
-        dataCadastro: new Date()
-      },
-      equipamento: 'Notebook VivoBook VJ123 e Carregador',
-      dataAbertura: new Date('2024/11/20'),
-      dataConclusao: new Date('2024-11-30'),
-      descricaoProblema: 'Notebook Lento',
-      laudoTecnico: 'Formatação',
-      status: StatusOrdemServicoEnum.EM_ANDAMENTO,
-      valorTotal: 120,
-      servicos: [
-        {
-          id: '1',
-          nome: 'Formatação',
-          categoria: {id: '1', nome: 'Software', descricao: 'Descrição Categoria'},
-          precoVenda: 120,
-          dataCadastro: new Date('2024-03-20'),
-          observacoes: 'Observações sobre o serviço',
-          quantidadeVenda: 1
-        }
-      ],
-      produtosUtilizados: [],
-      pagamento: {
-        metodoPagamento: MetodoPagamentoEnum.PIX,
-        dataPagamento: null,
-        statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO,
-        observacoes: 'No mesmo dia',
-        descontos: []
-      },
-    },
-    {
-      id: '2',
-      empresa: {
-        nome: 'Oryc Info Service',
-        cnpj: '14.670.398/0001-88',
-        endereco: "Caminho 3, 31, Hernani Sá, Ilhéus - BA",
-        tecnico: "Cyronaldo dos Santos Gonçalves",
-        telefone: '(73) 3223-3793',
-        celular: '(73) 98825-5273',
-        email: 'oryc_service@hotmail.com'
-      },
-      cliente: {
-        id: '2',
-        nome: 'Maria dos Santos',
-        telefone: '123456789',
-        email: 'maria@email.com',
-        cpf: '077.153.456-78',
-        tipoCliente: 'PF',
-        observacoes: 'Informações importantes sobre o cliente',
-        cidade: 'São Paulo',
-        endereco: 'Rua dos Bobos',
-        celular: '(73)987654321',
-        ie: 'empty',
-        cnpj: 'empty',
-        fantasia: 'empty',
-        bairro: 'Lavinia',
-        numero: '123',
-        dataCadastro: new Date()
-      },
-      equipamento: 'CPU',
-      dataAbertura: new Date('2024-11-19'),
-      dataConclusao: new Date('2024-11-23'),
-      descricaoProblema: 'Hd Queimado',
-      laudoTecnico: 'Troca de HD',
-      status: StatusOrdemServicoEnum.CONCLUIDO,
-      valorTotal: 280,
-      servicos: [
-        {
-          id: '1',
-          nome: 'Diagnóstico de Hardware',
-          categoria: {id: '1', nome: 'Hardware', descricao: 'Descrição Categoria'},
-          precoVenda: 40,
-          dataCadastro: new Date('2024-03-20'),
-          observacoes: 'Observações sobre o serviço',
-          quantidadeVenda: 1
-        }
-      ],
-      produtosUtilizados: [
-        {
-          id: '1',
-          nome: 'HD 1TB',
-          precoVenda: 240,
-          precoCompra: 200,
-          lucro: 40,
-          observacoes: 'Observações sobre o produto',
-          estoque: 5,
-          unidadeVenda: 'UN',
-          quantidadeVenda: 1
-        },
-        {
-          id: '2',
-          nome: 'Cabo SATA',
-          precoVenda: 15,
-          precoCompra: 8,
-          lucro: 7,
-          observacoes: 'Observações sobre o produto',
-          estoque: 10,
-          unidadeVenda: 'UN',
-          quantidadeVenda: 1
-        }
-      ],
-      pagamento: {
-        metodoPagamento: MetodoPagamentoEnum.CARTAO,
-        dataPagamento: new Date('2024-11-23'),
-        statusPagamento: StatusPagamentoEnum.PAGO,
-        observacoes: 'Parcelado em 2x',
-        descontos: [
-          {valor: 5, descricao: 'Desconto em conjunto de HD e SATA'}
-        ]
-      },
-    },
-    {
-      id: '3',
-      empresa: {
-        nome: 'Oryc Info Service',
-        cnpj: '14.670.398/0001-88',
-        endereco: "Caminho 3, 31, Hernani Sá, Ilhéus - BA",
-        tecnico: "Cyronaldo dos Santos Gonçalves",
-        telefone: '(73) 3223-3793',
-        celular: '(73) 98825-5273',
-        email: 'oryc_service@hotmail.com'
-      },
-      cliente: {
-        id: '3',
-        nome: 'José Carlos',
-        telefone: '123456789',
-        email: 'jose@email.com',
-        cpf: '080.153.806-78',
-        tipoCliente: 'PF',
-        observacoes: 'Informações importantes sobre o cliente',
-        cidade: 'São Paulo',
-        endereco: 'Rua dos Bobos',
-        celular: '(73)987654321',
-        ie: 'empty',
-        cnpj: 'empty',
-        fantasia: 'empty',
-        bairro: 'Lavinia',
-        numero: '123',
-        dataCadastro: new Date()
-      },
-      equipamento: 'Netbook Positivo Styles e Carregador',
-      dataAbertura: new Date('2024-11-20'),
-      dataConclusao: new Date('2024-11-22'),
-      descricaoProblema: 'Hd Queimado',
-      laudoTecnico: 'Troca de HD',
-      status: StatusOrdemServicoEnum.CANCELADO,
-      valorTotal: 0,
-      servicos: [],
-      produtosUtilizados: [],
-      pagamento: {
-        metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
-        dataPagamento: null,
-        statusPagamento: StatusPagamentoEnum.CANCELADO,
-        observacoes: 'No mesmo dia',
-        descontos: []
-      },
-    }
-  ];
-  filtro: string = '';
+  Ordens: OrdemServico[] = [];
   ordemSelecionada: OrdemServico = {
     id: '',
     empresa: {nome: '', cnpj: '', endereco: '', tecnico: '', telefone: '', celular: '', email: ''},
@@ -249,15 +64,16 @@ export class OrdemListaComponent implements OnInit {
     valorTotal: 0,
     servicos: [],
     produtosUtilizados: [],
-    pagamento: {metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO, statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO, observacoes: '', dataPagamento: null, descontos: []},
+    pagamento: {metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO, statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO, observacoes: '', dataPagamento: null, descontos: [], descontoTotal: 0},
   }
+  filtro: string = '';
 
   // Estatisticas
   QOrdens = signal(this.Ordens.length);
-  valorTotalOrdens: number = 0;
-  dadosPie: any;
-  opcoesPie: any;
-  datasetPie: number[] = [];
+  // valorTotalOrdens: number = 0;
+  // dadosPie: any;
+  // opcoesPie: any;
+  // datasetPie: number[] = [];
 
   // Dialogos
   verDetalhesOrdem: boolean = false;
@@ -303,10 +119,9 @@ export class OrdemListaComponent implements OnInit {
   }
 
   // Função para carregar as ordens de serviço
-  carregarOrdens() {
-    this.ordemService.getOrdens().subscribe(ordens => {
-      // TODO: Retirar comentario
-      // this.Ordens = ordens;
+  async carregarOrdens() {
+    (await this.ordemService.getOrdens()).subscribe(ordens => {
+      this.Ordens = ordens;
       setTimeout(() => {
         this.carregandoDados = false;
         this.estatisticaOrdens(ordens);
@@ -325,32 +140,9 @@ export class OrdemListaComponent implements OnInit {
     return this.Ordens.filter(ordem => ordem.cliente?.nome.toLowerCase().includes(this.filtro.toLowerCase()));
   }
 
-  // salvarOrdem() {
-  //   let novaOrdem: OrdemServico = this.ordemForm.value;
-  //   if (this.ordemForm.valid) {
-  //     novaOrdem.id = generateUniqueId();
-  //     this.ordemService.addOrdem(novaOrdem).subscribe(() => {
-  //       this.carregarOrdens();
-  //       this.estatisticaOrdens(this.Ordens);
-  //       this.fecharAdicionarOrdem();
-  //       this.messageService.add({
-  //         severity: 'success',
-  //         summary: 'Ordem de Serviço',
-  //         detail: 'Ordem de serviço adicionada'
-  //       });
-  //     });
-  //   } else {
-  //     this.messageService.add({
-  //       severity: 'error',
-  //       summary: 'Ordem de Serviço',
-  //       detail: 'Verifique se os campos estão preenchidos corretamente'
-  //     });
-  //   }
-  // }
-
-  deletarOrdem() {
-    if (this.Ordens.find(ordem => ordem.id === this.ordemSelecionada.id)?.id === this.ordemSelecionada.id) {
-      this.ordemService.deleteOrdem(this.ordemSelecionada.id).subscribe(() => {
+  async deletarOrdem(idDelete: string) {
+    if (this.Ordens.find(ordem => ordem.id === idDelete)?.id === idDelete) {
+      (await this.ordemService.deleteOrdem(idDelete)).subscribe(() => {
         this.carregarOrdens();
         this.estatisticaOrdens(this.Ordens);
         this.fecharDetalhesOrdem();
@@ -388,7 +180,7 @@ export class OrdemListaComponent implements OnInit {
       valorTotal: 0,
       servicos: [],
       produtosUtilizados: [],
-      pagamento: {metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO, statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO, observacoes: '', dataPagamento: null, descontos: []},
+      pagamento: {metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO, statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO, observacoes: '', dataPagamento: null, descontos: [], descontoTotal: 0},
     }
     this.verDetalhesOrdem = false;
   }
