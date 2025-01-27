@@ -50,7 +50,7 @@ ul {
       margin-left: 1rem;
       opacity: 0;
       pointer-events: none;
-      color: red;
+      color: black;
       background: #ececec;
       padding: 1rem * 0.75;
       transition: 250ms ease all;
@@ -105,7 +105,7 @@ ul {
           &:nth-child(#{$j}):hover, {
             ~ li:last-child:before {
               @include gooeyEffect($j);
-              top: (100% / $i) * ($j - 1);
+              top: calc(100% / $i) * ($j - 1);
               animation: gooeyEffect-#{$j} 250ms 1;
             }
           }
@@ -113,7 +113,7 @@ ul {
 
         &:last-child:hover:before, {
           @include gooeyEffect($i);
-          top: (100% / $i) * ($i - 1);
+          top: calc(100% / $i) * ($i - 1);
           animation: gooeyEffect-#{$i} 250ms 1;
         }
       }
