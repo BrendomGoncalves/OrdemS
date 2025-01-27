@@ -18,11 +18,19 @@ export class ClientesService {
     );
   }
 
-  getClienteById(id: string): Observable<Cliente> {
+  async getClienteById(id: string): Promise<Observable<Cliente>> {
     return this.http.get<Cliente>(`${this.apiUrl}/${id}`);
   }
 
-  addCliente(cliente: Cliente): Observable<Cliente> {
+  async getClienteByCpf(cpf: string): Promise<Observable<Cliente>> {
+    return this.http.get<Cliente>(`${this.apiUrl}?cpf=${cpf}`);
+  }
+
+  async getClienteByCnpj(cnpj: string): Promise<Observable<Cliente>> {
+    return this.http.get<Cliente>(`${this.apiUrl}?cnpj=${cnpj}`);
+  }
+
+  async addCliente(cliente: Cliente): Promise<Observable<Cliente>> {
     return this.http.post<Cliente>(this.apiUrl, cliente).pipe(
       map(clienteAdicionado => {
         if (clienteAdicionado.id !== undefined) {
@@ -33,7 +41,7 @@ export class ClientesService {
     );
   }
 
-  updateCliente(id: number | undefined, cliente: Cliente): Observable<Cliente> {
+  async updateCliente(id: number | undefined, cliente: Cliente): Promise<Observable<Cliente>> {
     return this.http.put<Cliente>(`${this.apiUrl}/${id}`, cliente).pipe(
       map(clienteAtualizado => {
         return clienteAtualizado;
@@ -41,7 +49,7 @@ export class ClientesService {
     );
   }
 
-  deleteCliente(id: number): Observable<void> {
+  async deleteCliente(id: number): Promise<Observable<void>> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

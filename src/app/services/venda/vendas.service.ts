@@ -9,14 +9,18 @@ import {generateUniqueId} from '../../ferramentas/utils';
   providedIn: 'root'
 })
 export class VendasService {
-  private apiUrl = `${environment.apiUrl}/vendas`;
+  apiUrl = `${environment.apiUrl}/vendas`;
 
   constructor(private http: HttpClient) {
   }
 
   getVendas(): Observable<Venda[]> {
     return this.http.get<Venda[]>(this.apiUrl).pipe(
-      map(vendas => vendas.sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime()))
+      map(vendas => vendas.sort((a, b) => {
+        const dateA = a.data ? new Date(a.data).getTime() : 0;
+        const dateB = b.data ? new Date(b.data).getTime() : 0;
+        return dateA - dateB;
+      }))
     );
   }
 
