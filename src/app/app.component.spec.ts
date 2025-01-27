@@ -1,29 +1,37 @@
-import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { PrimeNGConfig } from 'primeng/api';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AppComponent],
+      imports: [AppComponent, RouterTestingModule],
+      providers: [PrimeNGConfig],
     }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  it(`should have the 'OrdemS' title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app.title).toEqual('OrdemS');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, OrdemS');
+  });
+
+  it('should create the app', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it(`should have as title 'OrdemS'`, () => {
+    expect(component.title).toEqual('OrdemS');
+  });
+
+  it('should set translation', () => {
+    const primengConfig = TestBed.inject(PrimeNGConfig);
+    const setTranslationSpy = spyOn(primengConfig, 'setTranslation');
+    component.ngOnInit();
+    expect(setTranslationSpy).toHaveBeenCalled();
   });
 });

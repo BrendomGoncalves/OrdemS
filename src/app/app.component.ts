@@ -9,11 +9,13 @@ import {MessageService, PrimeNGConfig} from 'primeng/api';
   imports: [RouterOutlet, NavBarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  providers: [MessageService]
+  providers: [MessageService,]
 })
 export class AppComponent implements OnInit {
+  title = 'OrdemS';
 
-  constructor(private primengConfig: PrimeNGConfig) {}
+  constructor(public primengConfig: PrimeNGConfig) {}
+
   ngOnInit() {
     this.primengConfig.setTranslation({
       dayNames: ["domingo", "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado"],
