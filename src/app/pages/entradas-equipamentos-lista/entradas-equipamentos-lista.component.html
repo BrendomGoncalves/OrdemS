@@ -1,0 +1,242 @@
+<!--HEADER DA PÁGINA-->
+<div class="surface-section px-4 py-5 md:px-6 lg:px-8">
+  <ul class="list-none p-0 m-0 flex align-items-center font-medium mb-3">
+    <li>
+      <a class="text-500 no-underline line-height-3 cursor-pointer" routerLink="/pagina-inicial">Página Inicial</a>
+    </li>
+    <li class="px-2">
+      <i class="pi pi-angle-right text-500 line-height-3"></i>
+    </li>
+    <li>
+      <span class="line-height-3 font-bold">Lista de Entradas de Equipamentos</span>
+    </li>
+  </ul>
+  <div class="flex align-items-start flex-column lg:justify-content-between lg:flex-row">
+    <div>
+      <div class="font-medium text-3xl text-900">Entradas de Equipamentos</div>
+      <div class="flex align-items-center text-700 flex-wrap">
+        <div class="mr-5 flex align-items-center mt-3">
+          <i class="pi pi-users mr-2"></i>
+          <span>{{ QEntradasEquipamentos() }} Entradas</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-3 lg:mt-0">
+      <button pButton label="Nova Entrada de Equipamento" class="p-button-outlined mr-2 p-button-danger"
+              icon="pi pi-file-edit"
+              routerLink="/entrada-equipamento"></button>
+    </div>
+  </div>
+</div>
+
+<!--TABELA DE ENTRADAS DE EQUIPAMENTOS-->
+<div class="tabela">
+  <div class="p-inputgroup">
+    <span class="p-inputgroup-addon">
+      <i class="pi pi-search"></i>
+    </span>
+    <input
+      type="text"
+      pInputText
+      placeholder="Pesquise o nome do cliente"
+      [(ngModel)]="filtro"
+    />
+  </div>
+  <p-table [value]="entradasEquipamentosFiltradas" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th class="text-center w-2rem">
+          <i class="pi pi-eye font-bold"></i>
+        </th>
+        <th class="text-left">
+          Cliente
+        </th>
+        <th class="text-center">
+          <i class="pi pi-calendar mr-1 font-bold"></i>
+          Equipamento
+        </th>
+        <th class="text-center">
+          <i class="pi pi-calendar mr-1 font-bold"></i>
+          Data Recebimento
+        </th>
+        <th class="text-center">
+          <i class="pi pi-tag mr-1 font-bold"></i>
+          Descrição Problema
+        </th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-entradaEquipamento>
+      <tr *ngIf="!carregandoDados">
+        <td>
+          <p-button (onClick)="abrirDetalhesEntradaEquipamento(entradaEquipamento)"
+                    styleClass="bg-red-600 border-0 w-1rem h-2rem flex justify-content-center">
+            <i class="pi pi-eye" [style]="{'font-size': '.9rem'}"></i>
+          </p-button>
+        </td>
+        <td class="white-space-nowrap text-overflow-ellipsis overflow-hidden max-w-8rem" [style]="{minWidth: '150px'}">
+          {{ entradaEquipamento.cliente.nome }}
+        </td>
+        <td class="text-center white-space-nowrap text-overflow-ellipsis overflow-hidden max-w-8rem" [style]="{minWidth: '100px'}">
+          {{ entradaEquipamento.equipamento}}
+        </td>
+        <td class="text-center" [style]="{minWidth: '60px'}">
+          {{ entradaEquipamento.dataRecebimento | date: 'dd/MM/yyyy' }}
+        </td>
+        <td class="text-center white-space-nowrap text-overflow-ellipsis overflow-hidden max-w-10rem">
+          {{ entradaEquipamento.descricaoProblema }}
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+      <tr *ngIf="carregandoDados">
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+      </tr>
+      <tr *ngIf="carregandoDados">
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+      </tr>
+      <tr *ngIf="carregandoDados">
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+      </tr>
+      <tr *ngIf="ListaEntradasEquipamentos.length === 0 && !carregandoDados">
+        <td colspan="6" class="text-center text-black-alpha-50">
+          Nenhuma entrada de equipamento cadastrada
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!--DETALHES ENTRADA DE EQUIPAMENTO-->
+<p-dialog header="Detalhes Entrada de Equipamento #{{ entradaEquipamentoSelecionada.id.padStart(4, '0') }}" [resizable]="true" [closable]="false" [modal]="true" [(visible)]="verDetalhesEntradaEquipamento" [style]="{ width: '32rem', maxHeight: '700px', minHeight: '300px'}">
+  <div class="flex flex-column gap-4">
+    <!-- Datas de Recebimento-->
+    <div class="flex flex-row gap-3 justify-content-around">
+      <div class="bg-red-100 p-2 flex flex-column justify-content-center align-items-center w-full gap-2">
+        <strong>Data Recebimento:</strong> {{ entradaEquipamentoSelecionada.dataRecebimento | date: 'dd/MM/yyyy' }}
+      </div>
+    </div>
+    <!-- Cliente -->
+    <div class="flex flex-column">
+      <h4 class="m-0 pb-1">Cliente:</h4>
+      <p-panel header="{{ entradaEquipamentoSelecionada.cliente?.nome }}" [toggleable]="true" collapsed="true">
+        <div class="flex flex-column">
+          <div class="flex flex-row align-items-center gap-2" *ngIf="entradaEquipamentoSelecionada.cliente?.tipoCliente == 'PJ'">
+            <label class="text-black font-bold bg-gray-200 p-2 border-round">Nome Fantasia</label>
+            <p>{{ entradaEquipamentoSelecionada.cliente?.fantasia }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2" *ngIf="entradaEquipamentoSelecionada.cliente?.tipoCliente == 'PJ'">
+            <label class="font-bold bg-gray-200 p-2 border-round">CNPJ</label>
+            <p>{{ entradaEquipamentoSelecionada.cliente?.cnpj }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2" *ngIf="entradaEquipamentoSelecionada.cliente?.tipoCliente == 'PJ'">
+            <label class="font-bold bg-gray-200 p-2 border-round">IE</label>
+            <p>{{ entradaEquipamentoSelecionada.cliente?.ie }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2" *ngIf="entradaEquipamentoSelecionada.cliente?.tipoCliente == 'PF'">
+            <label class="font-bold bg-gray-200 p-2 border-round">CPF</label>
+            <p>{{ entradaEquipamentoSelecionada.cliente?.cpf }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">Celular</label>
+            <p>{{ entradaEquipamentoSelecionada.cliente?.celular }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">Telefone</label>
+            <p>{{ entradaEquipamentoSelecionada.cliente?.telefone }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">E-mail</label>
+            <p>{{ entradaEquipamentoSelecionada.cliente?.email }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">Endereço</label>
+            <p>{{ entradaEquipamentoSelecionada.cliente?.endereco }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">Número</label>
+            <p>{{ entradaEquipamentoSelecionada.cliente?.numero }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">Cidade</label>
+            <p>{{ entradaEquipamentoSelecionada.cliente?.cidade }}</p>
+          </div>
+          <div class="flex flex-row align-items-center gap-2">
+            <label class="font-bold bg-gray-200 p-2 border-round">Observações</label>
+            <p>{{ entradaEquipamentoSelecionada.cliente?.observacoes }}</p>
+          </div>
+        </div>
+      </p-panel>
+    </div>
+    <!-- Equipamento -->
+    <div class="flex flex-column w-full border-bottom-1 border-gray-400">
+      <h4 class="m-0">Equipamento:</h4>
+      <p class="m-1 pl-1">{{ entradaEquipamentoSelecionada.equipamento }}</p>
+    </div>
+    <!-- Descrição Problema -->
+    <div class="flex flex-column w-full border-bottom-1 border-gray-400">
+      <h4 class="m-0">Problema:</h4>
+      <p class="m-1 pl-1">{{ entradaEquipamentoSelecionada.descricaoProblema }}</p>
+    </div>
+
+    <div class="flex justify-content-center gap-3">
+      <p-button label="Gerar OS" severity="warning" routerLink="/ordem-servico/entrada-equipamento/{{entradaEquipamentoSelecionada.id}}"/>
+      <p-button label="Editar" severity="info" routerLink="/entrada-equipamento/{{entradaEquipamentoSelecionada.id}}"/>
+      <p-button label="Deletar" severity="danger" (onClick)="deletarEntradaEquipamento(this.entradaEquipamentoSelecionada.id)"/>
+      <p-button label="Voltar" severity="secondary" (onClick)="fecharDetalhesEntradaEquipamento()"/>
+    </div>
+  </div>
+</p-dialog>
+
+<!--MENSAGENS-->
+<p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>
