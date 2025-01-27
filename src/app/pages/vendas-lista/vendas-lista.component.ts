@@ -42,7 +42,7 @@ export class VendasListaComponent implements OnInit {
     produtos: [],
     nomeCliente: '',
     documentoCliente: '',
-    data: new Date(),
+    data: null,
     total: 0
   }; // Venda selecionada
   filtro: string = ''; // Objeto para filtrar vendas por nome

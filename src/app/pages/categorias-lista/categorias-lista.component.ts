@@ -75,12 +75,17 @@ export class CategoriasListaComponent implements OnInit {
 
   // Utiliza o serviço de categoria para carregar a lista de categorias
   async carregarCategorias() {
-    (await this.categoriaService.getCategorias()).subscribe(categorias => {
-      this.Categorias = categorias;
-      setTimeout(() => {
+    (await this.categoriaService.getCategorias()).subscribe({
+      next: categorias => {
+        this.Categorias = categorias;
+        setTimeout(() => {
+          this.carregandoDados = false;
+          this.estatisticaCategoria(categorias);
+        }, 1500);
+      },
+      error: () => {
         this.carregandoDados = false;
-        this.estatisticaCategoria(categorias);
-      }, 1500);
+      }
     });
   }
 

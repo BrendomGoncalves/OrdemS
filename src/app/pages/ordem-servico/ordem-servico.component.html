@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<!--CONTENT VENDA DE PRODUTO-->
+<!--CONTEINER CADASTRO E EDIÇAO ORDEM DE SERVIÇO-->
 <div class="card flex justify-content-center" style="height: 100%">
   <p-stepper [linear]="true">
     <p-stepperPanel header="CLIENTE">
@@ -498,7 +498,7 @@
                   <p class="m-0">{{ ordemServico.empresa.endereco }}</p>
                   <p class="m-0">{{ ordemServico.empresa.telefone }} / {{ ordemServico.empresa.celular }}
                     / {{ ordemServico.empresa.email }}</p>
-                  <p class="m-0"><strong>CNPJ:</strong> {{ ordemServico.empresa.cnpj }}</p>
+                  <p class="m-0">CNPJ: {{ ordemServico.empresa.cnpj }}</p>
                 </div>
               </header>
               <!--DADOS DA ORDEM DE SERVIÇO-->
@@ -677,4 +677,5 @@
   </p-stepper>
 </div>
 
+<!--MENSAGENS-->
 <p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>

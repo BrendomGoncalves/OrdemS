@@ -5,7 +5,7 @@ import {DropdownModule} from 'primeng/dropdown';
 import {ListboxModule} from 'primeng/listbox';
 import {StepperModule} from 'primeng/stepper';
 import {TableModule} from 'primeng/table';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import {ActivatedRoute, Route, Router, RouterLink} from '@angular/router';
 import {ClientesService} from '../../services/cliente/clientes.service';
 import {Cliente} from '../../models/cliente';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -30,6 +30,7 @@ import {InputTextareaModule} from 'primeng/inputtextarea';
 import {MessageService} from 'primeng/api';
 import {ToastModule} from 'primeng/toast';
 import {OrdensService} from '../../services/ordem/ordens.service';
+import {EntradaEquipamentoService} from '../../services/entrada-equipamento/entrada-equipamento.service';
 
 @Component({
   selector: 'app-ordem-servico',
@@ -110,36 +111,74 @@ export class OrdemServicoComponent implements OnInit {
               private ordensService: OrdensService,
               private messageService: MessageService,
               private activateRoute: ActivatedRoute,
-              private router: Router
+              private router: Router,
+              private entradaEquipamentoService: EntradaEquipamentoService,
   ) {
   }
 
   async ngOnInit(): Promise<void> {
-    this.activateRoute.paramMap.subscribe(async params => {
-      const id = params.get('id');
-      if (id !== null) {
-        (await this.ordensService.getOrdemById(id)).subscribe(ordem => {
-          this.ordemServico = {
-            ...ordem,
-            dataAbertura: ordem.dataAbertura ? new Date(ordem.dataAbertura) : null,
-            dataConclusao: ordem.dataConclusao ? new Date(ordem.dataConclusao) : null,
-            pagamento: {
-              ...ordem.pagamento,
-              dataPagamento: ordem.pagamento.dataPagamento ? new Date(ordem.pagamento.dataPagamento) : null
-            }
-          }
-          this.clienteSelecionado = ordem.cliente;
-          this.produtosSelecionados = ordem.produtosUtilizados;
-          this.servicosSelecionados = ordem.servicos;
-          this.calcularTotalProdutos();
-          this.calcularTotalServicos();
-          this.calcularTotal();
-        });
+    let id;
+    let isEntradaEquipamento: boolean = false;
+
+    this.activateRoute.url.subscribe(urlSegments => {
+      if (urlSegments.length > 1 && urlSegments[1].path === 'entrada-equipamento') {
+        isEntradaEquipamento = true;
+        id = urlSegments[2].path;
       } else {
-        this.ordemServico.id = await this.ordensService.novoId();
-        this.ordemServico.dataAbertura = new Date();
+        isEntradaEquipamento = false;
+        id = urlSegments[1].path;
       }
     });
+
+    if (id && !isEntradaEquipamento) {
+      (await this.ordensService.getOrdemById(id)).subscribe(ordem => {
+        this.ordemServico = {
+          ...ordem,
+          dataAbertura: ordem.dataAbertura ? new Date(ordem.dataAbertura) : null,
+          dataConclusao: ordem.dataConclusao ? new Date(ordem.dataConclusao) : null,
+          pagamento: {
+            ...ordem.pagamento,
+            dataPagamento: ordem.pagamento.dataPagamento ? new Date(ordem.pagamento.dataPagamento) : null
+          }
+        }
+        this.clienteSelecionado = ordem.cliente;
+        this.produtosSelecionados = ordem.produtosUtilizados;
+        this.servicosSelecionados = ordem.servicos;
+        this.calcularTotalProdutos();
+        this.calcularTotalServicos();
+        this.calcularTotal();
+      });
+    } else if(id && isEntradaEquipamento){
+      (await this.entradaEquipamentoService.getEntradaEquipamentoById(id)).subscribe(async (entradaEquipamento) => {
+        this.ordemServico = {
+          id: '',
+          empresa: entradaEquipamento.empresa,
+          cliente: entradaEquipamento.cliente,
+          equipamento: entradaEquipamento.equipamento,
+          dataAbertura: null,
+          dataConclusao: null,
+          descricaoProblema: entradaEquipamento.descricaoProblema,
+          laudoTecnico: '',
+          status: StatusOrdemServicoEnum.EM_ANDAMENTO,
+          valorTotal: 0,
+          servicos: [],
+          produtosUtilizados: [],
+          pagamento: {
+            metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO,
+            statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO,
+            observacoes: '',
+            dataPagamento: null,
+            descontos: [],
+            descontoTotal: 0
+          }
+        };
+        this.clienteSelecionado = entradaEquipamento.cliente;
+        this.ordemServico.id = await this.ordensService.novoId();
+      });
+    } else {
+      this.ordemServico.id = await this.ordensService.novoId();
+      this.ordemServico.dataAbertura = new Date();
+    }
     (await this.empresaService.getEmpresa()).subscribe((empresa) => {
       this.ordemServico.empresa = {
         nome: empresa.nome,

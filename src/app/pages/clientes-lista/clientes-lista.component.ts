@@ -174,7 +174,7 @@ export class ClientesListaComponent implements OnInit {
     private messageService: MessageService) {
     this.clienteForm = this.fb.group({
       id: [''],
-      nome: ['', [Validators.required, Validators.minLength(3)], [asyncValidator]], // Deve ter no mínimo 3 caracteres, é obrigatório,
+      nome: ['', [Validators.required, Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres, é obrigatório,
       fantasia: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres,
       cnpj: ['', [Validators.minLength(18), Validators.pattern(/^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$/)], [asyncValidator()]], // Deve ter no mínimo 14 caracteres,
       ie: ['', [Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)], [asyncValidator()]], // Deve ter no mínimo 9 caracteres,
@@ -224,18 +224,25 @@ export class ClientesListaComponent implements OnInit {
   }
 
   // Utiliza o serviço de cliente para adicionar um novo cliente
-  salvarCliente() {
+  async salvarCliente() {
     const novoCliente: Cliente = this.clienteForm.value;
-    if (this.Clientes.find(cliente => cliente.cpf === novoCliente.cpf)?.cpf === novoCliente.cpf
-      || this.Clientes.find(cliente => cliente.cnpj === novoCliente.cnpj)?.cnpj === novoCliente.cnpj) {
+    let clienteBanco = this.Clientes.find(cliente => cliente.cpf === novoCliente.cpf);
+
+    if (clienteBanco && novoCliente.tipoCliente == 'PF') {
       this.messageService.add({
         severity: 'error',
         summary: 'Cliente',
-        detail: 'Cliente já existe'
+        detail: 'CPF já cadastrado'
+      })
+    } else if (clienteBanco && novoCliente.tipoCliente == 'PJ') {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Cliente',
+        detail: 'CNPJ já cadastrado'
       })
     } else if (this.clienteForm.valid) {
       novoCliente.id = generateUniqueId();
-      this.clientesService.addCliente(novoCliente).subscribe(() => {
+      (await this.clientesService.addCliente(novoCliente)).subscribe(() => {
           this.carregarClientes().then();
           this.estatisticaClientes(this.Clientes);
           this.fecharAdicionarCliente();
@@ -251,10 +258,10 @@ export class ClientesListaComponent implements OnInit {
   }
 
   // Utiliza o serviço de cliente para deletar um cliente
-  deletarCliente() {
+  async deletarCliente() {
     const idDeletar = this.clienteForm.get('id')?.value;
-    if(this.Clientes.find(cliente => cliente.id === idDeletar)?.id === idDeletar) {
-      this.clientesService.deleteCliente(idDeletar).subscribe(() => {
+    if (this.Clientes.find(cliente => cliente.id === idDeletar)?.id === idDeletar) {
+      (await this.clientesService.deleteCliente(idDeletar)).subscribe(() => {
           this.carregarClientes().then();
           this.fecharDetalhesCliente();
           this.messageService.add({
@@ -286,11 +293,11 @@ export class ClientesListaComponent implements OnInit {
   }
 
   // Salva a edição de um campo
-  salvarEdicao(campo: string) {
+  async salvarEdicao(campo: string) {
     const clienteEditado = this.clienteForm.value;
     let clienteBanco: Cliente = this.Clientes.find(c => c.id === clienteEditado.id)!;
     if (clienteEditado.nome !== clienteBanco.nome) {
-      this.clientesService.updateCliente(clienteEditado.id, clienteEditado).subscribe(() => {
+      (await this.clientesService.updateCliente(clienteEditado.id, clienteEditado)).subscribe(() => {
           this.editando[campo] = false;
           this.carregarClientes().then();
           this.messageService.add({
@@ -319,9 +326,7 @@ export class ClientesListaComponent implements OnInit {
 
   // Abre o modal de detalhes do cliente
   abrirDetalhesCliente(cliente: Cliente) {
-    this.clienteForm.setValue({
-      ...cliente
-    })
+    this.clienteForm.setValue(cliente);
     this.verDetalhesCliente = true;
   }
 

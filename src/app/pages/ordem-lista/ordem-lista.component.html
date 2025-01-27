@@ -22,9 +22,6 @@
       </div>
     </div>
     <div class="mt-3 lg:mt-0">
-      <button pButton label="Entrada de Equipamento" class="p-button-outlined mr-2 p-button-danger"
-              icon="pi pi-microchip"
-              routerLink="/ordem-servico"></button>
       <button pButton label="Nova Ordem de Serviço" class="p-button-outlined mr-2 p-button-danger"
               icon="pi pi-file-edit"
               routerLink="/ordem-servico"></button>
@@ -287,7 +284,7 @@
     <div class="flex justify-content-center gap-3">
       <p-button label="Editar" severity="info" routerLink="/ordem-servico/{{ordemSelecionada.id}}"/>
       <p-button label="Deletar" severity="danger" (onClick)="deletarOrdem(this.ordemSelecionada.id)"/>
-      <p-button label="Cancelar" severity="secondary" (onClick)="fecharDetalhesOrdem()"/>
+      <p-button label="Voltar" severity="secondary" (onClick)="fecharDetalhesOrdem()"/>
     </div>
   </div>
 </p-dialog>

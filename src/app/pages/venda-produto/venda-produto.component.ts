@@ -76,12 +76,10 @@ export class VendaProdutoComponent implements OnInit {
   }
 
   async ngOnInit() {
-    (await this.produtoService.getProdutos())
-      .subscribe((produtos) => {
+    (await this.produtoService.getProdutos()).subscribe((produtos) => {
         this.produtos = produtos;
       });
-    (await this.clienteService.getClientes())
-      .subscribe((clientes) => {
+    (await this.clienteService.getClientes()).subscribe((clientes) => {
         this.clientes = clientes;
       });
   }
@@ -157,8 +155,8 @@ export class VendaProdutoComponent implements OnInit {
         total: this.totalVenda,
         data: new Date()
       }
-      this.vendaService.addVenda(novaVenda).subscribe(() => {
-        this.produtoService.baixarEstoque(this.produtosSelecionados).subscribe(() => {
+      this.vendaService.addVenda(novaVenda).subscribe(async () => {
+        (await this.produtoService.baixarEstoque(this.produtosSelecionados)).subscribe(() => {
           this.messageService.add({
             severity: 'success',
             summary: 'Venda',

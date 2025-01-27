@@ -87,34 +87,82 @@
     </ng-template>
     <ng-template pTemplate="footer">
       <tr *ngIf="carregandoDados">
-        <td><p-skeleton size="3rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
       </tr>
       <tr *ngIf="carregandoDados">
-        <td><p-skeleton size="3rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
       </tr>
       <tr *ngIf="carregandoDados">
-        <td><p-skeleton size="3rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
       </tr>
       <tr *ngIf="Produtos.length === 0 && !carregandoDados">
         <td colspan="8" class="text-center text-black-alpha-50">
@@ -290,18 +338,6 @@
         <input formControlName="nome" placeholder="Digite o nome" autofocus/>
         <p-message *ngIf="produtoForm.get('nome')?.invalid" severity="info"
                    text="Precisa ter ao mesno 3 caracteres"></p-message>
-      </div>
-    </div>
-    <!--Unidade de Venda-->
-    <div class="campo-salvar">
-      <div class="campo-salvar-valor">
-        <strong>Unidade de Venda:</strong>
-<!--        <input formControlName="unidadeVenda" placeholder="Digite a unidade de venda" autofocus/>-->
-        <p-dropdown formControlName="unidadeVenda" [options]="unidadesMedida" placeholder="Selecione a unidade de venda"
-                    optionLabel="label" optionValue="value"></p-dropdown>
-<!--        <p-message *ngIf="produtoForm.get('unidadeVenda')?.invalid && produtoForm.get('unidadeVenda')?.touched"-->
-<!--                   severity="info"-->
-<!--                   text="A unidade é obrigatória"></p-message>-->
       </div>
     </div>
     <!--Estoque-->

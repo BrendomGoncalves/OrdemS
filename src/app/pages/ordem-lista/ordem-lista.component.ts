@@ -64,7 +64,14 @@ export class OrdemListaComponent implements OnInit {
     valorTotal: 0,
     servicos: [],
     produtosUtilizados: [],
-    pagamento: {metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO, statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO, observacoes: '', dataPagamento: null, descontos: [], descontoTotal: 0},
+    pagamento: {
+      metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO,
+      statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO,
+      observacoes: '',
+      dataPagamento: null,
+      descontos: [],
+      descontoTotal: 0
+    },
   }
   filtro: string = '';
 
@@ -81,11 +88,10 @@ export class OrdemListaComponent implements OnInit {
   // Carregamento
   carregandoDados: boolean = true;
 
-  constructor(private messageService: MessageService, private ordemService: OrdensService) {
-  }
+  constructor(private messageService: MessageService, private ordemService: OrdensService) {}
 
   ngOnInit() {
-    this.carregarOrdens();
+    this.carregarOrdens().then();
 
     // TODO: Corrigir uso dos gráficos
     // const documentStyle = getComputedStyle(document.documentElement);
@@ -180,7 +186,14 @@ export class OrdemListaComponent implements OnInit {
       valorTotal: 0,
       servicos: [],
       produtosUtilizados: [],
-      pagamento: {metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO, statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO, observacoes: '', dataPagamento: null, descontos: [], descontoTotal: 0},
+      pagamento: {
+        metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO,
+        statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO,
+        observacoes: '',
+        dataPagamento: null,
+        descontos: [],
+        descontoTotal: 0
+      },
     }
     this.verDetalhesOrdem = false;
   }

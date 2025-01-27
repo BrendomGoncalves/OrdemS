@@ -123,7 +123,7 @@
 
 <!--DETALHES SERVIÇO-->
 <p-dialog header="Detalhes Serviço" [closable]="false" [modal]="true" [(visible)]="verDetalhesServico"
-          [style]="{ width: '30rem' }">
+          [style]="{ width: '30rem', 'min-height': '500px' }">
   <form [formGroup]="servicoForm">
     <div class="flex flex-column gap-2">
       <div *ngIf="!editando['nome']" class="campo-editar">
@@ -166,19 +166,21 @@
         </p-button>
       </div>
 
+      <!--CATEGORIA-->
       <div *ngIf="!editando['categoria']" class="campo-editar">
         <div class="campo-editar-valor">
           <strong>Categoria:</strong> {{ servicoForm.get('categoria')?.value }}
         </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
-                  (onClick)="ativarEdicao('categoria')">
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="ativarEdicao('categoria')">
           <i class="pi pi-pencil" style="font-size: 1rem;"></i>
         </p-button>
       </div>
       <div *ngIf="editando['categoria']" class="campo-editar">
         <div class="campo-editar-valor">
           <strong>Categoria:</strong>
-          <input formControlName="categoria" placeholder="Digite a nova categoria"/>
+          <p-dropdown formControlName="categoria" [options]="listaCategorias" optionLabel="nome"
+                      placeholder="Selecione uma categoria"
+                      [showClear]="true"></p-dropdown>
         </div>
         <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
                   (onClick)="salvarEdicao('categoria')">
@@ -186,6 +188,7 @@
         </p-button>
       </div>
 
+      <!--OBSERVAÇOES-->
       <div *ngIf="!editando['observacoes']" class="campo-editar">
         <div class="campo-editar-valor">
           <strong>Observações:</strong> {{ servicoForm.get('observacoes')?.value }}
@@ -236,7 +239,6 @@
     <div class="campo-salvar">
       <div class="campo-salvar-valor">
         <strong>Categoria:</strong>
-        <!--<input formControlName="categoria" placeholder="Digite a categoria" autofocus/>-->
         <p-dropdown formControlName="categoria" [options]="listaCategorias" optionLabel="nome"
                     placeholder="Selecione uma categoria"
                     [showClear]="true"></p-dropdown>
@@ -267,4 +269,5 @@
   </form>
 </p-dialog>
 
+<!--MENSAGENS-->
 <p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>

@@ -3,16 +3,12 @@ import {Button, ButtonDirective} from 'primeng/button';
 import {RouterLink} from '@angular/router';
 import {Servico} from '../../models/servico';
 import {
-  AbstractControl,
-  AsyncValidatorFn,
   FormBuilder,
   FormGroup, FormsModule,
   ReactiveFormsModule,
-  ValidationErrors,
   Validators
 } from '@angular/forms';
 import {ServicosService} from '../../services/servico/servicos.service';
-import {delay, map, Observable, of} from 'rxjs';
 import {InputTextModule} from 'primeng/inputtext';
 import {MessageService, PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
@@ -20,7 +16,7 @@ import {CurrencyPipe, NgIf} from '@angular/common';
 import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
 import {TabViewModule} from 'primeng/tabview';
-import {generateUniqueId} from '../../ferramentas/utils';
+import {asyncValidator, generateUniqueId} from '../../ferramentas/utils';
 import {ToastModule} from 'primeng/toast';
 import {SkeletonModule} from 'primeng/skeleton';
 import {Categoria} from '../../models/categoria';
@@ -74,11 +70,12 @@ export class ServicosListaComponent implements OnInit {
               private messageService: MessageService) {
     this.servicoForm = this.fb.group({
       id: [''],
-      nome: ['', [Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres
+      nome: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
       categoria: [''],
-      precoVenda: ['', [Validators.min(0)], [this.asyncValidator()]], // Deve ser maior ou igual a 0
-      observacoes: ['', [Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres
-      dataCadastro: ['']
+      precoVenda: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
+      observacoes: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
+      dataCadastro: [''],
+      quantidadeVenda: ['']
     });
     this.resetarEdicao();
   }
@@ -226,17 +223,5 @@ export class ServicosListaComponent implements OnInit {
     this.servicoForm.reset();
     this.resetarEdicao();
     this.verDetalhesServico = false;
-  }
-
-  // Função de validação assíncrona
-  asyncValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      return of(control.value).pipe(
-        delay(1000), // Simulate async operation
-        map(value => {
-          return value === 'invalid' ? {invalidAsync: true} : null;
-        })
-      );
-    };
   }
 }

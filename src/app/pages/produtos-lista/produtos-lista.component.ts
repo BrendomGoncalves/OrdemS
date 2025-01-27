@@ -10,7 +10,6 @@ import {
 } from '@angular/forms';
 import {Produto} from '../../models/produto';
 import {ProdutosService} from '../../services/produto/produtos.service';
-import {delay, map, Observable, of} from 'rxjs';
 import {Button, ButtonDirective} from 'primeng/button';
 import {RouterLink} from '@angular/router';
 import {CurrencyPipe, NgIf, PercentPipe} from '@angular/common';
@@ -19,7 +18,7 @@ import {MessageService, PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
-import {generateUniqueId} from '../../ferramentas/utils';
+import {asyncValidator} from '../../ferramentas/utils';
 import {ToastModule} from 'primeng/toast';
 import {SkeletonModule} from 'primeng/skeleton';
 import {DropdownModule} from 'primeng/dropdown';
@@ -53,14 +52,6 @@ export class ProdutosListaComponent implements OnInit {
   filtro: string = ''; // Objeto para filtrar produtos por nome
   produtoForm: FormGroup; // Formulário de cadastro de produtos
   editando: { [key: string]: boolean } = {}; // Objeto para controlar a edição de produtos
-  unidadesMedida: { label: string, value: string }[] = [
-    {label: 'Unidade', value: 'un'},
-    {label: 'Metro', value: 'm'},
-    {label: 'Litro', value: 'l'},
-    {label: 'Mililitro', value: 'ml'},
-    {label: 'Quilograma', value: 'kg'},
-    {label: 'Grama', value: 'g'}
-  ]; // Lista de unidades de medida
 
   // Estatisticas
   QProdutos = signal(this.Produtos.length); // Quantidade de produtos
@@ -78,14 +69,14 @@ export class ProdutosListaComponent implements OnInit {
     private messageService: MessageService) {
     this.produtoForm = this.fb.group({
       id: [''],
-      nome: ['', [Validators.required, Validators.minLength(3)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres
-      unidadeVenda: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)], [this.asyncValidator()]], // Deve ter no mínimo 3 caracteres
-      precoCompra: ['', [Validators.min(0)], [this.asyncValidator()]], // Deve ser maior ou igual a 0
-      precoVenda: ['', [Validators.min(0)], [this.asyncValidator()]], // Deve ser maior ou igual a 0
-      lucro: ['', [Validators.min(0)], [this.asyncValidator()]], // Deve ser maior ou igual a 0
-      estoque: ['', [Validators.min(0)], [this.asyncValidator()]], // Deve ser maior ou igual a 0
+      nome: ['', [Validators.required, Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
+      unidadeVenda: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
+      precoCompra: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
+      precoVenda: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
+      lucro: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
+      estoque: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
       quantidadeVenda: [''], // Não precisa de validação
-      observacoes: ['', [Validators.minLength(3)], [this.asyncValidator()]] // Deve ter no mínimo 3 caracteres
+      observacoes: ['', [Validators.minLength(3)], [asyncValidator()]] // Deve ter no mínimo 3 caracteres
     });
     this.resetarEdicao();
   }
@@ -120,22 +111,18 @@ export class ProdutosListaComponent implements OnInit {
   }
 
   // Utiliza o serviço de produto para adicionar um novo produto
-  salvarProduto() {
+  async salvarProduto() {
     let novoProduto: Produto = this.produtoForm.value;
 
-    if(novoProduto.unidadeVenda === undefined || novoProduto.unidadeVenda === ''){
-      novoProduto.unidadeVenda = 'un';
-    }
-
-    if (this.Produtos.find(produto => produto.nome === novoProduto.nome)?.nome === novoProduto.nome) {
+    if (this.Produtos.find(produto => produto.nome === novoProduto.nome)) {
       this.messageService.add({
         severity: 'error',
         summary: 'Erro',
         detail: 'Produto já cadastrado!'
       });
     } else if (this.produtoForm.valid) {
-      novoProduto.id = generateUniqueId();
-      this.produtoService.addProduto(novoProduto).subscribe(() => {
+      novoProduto.id = await this.produtoService.novoId();
+      (await this.produtoService.addProduto(novoProduto)).subscribe(() => {
         this.carregarProdutos().then();
         this.estatisticaProdutos(this.Produtos);
         this.fecharAdicionarProduto();
@@ -150,10 +137,10 @@ export class ProdutosListaComponent implements OnInit {
   }
 
   // Utiliza o serviço de produto para deletar um produto
-  deletarProduto() {
+  async deletarProduto() {
     const idDeletar = this.produtoForm.get('id')?.value;
     if (this.Produtos.find(produto => produto.id === idDeletar)?.id === idDeletar) {
-      this.produtoService.deleteProduto(idDeletar).subscribe(() => {
+      (await this.produtoService.deleteProduto(idDeletar)).subscribe(() => {
         this.carregarProdutos().then();
         this.fecharDetalhesProduto();
         this.messageService.add({
@@ -184,11 +171,11 @@ export class ProdutosListaComponent implements OnInit {
   }
 
   // Salva a edição de um campo
-  salvarEdicao(campo: string) {
+  async salvarEdicao(campo: string) {
     const produtoEditado = this.produtoForm.value;
     let produtoBanco: Produto = this.Produtos.find(c => c.id === produtoEditado.id)!;
     if (produtoEditado.nome !== produtoBanco.nome) {
-      this.produtoService.updateProduto(produtoEditado.id, produtoEditado).subscribe(() => {
+      (await this.produtoService.updateProduto(produtoEditado.id, produtoEditado)).subscribe(() => {
         this.editando[campo] = false;
         this.carregarProdutos().then();
         this.messageService.add({
@@ -227,17 +214,5 @@ export class ProdutosListaComponent implements OnInit {
     this.produtoForm.reset();
     this.resetarEdicao();
     this.verDetalhesProduto = false;
-  }
-
-  // Função de validação assíncrona
-  asyncValidator(): AsyncValidatorFn {
-    return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      return of(control.value).pipe(
-        delay(1000), // Simulate async operation
-        map(value => {
-          return value === 'invalid' ? {invalidAsync: true} : null;
-        })
-      );
-    };
   }
 }
