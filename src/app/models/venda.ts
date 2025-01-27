@@ -5,6 +5,6 @@ export interface Venda{
   produtos: Produto[];
   nomeCliente: string;
   documentoCliente: string;
-  data: Date;
+  data: Date | null;
   total: number;
 }
