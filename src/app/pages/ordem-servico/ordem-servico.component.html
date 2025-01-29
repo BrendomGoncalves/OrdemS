@@ -484,9 +484,8 @@
     </p-stepperPanel>
     <p-stepperPanel header="RESUMO">
       <ng-template pTemplate="content" let-prevCallback="prevCallback">
-        <div class="flex flex-column h-full" style="width: calc(100vw - 100px);max-width: 1400px;">
-          <div
-            class="border-2 border-dashed surface-border border-round surface-ground flex-column flex gap-5 justify-content-center align-items-center font-medium pt-4 pb-4">
+        <div class="h-full" style="width: calc(100vw - 100px);max-width: 1400px;">
+          <div class="border-2 border-dashed surface-border border-round surface-ground flex-column flex gap-5 justify-content-center align-items-center font-medium pt-4 pb-4">
             <div id="ordem-servico-print" class="ordem-servico text-black-alpha-90 m-0 p-4 bg-white">
               <!--LOGOTIPO E INFORMAÇÕES DA EMPRESA-->
               <header class="os-header flex flex-row justify-content-between mb-3">
@@ -519,7 +518,7 @@
               </section>
               <!--DADOS DO CLIENTE, EQUIPAMENTOS E DEFEITOS RELATADOS-->
               <section class="w-full flex flex-row">
-                <div class="border-1" style="width:60%;">
+                <div class="border-1" style="width:40%;">
                   <h4 class="m-0 text-center border-bottom-1 border-black-alpha-30">DADOS DO CLIENTE</h4>
                   <p class="ml-2 mt-2 m-0">
                     <strong>Nome:</strong> {{ ordemServico.cliente?.nome || 'Nenhum nome inserido' }}
@@ -540,14 +539,14 @@
                     <strong>E-mail:</strong> {{ ordemServico.cliente?.email || 'Nenhum e-mail inserido' }}
                   </p>
                 </div>
-                <div class="border-left-1" style="width:40%;">
-                  <div class="border-1">
+                <div style="width:60%;">
+                  <div class="border-top-1 border-bottom-1 border-right-1">
                     <h4 class="m-0 text-center border-bottom-1 border-black-alpha-30">EQUIPAMENTO(S)</h4>
                     <p class="mt-1 mb-1 m-0 ml-2">
                       {{ ordemServico.equipamento || 'Nenhum equipamento inserido' }}
                     </p>
                   </div>
-                  <div class="border-1">
+                  <div class="border-bottom-1 border-right-1">
                     <h4 class="m-0 text-center border-bottom-1 border-black-alpha-30">DEFEITO(S) RELATADO</h4>
                     <p class="mt-1 mb-1 m-0 ml-2">
                       {{ ordemServico.descricaoProblema || 'Nenhum defeito relatado' }}
@@ -556,7 +555,7 @@
                 </div>
               </section>
               <!--LAUDO TÉCNICO-->
-              <section class="w-full mt-2 border-1">
+              <section class="w-full mt-3 border-1">
                 <h4 class="m-0 text-center border-bottom-1 border-black-alpha-30">LAUDO TÉCNICO</h4>
                 <p class="m-2">{{ ordemServico.laudoTecnico || 'Nenhum laudo inserido' }}</p>
               </section>
@@ -653,7 +652,7 @@
             <div class="flex pl-3 pr-3 pt-4 justify-content-between w-full no-print bg-transparent cursor-auto">
               <p-button
                 severity="danger"
-                label="Back"
+                label="VOLTAR"
                 icon="pi pi-arrow-left"
                 (onClick)="prevCallback.emit()"/>
               <div class="flex flex-row justify-content-around w-18rem">
@@ -662,10 +661,11 @@
                   severity="danger"
                   icon="pi pi-print"
                   (onClick)="imprimir()"
-                  label="Imprimir"/>
+                  label="IMPRIMIR"/>
                 <p-button
-                  label="Salvar"
+                  label="SALVAR"
                   icon="pi pi-check"
+                  severity="danger"
                   [loading]="carregandoBotao"
                   (onClick)="salvarOrdem()"/>
               </div>

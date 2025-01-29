@@ -4,7 +4,7 @@ import {MessageService, PrimeTemplate} from 'primeng/api';
 import {EntradaEquipamentoService} from '../../services/entrada-equipamento/entrada-equipamento.service';
 import {Button, ButtonDirective} from 'primeng/button';
 import {RouterLink} from '@angular/router';
-import {CurrencyPipe, DatePipe, NgForOf, NgIf} from '@angular/common';
+import {DatePipe, NgIf} from '@angular/common';
 import {InputTextModule} from 'primeng/inputtext';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SkeletonModule} from 'primeng/skeleton';
@@ -44,6 +44,7 @@ export class EntradasEquipamentosListaComponent implements OnInit {
     equipamento: '',
     dataRecebimento: null,
     descricaoProblema: '',
+    observacoes: ''
   }
   filtro: string = '';
 
@@ -121,6 +122,7 @@ export class EntradasEquipamentosListaComponent implements OnInit {
       equipamento: '',
       dataRecebimento: null,
       descricaoProblema: '',
+      observacoes: ''
     }
     this.verDetalhesEntradaEquipamento = false;
   }

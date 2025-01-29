@@ -8,4 +8,5 @@ export interface EntradaEquipamento {
   equipamento: string
   dataRecebimento: Date | null
   descricaoProblema: string
+  observacoes: string
 }

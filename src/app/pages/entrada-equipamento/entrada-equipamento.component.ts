@@ -57,6 +57,7 @@ export class EntradaEquipamentoComponent implements OnInit {
     equipamento: '',
     dataRecebimento: null,
     descricaoProblema: '',
+    observacoes: ''
   }
   clienteSelecionado: Cliente | null = null;
 
@@ -160,6 +161,7 @@ export class EntradaEquipamentoComponent implements OnInit {
               equipamento: '',
               dataRecebimento: null,
               descricaoProblema: '',
+              observacoes: ''
             }
             setTimeout(() => {
               this.carregandoBotao = false;
