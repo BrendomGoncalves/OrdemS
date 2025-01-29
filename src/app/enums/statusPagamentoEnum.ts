@@ -1,5 +1,5 @@
 export enum StatusPagamentoEnum{
-  EM_MANUTENCAO = 'EM MANUTENÇÃO',
+  EM_ABERTO = 'EM ABERTO',
   PAGO = 'PAGO',
   CANCELADO = 'CANCELADO'
 }

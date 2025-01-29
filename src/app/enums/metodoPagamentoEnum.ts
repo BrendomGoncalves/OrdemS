@@ -1,6 +1,6 @@
 export enum MetodoPagamentoEnum{
-  EM_MANUTENCAO = 'EM MANUTENÇÃO',
   DINHEIRO = 'DINHEIRO',
-  CARTAO = 'CARTAO',
+  CARTAO_CREDITO = 'CARTAO DE CRÉDITO',
+  CARTAO_DEBITO = 'CARTAO DE DÉBITO',
   PIX = 'PIX'
 }

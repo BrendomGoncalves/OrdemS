@@ -65,8 +65,8 @@ export class OrdemListaComponent implements OnInit {
     servicos: [],
     produtosUtilizados: [],
     pagamento: {
-      metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO,
-      statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO,
+      metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
+      statusPagamento: StatusPagamentoEnum.EM_ABERTO,
       observacoes: '',
       dataPagamento: null,
       descontos: [],
@@ -187,8 +187,8 @@ export class OrdemListaComponent implements OnInit {
       servicos: [],
       produtosUtilizados: [],
       pagamento: {
-        metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO,
-        statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO,
+        metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
+        statusPagamento: StatusPagamentoEnum.EM_ABERTO,
         observacoes: '',
         dataPagamento: null,
         descontos: [],

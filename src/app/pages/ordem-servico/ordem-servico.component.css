@@ -6,24 +6,6 @@
   line-height: 1.6;
 }
 
-.os-header img {
-  width: 180px;
-  height: 180px;
-}
-
-.os-info {
-  h2 {
-    margin: 0;
-  }
-  p {
-    margin: 4px 0;
-  }
-}
-
-section p {
-  font-size: .9rem;
-}
-
 /* Tabelas */
 table {
   width: 100%;
@@ -58,9 +40,20 @@ table th {
 
 /* Estilos de Impressão */
 @media print {
+
   @page {
     size: A4;
     margin: 0;
+  }
+
+  h1 {
+    font-size: 16pt;
+  }
+  h2 {
+    font-size: 14pt;
+  }
+  h3 {
+    font-size: 12pt;
   }
 
   #ordem-servico-print, #ordem-servico-print * {

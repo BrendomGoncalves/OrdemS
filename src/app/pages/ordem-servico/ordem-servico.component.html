@@ -141,7 +141,7 @@
 
               <!--PAGAMENTO-->
               <p style="font-size: 1.2rem" class="m-0 mb-2 text-center font-bold">PAGAMENTO</p>
-              <div class="flex flex-column md:flex-row">
+              <div class="w-full flex flex-column justify-content-center gap-2 md:flex-row">
                 <!--DATA PAGAMENTO-->
                 <div class="flex flex-column">
                   <p style="font-size: 1.1rem" class="m-0 mb-2">Data:</p>
@@ -154,57 +154,70 @@
                     [showOnFocus]="false"/>
                 </div>
                 <!--METODO E STATUS-->
-                <div class="flex flex-column justify-content-around gap-3 w-full md:flex-row">
+                <div class="flex flex-column gap-2 md:flex-row">
                   <!--METODO PAGAMENTO-->
                   <div class="flex flex-column">
                     <p style="font-size: 1.1rem" class="m-0 mb-2">Método:</p>
-                    <p-listbox
+                    <p-dropdown
                       [options]="Object.values(MetodoPagamentoEnum)"
                       [(ngModel)]="ordemServico.pagamento.metodoPagamento"
                       optionLabel="name"
-                      [style]="{ width: '14rem' }">
-                      <ng-template let-metodo pTemplate="item">
+                      [style]="{ width: '15rem', height: '3rem' }">
+                      <ng-template pTemplate="selectedItem" let-metodo>
                         <div class="flex align-items-center gap-2">
-                          @if (metodo == MetodoPagamentoEnum.EM_MANUTENCAO) {
-                            <i class="pi pi-clock font-bold" style="color: orange"></i>
-                            <div class="font-bold">{{ metodo }}</div>
-                          } @else if (metodo == MetodoPagamentoEnum.DINHEIRO) {
-                            <i class="pi pi-money-bill font-bold" style="color: green"></i>
-                            <div class="font-bold">{{ metodo }}</div>
-                          } @else if (metodo == MetodoPagamentoEnum.CARTAO) {
-                            <i class="pi pi-credit-card font-bold" style="color: blue"></i>
-                            <div class="font-bold">{{ metodo }}</div>
-                          } @else {
-                            <i class="pi pi-dollar font-bold" style="color: gray"></i>
-                            <div class="font-bold">{{ metodo }}</div>
-                          }
+                          <div class="flex align-items-center gap-2">
+                            <ng-container *ngFor="let item of metodoPagamentoItems">
+                              <ng-container *ngIf="metodo === item.value">
+                                <i [class]="item.icon" [style.color]="item.color" class="font-bold"></i>
+                                <div class="font-bold">{{ metodo }}</div>
+                              </ng-container>
+                            </ng-container>
+                          </div>
                         </div>
                       </ng-template>
-                    </p-listbox>
+                      <ng-template pTemplate="item" let-metodo>
+                        <div class="flex align-items-center gap-2">
+                          <div class="flex align-items-center gap-2">
+                            <ng-container *ngFor="let item of metodoPagamentoItems">
+                              <ng-container *ngIf="metodo === item.value">
+                                <i [class]="item.icon" [style.color]="item.color" class="font-bold"></i>
+                                <div class="font-bold">{{ metodo }}</div>
+                              </ng-container>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
                   </div>
                   <!--STATUS PAGAMENTO-->
                   <div class="flex flex-column">
                     <p style="font-size: 1.1rem" class="m-0 mb-2">Status:</p>
-                    <p-listbox
+                    <p-dropdown
                       [options]="Object.values(StatusPagamentoEnum)"
                       [(ngModel)]="ordemServico.pagamento.statusPagamento"
                       optionLabel="name"
-                      [style]="{ width: '14rem' }">
-                      <ng-template let-status pTemplate="item">
+                      [style]="{ width: '15rem', height: '3rem' }">
+                      <ng-template let-status pTemplate="selectedItem">
                         <div class="flex align-items-center gap-2">
-                          @if (status == StatusPagamentoEnum.PAGO) {
-                            <i class="pi pi-check-circle font-bold" style="color: green"></i>
-                            <div class="font-bold">{{ status }}</div>
-                          } @else if (status == StatusPagamentoEnum.EM_MANUTENCAO) {
-                            <i class="pi pi-clock font-bold" style="color: orange"></i>
-                            <div class="font-bold">{{ status }}</div>
-                          } @else {
-                            <i class="pi pi-times-circle font-bold" style="color: red"></i>
-                            <div class="font-bold">{{ status }}</div>
-                          }
+                          <ng-container *ngFor="let item of statusPagamentoItems">
+                            <ng-container *ngIf="status === item.value">
+                              <i [class]="item.icon" [style.color]="item.color" class="font-bold"></i>
+                              <div class="font-bold">{{ status }}</div>
+                            </ng-container>
+                          </ng-container>
                         </div>
                       </ng-template>
-                    </p-listbox>
+                      <ng-template let-status pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                          <ng-container *ngFor="let item of statusPagamentoItems">
+                            <ng-container *ngIf="status === item.value">
+                              <i [class]="item.icon" [style.color]="item.color" class="font-bold"></i>
+                              <div class="font-bold">{{ status }}</div>
+                            </ng-container>
+                          </ng-container>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
                   </div>
                 </div>
               </div>
@@ -485,37 +498,39 @@
     <p-stepperPanel header="RESUMO">
       <ng-template pTemplate="content" let-prevCallback="prevCallback">
         <div class="h-full" style="width: calc(100vw - 100px);max-width: 1400px;">
-          <div class="border-2 border-dashed surface-border border-round surface-ground flex-column flex gap-5 justify-content-center align-items-center font-medium pt-4 pb-4">
+          <div
+            class="border-2 border-dashed surface-border border-round surface-ground flex-column flex gap-5 justify-content-center align-items-center font-medium pt-4 pb-4">
             <div id="ordem-servico-print" class="ordem-servico text-black-alpha-90 m-0 p-4 bg-white">
               <!--LOGOTIPO E INFORMAÇÕES DA EMPRESA-->
-              <header class="os-header flex flex-row justify-content-between mb-3">
-                <img alt="Logo da Empresa" src="assets/logoBranco.svg">
+              <header class="flex flex-row justify-content-between mb-3">
+                <!--DADOS DA ORDEM DE SERVIÇO-->
+                <section class="mb-3 align-items-start">
+                  <h1 class="text-left m-0">ORDEM DE SERVIÇO</h1>
+                  <div class="flex flex-column justify-content-around">
+                    <p class="m-0"><strong>NÚMERO:</strong> #{{ ordemServico.id.padStart(5, '0') }}</p>
+                    <p class="m-0"><strong>EMISSÃO:</strong> {{ ordemServico.dataAbertura | date: 'dd/MM/yyyy' }}</p>
+                    <p class="m-0"><strong>ENTREGA:</strong>
+                      @if (ordemServico.dataConclusao != null) {
+                        {{ ordemServico.dataConclusao | date: 'dd/MM/yyyy' }}
+                      } @else {
+                        EM MANUTENÇÃO
+                      }
+                    </p>
+                  </div>
+                </section>
                 <!--DIV INFORMAÇÕES DA EMPRESA-->
-                <div class="p-2 flex flex-column justify-content-center align-items-end">
-                  <h2 class="m-0 mt-1 mb-1">{{ ordemServico.empresa.nome.toUpperCase() }}</h2>
+                <section class="flex flex-column justify-content-center align-items-end">
+                  <h2 class="m-0">{{ ordemServico.empresa.nome }}</h2>
                   <p class="m-0">{{ ordemServico.empresa.tecnico }}</p>
-                  <p class="m-0">{{ ordemServico.empresa.endereco }}</p>
-                  <p class="m-0">{{ ordemServico.empresa.telefone }} / {{ ordemServico.empresa.celular }}
-                    / {{ ordemServico.empresa.email }}</p>
                   <p class="m-0">CNPJ: {{ ordemServico.empresa.cnpj }}</p>
-                </div>
-              </header>
-              <!--DADOS DA ORDEM DE SERVIÇO-->
-              <section class="os-info w-full mb-3">
-                <h2 class="text-center">ORDEM DE SERVIÇO</h2>
-                <div class="flex flex-row justify-content-around mt-2">
-                  <p><strong>NÚMERO:</strong> #{{ ordemServico.id.padStart(5, '0') }}</p>
-                  <p><strong>EMISSÃO:</strong> {{ ordemServico.dataAbertura | date: 'dd/MM/yyyy' }}</p>
-                  <p>
-                    <strong>ENTREGA:</strong>
-                    @if (ordemServico.dataConclusao != null) {
-                      {{ ordemServico.dataConclusao | date: 'dd/MM/yyyy' }}
-                    } @else {
-                      EM MANUTENÇÃO
+                  <p class="m-0">{{ ordemServico.empresa.endereco }}</p>
+                  <p class="m-0">{{ ordemServico.empresa.email }} - {{ ordemServico.empresa.celular }}
+                    @if (ordemServico.empresa.telefone != undefined && ordemServico.empresa.telefone != '') {
+                      {{ '/' + ordemServico.empresa.telefone }}
                     }
                   </p>
-                </div>
-              </section>
+                </section>
+              </header>
               <!--DADOS DO CLIENTE, EQUIPAMENTOS E DEFEITOS RELATADOS-->
               <section class="w-full flex flex-row">
                 <div class="border-1" style="width:40%;">
@@ -580,9 +595,10 @@
                     <td colspan="2">Nenhum serviço realizado</td>
                   </tr>
                   <tr class="border-left-1 border-bottom-1 border-right-1 w-auto">
-                    <td class="font-bold border-right-1 text-right">TOTAL DE SERVIÇOS</td>
-                    <td class="font-bold text-center w-12rem"
-                        colspan="2">{{ totalServicos | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
+                    <td></td>
+                    <td class="font-bold border-right-1 text-center">TOTAL</td>
+                    <td
+                      class="border-left-1 font-bold text-center w-12rem">{{ totalServicos | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
                     </td>
                   </tr>
                   </tbody>
@@ -609,15 +625,15 @@
                     <td colspan="2">Nenhum produto foi utilizado</td>
                   </tr>
                   <tr class="border-left-1 border-bottom-1 border-right-1">
-                    <td class="font-bold border-right-1 text-right">TOTAL DE PRODUTOS</td>
-                    <td class="font-bold text-center w-12rem"
-                        colspan="2">{{ totalProdutos | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
+                    <td></td>
+                    <td class="font-bold border-right-1 text-center">TOTAL</td>
+                    <td
+                      class="font-bold text-center w-12rem">{{ totalProdutos | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}
                     </td>
                   </tr>
                   </tbody>
                 </table>
               </section>
-              <!--PAGAMENTO, DESCONTO E TOTAL-->
               <section class="w-full flex flex-row justify-content-between mt-2">
                 <div class="flex flex-row gap-2" style="width: 50rem">
                   <!--PAGAMENTO-->

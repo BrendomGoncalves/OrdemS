@@ -75,8 +75,8 @@ export class OrdemServicoComponent implements OnInit {
     servicos: [],
     produtosUtilizados: [],
     pagamento: {
-      metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO,
-      statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO,
+      metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
+      statusPagamento: StatusPagamentoEnum.EM_ABERTO,
       observacoes: '',
       dataPagamento: null,
       descontos: [],
@@ -89,6 +89,17 @@ export class OrdemServicoComponent implements OnInit {
   descontoAdicionado: Desconto = {valor: 0, descricao: ''};
   totalServicos: number = 0;
   totalProdutos: number = 0;
+  metodoPagamentoItems = [
+    {value: MetodoPagamentoEnum.DINHEIRO, icon: 'pi pi-money-bill', color: 'green'},
+    {value: MetodoPagamentoEnum.CARTAO_CREDITO, icon: 'pi pi-credit-card', color: 'blue'},
+    {value: MetodoPagamentoEnum.CARTAO_DEBITO, icon: 'pi pi-credit-card', color: 'blue'},
+    {value: MetodoPagamentoEnum.PIX, icon: 'pi pi-dollar', color: 'gray'}
+  ];
+  statusPagamentoItems = [
+    {value: StatusPagamentoEnum.PAGO, icon: 'pi pi-check-circle', color: 'green'},
+    {value: StatusPagamentoEnum.EM_ABERTO, icon: 'pi pi-clock', color: 'orange'},
+    {value: StatusPagamentoEnum.CANCELADO, icon: 'pi pi-times-circle', color: 'red'}
+  ];
 
   // Listas
   listaClientes: Cliente[] = [];
@@ -121,12 +132,14 @@ export class OrdemServicoComponent implements OnInit {
     let isEntradaEquipamento: boolean = false;
 
     this.activateRoute.url.subscribe(urlSegments => {
-      if (urlSegments.length > 1 && urlSegments[1].path === 'entrada-equipamento') {
-        isEntradaEquipamento = true;
-        id = urlSegments[2].path;
-      } else {
-        isEntradaEquipamento = false;
-        id = urlSegments[1].path;
+      if (urlSegments.length > 1 && urlSegments[1].path !== null) {
+        if (urlSegments[1].path === 'entrada-equipamento') {
+          isEntradaEquipamento = true;
+          id = urlSegments[2].path;
+        } else {
+          isEntradaEquipamento = false;
+          id = urlSegments[1].path;
+        }
       }
     });
 
@@ -148,7 +161,7 @@ export class OrdemServicoComponent implements OnInit {
         this.calcularTotalServicos();
         this.calcularTotal();
       });
-    } else if(id && isEntradaEquipamento){
+    } else if (id && isEntradaEquipamento) {
       (await this.entradaEquipamentoService.getEntradaEquipamentoById(id)).subscribe(async (entradaEquipamento) => {
         this.ordemServico = {
           id: '',
@@ -164,8 +177,8 @@ export class OrdemServicoComponent implements OnInit {
           servicos: [],
           produtosUtilizados: [],
           pagamento: {
-            metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO,
-            statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO,
+            metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
+            statusPagamento: StatusPagamentoEnum.EM_ABERTO,
             observacoes: '',
             dataPagamento: null,
             descontos: [],
@@ -354,8 +367,8 @@ export class OrdemServicoComponent implements OnInit {
               servicos: [],
               produtosUtilizados: [],
               pagamento: {
-                metodoPagamento: MetodoPagamentoEnum.EM_MANUTENCAO,
-                statusPagamento: StatusPagamentoEnum.EM_MANUTENCAO,
+                metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
+                statusPagamento: StatusPagamentoEnum.EM_ABERTO,
                 observacoes: '',
                 dataPagamento: null,
                 descontos: [],
