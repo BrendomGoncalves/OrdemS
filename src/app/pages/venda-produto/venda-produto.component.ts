@@ -86,6 +86,7 @@ export class VendaProdutoComponent implements OnInit {
 
   limparProdutosSelecionados() {
     this.produtosSelecionados = [];
+    this.totalVenda = 0;
   }
 
   limparClienteSelecionado() {
@@ -109,13 +110,17 @@ export class VendaProdutoComponent implements OnInit {
     }
   }
 
+  calcularTotalVenda(){
+    this.totalVenda = this.produtosSelecionados.reduce((acc, produto) => acc + (produto.quantidadeVenda * produto.precoVenda), 0);
+  }
+
   aumentarQuantidade(produtoId: string) {
     this.produtosSelecionados.forEach(produto => {
       if (produto.id === produtoId) {
         if (produto.quantidadeVenda < produto.estoque) produto.quantidadeVenda++;
       }
     });
-    this.totalVenda = this.produtosSelecionados.reduce((acc, produto) => acc + (produto.quantidadeVenda * produto.precoVenda), 0);
+    this.calcularTotalVenda();
   }
 
   diminuirQuantidade(produtoId: string) {
@@ -124,7 +129,7 @@ export class VendaProdutoComponent implements OnInit {
         if (produto.quantidadeVenda > 0) produto.quantidadeVenda--;
       }
     });
-    this.totalVenda = this.produtosSelecionados.reduce((acc, produto) => acc + (produto.quantidadeVenda * produto.precoVenda), 0);
+    this.calcularTotalVenda();
   }
 
   realizarVenda() {
