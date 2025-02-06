@@ -81,7 +81,7 @@ export class CategoriasListaComponent implements OnInit {
         setTimeout(() => {
           this.carregandoDados = false;
           this.estatisticaCategoria(categorias);
-        }, 1500);
+        }, 1000);
       },
       error: () => {
         this.carregandoDados = false;

@@ -204,7 +204,7 @@ export class ClientesListaComponent implements OnInit {
       setTimeout(() => {
         this.carregandoDados = false;
         this.estatisticaClientes(clientes);
-      }, 1500);
+      }, 1000);
     });
   }
 

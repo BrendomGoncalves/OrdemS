@@ -70,7 +70,6 @@ export class ProdutosListaComponent implements OnInit {
     this.produtoForm = this.fb.group({
       id: [''],
       nome: ['', [Validators.required, Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
-      unidadeVenda: ['', [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
       precoCompra: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
       precoVenda: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
       lucro: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
@@ -92,7 +91,7 @@ export class ProdutosListaComponent implements OnInit {
       setTimeout(() => {
         this.carregandoDados = false;
         this.estatisticaProdutos(produtos);
-      }, 1500);
+      }, 1000);
     });
   }
 

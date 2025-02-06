@@ -94,7 +94,7 @@ export class ServicosListaComponent implements OnInit {
       setTimeout(() => {
         this.carregandoDados = false;
         this.estatisticaServicos(servicos);
-      }, 1500);
+      }, 1000);
     });
   }
 

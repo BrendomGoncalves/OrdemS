@@ -71,7 +71,7 @@ export class EntradasEquipamentosListaComponent implements OnInit {
       setTimeout(() => {
         this.carregandoDados = false;
         this.estatisticaEntradasEquipamentos(entradasEquipamentos);
-      }, 1500);
+      }, 1000);
     })
   }
 

@@ -139,9 +139,24 @@
                           [(ngModel)]="ordemServico.descricaoProblema"></textarea>
               </div>
 
+              <!--BOTAO ADICIONAR PAGAMENTO-->
+              <div class="flex flex-row justify-content-center w-full">
+                <p-button
+                  label="Adicionar Pagamento"
+                  icon="pi pi-plus"
+                  iconPos="left"
+                  (click)="adicionarPagamento = true"
+                  *ngIf="!adicionarPagamento"
+                  severity="danger"
+                  outlined
+                />
+              </div>
+
               <!--PAGAMENTO-->
-              <p style="font-size: 1.2rem" class="m-0 mb-2 text-center font-bold">PAGAMENTO</p>
-              <div class="w-full flex flex-column justify-content-center gap-2 md:flex-row">
+              <p style="font-size: 1.2rem" class="m-0 mb-2 text-center font-bold" *ngIf="adicionarPagamento">PAGAMENTO
+                <p-button (click)="adicionarPagamento = false; resetPagamento()" severity="danger" styleClass="w-2rem h-1rem" icon="pi pi-times"/>
+              </p>
+              <div class="w-full flex flex-column justify-content-center gap-2 md:flex-row" *ngIf="adicionarPagamento">
                 <!--DATA PAGAMENTO-->
                 <div class="flex flex-column">
                   <p style="font-size: 1.1rem" class="m-0 mb-2">Data:</p>
@@ -222,13 +237,13 @@
                 </div>
               </div>
               <!--OBSERVACOES-->
-              <div class="flex flex-column w-full">
+              <div class="flex flex-column w-full" *ngIf="adicionarPagamento">
                 <p style="font-size: 1.1rem" class="m-0 mb-2">Descrição:</p>
                 <textarea pInputTextarea style="font-size: 1.1rem" rows="4" cols="50"
                           [(ngModel)]="ordemServico.pagamento.observacoes"></textarea>
               </div>
               <!--DESCONTOS-->
-              <div class="flex flex-column w-full">
+              <div class="flex flex-column w-full" *ngIf="adicionarPagamento">
                 <p style="font-size: 1.1rem" class="m-0 mb-2">Descontos:</p>
                 <div class="flex flex-column align-items-start gap-3 w-full md:flex-row md:align-items-center">
                   <p-inputNumber
@@ -239,7 +254,7 @@
                     currency="BRL"/>
                   <textarea pInputTextarea style="font-size: 1.1rem;" rows="1" cols="40"
                             [(ngModel)]="descontoAdicionado.descricao" placeholder="Desconto da loja"></textarea>
-                  <p-button styleClass="w-3rem h-3rem" icon="pi pi-plus" outlined (onClick)="adicionarDesconto()"
+                  <p-button styleClass="w-3rem h-3rem" icon="pi pi-plus" severity="danger" outlined (onClick)="adicionarDesconto()"
                             [disabled]="descontoAdicionado.valor === 0"></p-button>
                 </div>
                 <div>
@@ -273,6 +288,7 @@
               label="Próximo"
               icon="pi pi-arrow-right"
               iconPos="right"
+              severity="danger"
               [disabled]="clienteSelecionado == null || ordemServico.equipamento == '' || ordemServico.descricaoProblema == ''"
               (onClick)="nextCallback.emit(); ordemServico.cliente == null ? ordemServico.cliente = clienteSelecionado : '';"/>
           </div>
@@ -342,16 +358,19 @@
               label="Voltar"
               icon="pi pi-arrow-left"
               iconPos="left"
+              severity="danger"
               (onClick)="prevCallback.emit()"/>
             <p-button
               (click)="limparServicosSelecionados()"
               [disabled]="servicosSelecionados.length == 0"
               icon="pi pi-trash"
+              severity="danger"
               label="Limpar Tudo"/>
             <p-button
               label="Próximo"
               icon="pi pi-arrow-right"
               iconPos="right"
+              severity="danger"
               [disabled]="servicosSelecionados.length == 0"
               (onClick)="nextCallback.emit();ordemServico.servicos = servicosSelecionados"/>
           </div>
@@ -485,11 +504,13 @@
               label="Voltar"
               icon="pi pi-arrow-left"
               iconPos="left"
+              severity="danger"
               (onClick)="prevCallback.emit()"/>
             <p-button
               label="Próximo"
               icon="pi pi-arrow-right"
               iconPos="right"
+              severity="danger"
               (onClick)="nextCallback.emit(); ordemServico.produtosUtilizados = produtosSelecionados; calcularTotal()"/>
           </div>
         </div>

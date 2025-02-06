@@ -70,7 +70,7 @@ export class VendasListaComponent implements OnInit {
       setTimeout(() => {
         this.carregandoDados = false;
         this.estatisticaVendas(vendas);
-      }, 1500);
+      }, 1000);
     });
   }
 

@@ -199,27 +199,6 @@
         </p-button>
       </div>
 
-      <!-- UnidadeVenda -->
-      <div *ngIf="!editando['unidadeVenda']" class="campo-editar">
-        <div class="campo-editar-valor">
-          <strong>Unidade de Venda:</strong> {{ produtoForm.get('unidadeVenda')?.value }}
-        </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
-                  (onClick)="ativarEdicao('unidadeVenda')">
-          <i class="pi pi-pencil" style="font-size: 1rem;"></i>
-        </p-button>
-      </div>
-      <div *ngIf="editando['unidadeVenda']" class="campo-editar">
-        <div class="campo-editar-valor">
-          <strong>Preço Venda:</strong>
-          <input formControlName="unidadeVenda" placeholder="Digite a nova unidade de venda"/>
-        </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
-                  (onClick)="salvarEdicao('unidadeVenda')">
-          <i class="pi pi-save" style="font-size: 1rem;"></i>
-        </p-button>
-      </div>
-
       <!-- Estoque -->
       <div *ngIf="!editando['estoque']" class="campo-editar">
         <div class="campo-editar-valor">

@@ -155,7 +155,7 @@ export class OrdemListaComponent implements OnInit {
       setTimeout(() => {
         this.carregandoDados = false;
         this.estatisticaOrdens(ordens);
-      }, 1500);
+      }, 1000);
     });
   }
 

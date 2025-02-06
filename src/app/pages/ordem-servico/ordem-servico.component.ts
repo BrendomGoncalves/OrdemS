@@ -99,6 +99,7 @@ export class OrdemServicoComponent implements OnInit {
     {value: StatusPagamentoEnum.PAGO, icon: 'pi pi-check-circle', color: 'green'},
     {value: StatusPagamentoEnum.CANCELADO, icon: 'pi pi-times-circle', color: 'red'}
   ];
+  adicionarPagamento: boolean = false;
 
   // Listas
   listaClientes: Cliente[] = [];
@@ -106,6 +107,7 @@ export class OrdemServicoComponent implements OnInit {
   listaServicos: Servico[] = [];
   listaCategorias: Categoria[] = [];
 
+  // Carregamento
   carregandoBotao = false;
 
   protected readonly Object = Object;
@@ -392,5 +394,16 @@ export class OrdemServicoComponent implements OnInit {
 
   calcularTotal() {
     this.ordemServico.valorTotal = this.totalProdutos + this.totalServicos - this.ordemServico.pagamento.descontoTotal;
+  }
+
+  resetPagamento() {
+    this.ordemServico.pagamento = {
+      metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
+      statusPagamento: null,
+      observacoes: '',
+      dataPagamento: null,
+      descontos: [],
+      descontoTotal: 0
+    };
   }
 }
