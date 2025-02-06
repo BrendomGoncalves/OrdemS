@@ -99,50 +99,128 @@
         <td class="text-center">
           {{ ordem.dataConclusao | date: 'dd/MM/yyyy' }}
         </td>
-        @switch (ordem.status) {
-          @case ('EM ANDAMENTO') {
-            <td class="justify-content-center flex">
-              <p class="w-9rem bg-orange-400 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>
-            </td>
-          }
-          @case ('CONCLUIDO') {
-            <td class="justify-content-center flex">
-              <p class="w-9rem bg-green-600 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>
-            </td>
-          }
-          @case ('CANCELADO') {
-            <td class="justify-content-center flex">
-              <p class="w-9rem bg-red-400 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>
-            </td>
-          }
-        }
+        <td class="justify-content-center flex">
+          <p-dropdown
+            appendTo="body"
+            [options]="Object.values(StatusOrdemServicoEnum)"
+            [(ngModel)]="ordem.status"
+            (onChange)="statusOrdemServicoAtualizar(ordem)"
+            styleClass="{{ ordem.status === 'EM ANDAMENTO' ? 'bg-orange-400' : ordem.status === 'CONCLUIDO' ? 'bg-green-600' : ordem.status === 'AGUARDANDO PEÇAS' ? 'bg-blue-400' : 'bg-red-400' }}"
+            [style]="{ width: 'auto', height: '2.5rem' }">
+            <ng-template let-status pTemplate="selectedItem">
+              @switch (status) {
+                @case ('EM ANDAMENTO') {
+                  <p class="m-0 p-0 text-white font-bold text-center">{{ status }}</p>
+                }
+                @case ('AGUARDANDO PEÇAS') {
+                  <p class="m-0 p-0 text-white font-bold text-center">{{ status }}</p>
+                }
+                @case ('CONCLUIDO') {
+                  <p class="m-0 p-0 text-white font-bold text-center">{{ status }}</p>
+                }
+                @case ('CANCELADO') {
+                  <p class="m-0 p-0 text-white font-bold text-center">{{ status }}</p>
+                }
+              }
+            </ng-template>
+            <ng-template let-status pTemplate="item">
+              @switch (status) {
+                @case ('EM ANDAMENTO') {
+                  <p class="m-0 p-0 font-bold text-center text-sm">{{ status }}</p>
+                }
+                @case ('AGUARDANDO PEÇAS') {
+                  <p class="m-0 p-0 font-bold text-center text-sm">{{ status }}</p>
+                }
+                @case ('CONCLUIDO') {
+                  <p class="m-0 p-0 font-bold text-center text-sm">{{ status }}</p>
+                }
+                @case ('CANCELADO') {
+                  <p class="m-0 p-0 font-bold text-center text-sm">{{ status }}</p>
+                }
+              }
+            </ng-template>
+          </p-dropdown>
+        </td>
+        <!--        @switch (ordem.status) {-->
+        <!--          @case ('EM ANDAMENTO') {-->
+        <!--            <td class="justify-content-center flex">-->
+        <!--              <p class="w-9rem bg-orange-400 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>-->
+        <!--            </td>-->
+        <!--          }-->
+        <!--          @case ('CONCLUIDO') {-->
+        <!--            <td class="justify-content-center flex">-->
+        <!--              <p class="w-9rem bg-green-600 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>-->
+        <!--            </td>-->
+        <!--          }-->
+        <!--          @case ('CANCELADO') {-->
+        <!--            <td class="justify-content-center flex">-->
+        <!--              <p class="w-9rem bg-red-400 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>-->
+        <!--            </td>-->
+        <!--          }-->
+        <!--        }-->
         <td class="text-center">{{ ordem.valorTotal | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
       </tr>
     </ng-template>
     <ng-template pTemplate="footer">
       <tr *ngIf="carregandoDados">
-        <td><p-skeleton size="3rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
       </tr>
       <tr *ngIf="carregandoDados">
-        <td><p-skeleton size="3rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
       </tr>
       <tr *ngIf="carregandoDados">
-        <td><p-skeleton size="3rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
       </tr>
       <tr *ngIf="Ordens.length === 0 && !carregandoDados">
         <td colspan="6" class="text-center text-black-alpha-50">
@@ -154,7 +232,8 @@
 </div>
 
 <!--DETALHES ORDEM DE SERVIÇO-->
-<p-dialog header="Detalhes Ordem de Serviço #{{ ordemSelecionada.id.padStart(4, '0') }}" [resizable]="true" [closable]="false" [modal]="true" [(visible)]="verDetalhesOrdem" [style]="{ width: '32rem', maxHeight: '700px', minHeight: '300px'}">
+<p-dialog header="Detalhes Ordem de Serviço #{{ ordemSelecionada.id.padStart(4, '0') }}" [resizable]="true" position="top" [closable]="false" [modal]="true"
+          [(visible)]="verDetalhesOrdem" [style]="{width: '34rem', height: '100%', maxHeight: '900px'}">
   <div class="flex flex-column gap-4">
     <!-- Datas de Abertura e Conclusão-->
     <div class="flex flex-row gap-3 justify-content-around">
@@ -282,10 +361,142 @@
     </div>
 
     <div class="flex justify-content-center gap-3">
-      <p-button label="Editar" severity="info" routerLink="/ordem-servico/{{ordemSelecionada.id}}"/>
-      <p-button label="Deletar" severity="danger" (onClick)="deletarOrdem(this.ordemSelecionada.id)"/>
-      <p-button label="Voltar" severity="secondary" (onClick)="fecharDetalhesOrdem()"/>
+      <p-button label="Pagamento" severity="danger" icon="pi pi-credit-card" outlined (onClick)="abrirVerPagamento()"/>
+      <p-button label="Editar" severity="danger" routerLink="/ordem-servico/{{ordemSelecionada.id}}"/>
+      <p-button label="Deletar" severity="danger" (onClick)="deletarOrdem(ordemSelecionada.id)"/>
+      <p-button label="Voltar" severity="danger" (onClick)="fecharDetalhesOrdem()"/>
     </div>
+  </div>
+</p-dialog>
+
+<!--PAGAMENTO-->
+<p-dialog header="Gerar Pagamento - {{ ordemSelecionada.valorTotal | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}" position="top" [resizable]="true" [closable]="false"
+          [modal]="true" [(visible)]="verPagamento" [style]="{ width: '34rem', height: '600px'}">
+  <!--DATA PAGAMENTO-->
+  <div class="flex flex-column mb-3">
+    <p style="font-size: 1rem" class="m-0 mb-2">Data do Pagamento</p>
+    <p-calendar
+      styleClass="w-12rem"
+      [(ngModel)]="ordemSelecionada.pagamento.dataPagamento"
+      [showIcon]="true"
+      inputId="buttondisplay"
+      dateFormat="dd/mm/yy"
+      [showOnFocus]="false"/>
+  </div>
+  <!--METODO E STATUS-->
+  <div class="w-full mb-3 flex flex-column justify-content-center gap-2 md:flex-row md:justify-content-between">
+    <!--METODO PAGAMENTO-->
+    <div class="flex flex-column">
+      <p style="font-size: 1.1rem" class="m-0 mb-2">Método:</p>
+      <p-dropdown
+        [options]="Object.values(MetodoPagamentoEnum)"
+        [(ngModel)]="ordemSelecionada.pagamento.metodoPagamento"
+        optionLabel="name"
+        [style]="{ width: '16rem', height: '3rem' }">
+        <ng-template pTemplate="selectedItem" let-metodo>
+          <div class="flex align-items-center gap-2">
+            <div class="flex align-items-center gap-2">
+              <ng-container *ngFor="let item of metodoPagamentoItems">
+                <ng-container *ngIf="metodo === item.value">
+                  <i [class]="item.icon" [style.color]="item.color" class="font-bold"></i>
+                  <div class="font-bold">{{ metodo }}</div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="item" let-metodo>
+          <div class="flex align-items-center gap-2">
+            <div class="flex align-items-center gap-2">
+              <ng-container *ngFor="let item of metodoPagamentoItems">
+                <ng-container *ngIf="metodo === item.value">
+                  <i [class]="item.icon" [style.color]="item.color" class="font-bold"></i>
+                  <div class="font-bold">{{ metodo }}</div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+    <!--STATUS PAGAMENTO-->
+    <div class="flex flex-column">
+      <p style="font-size: 1.1rem" class="m-0 mb-2">Status:</p>
+      <p-dropdown
+        [options]="Object.values(StatusPagamentoEnum)"
+        [(ngModel)]="ordemSelecionada.pagamento.statusPagamento"
+        optionLabel="name"
+        [style]="{ width: '13rem', height: '3rem' }">
+        <ng-template let-status pTemplate="selectedItem">
+          <div class="flex align-items-center gap-2">
+            <ng-container *ngFor="let item of statusPagamentoItems">
+              <ng-container *ngIf="status === item.value">
+                <i [class]="item.icon" [style.color]="item.color" class="font-bold"></i>
+                <div class="font-bold">{{ status }}</div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-template>
+        <ng-template let-status pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <ng-container *ngFor="let item of statusPagamentoItems">
+              <ng-container *ngIf="status === item.value">
+                <i [class]="item.icon" [style.color]="item.color" class="font-bold"></i>
+                <div class="font-bold">{{ status }}</div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-template>
+      </p-dropdown>
+    </div>
+  </div>
+  <!--OBSERVACOES-->
+  <div class="flex flex-column w-full mb-3">
+    <p style="font-size: 1.1rem" class="m-0 mb-2">Observações:</p>
+    <textarea pInputTextarea style="font-size: 1.1rem" rows="4" cols="50"
+              [(ngModel)]="ordemSelecionada.pagamento.observacoes"></textarea>
+  </div>
+  <!--DESCONTOS-->
+  <div class="flex flex-column w-full mb-3">
+    <p style="font-size: 1.1rem" class="m-0 mb-2">Descontos:</p>
+    <div class="flex flex-column align-items-start gap-3 w-full md:flex-row md:align-items-center">
+      <p-inputNumber
+        [(ngModel)]="descontoAdicionado.valor"
+        [showButtons]="false"
+        inputId="stacked"
+        mode="currency"
+        currency="BRL"/>
+      <textarea pInputTextarea style="font-size: 1.1rem;" rows="1" cols="40" [(ngModel)]="descontoAdicionado.descricao" placeholder="Desconto da loja"></textarea>
+      <p-button styleClass="w-3rem h-3rem" icon="pi pi-plus" outlined (onClick)="adicionarDesconto()" [disabled]="descontoAdicionado.valor === 0"></p-button>
+    </div>
+    <div>
+      <p-table [value]="ordemSelecionada.pagamento.descontos"
+               *ngIf="ordemSelecionada.pagamento.descontos.length > 0"
+               [style]="{'max-width': '700px'}">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Valor</th>
+            <th>Descrição</th>
+            <th class="text-center"><i class="pi pi-trash"></i></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-desconto>
+          <tr>
+            <td>{{ desconto.valor | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+            <td class="max-w-12rem overflow-hidden text-overflow-ellipsis">{{ desconto.descricao }}</td>
+            <td class="text-center">
+              <p-button styleClass="w-2rem h-2rem" icon="pi pi-trash" severity="danger" (onClick)="deletarDesconto(desconto)"></p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  <!--BOTOES-->
+  <div class="flex justify-content-center gap-3">
+    <p-button label="Salvar" severity="danger"
+              [loading]="carregandoBotao" (onClick)="salvarPagamento()"/>
+    <p-button label="Voltar" severity="danger" (onClick)="fecharVerPagamento()"/>
   </div>
 </p-dialog>
 

@@ -19,6 +19,9 @@ import {ChartModule} from 'primeng/chart';
 import {Chart, registerables} from 'chart.js';
 import {SkeletonModule} from 'primeng/skeleton';
 import {ToastModule} from 'primeng/toast';
+import {CalendarModule} from 'primeng/calendar';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import {Desconto} from '../../models/desconto';
 
 Chart.register(...registerables);
 
@@ -44,7 +47,9 @@ Chart.register(...registerables);
     ChartModule,
     FormsModule,
     SkeletonModule,
-    ToastModule
+    ToastModule,
+    CalendarModule,
+    InputTextareaModule
   ],
   templateUrl: './ordem-lista.component.html',
   styleUrl: './ordem-lista.component.css'
@@ -66,7 +71,7 @@ export class OrdemListaComponent implements OnInit {
     produtosUtilizados: [],
     pagamento: {
       metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
-      statusPagamento: StatusPagamentoEnum.EM_ABERTO,
+      statusPagamento: null,
       observacoes: '',
       dataPagamento: null,
       descontos: [],
@@ -74,6 +79,18 @@ export class OrdemListaComponent implements OnInit {
     },
   }
   filtro: string = '';
+  metodoPagamentoItems = [
+    {value: MetodoPagamentoEnum.DINHEIRO, icon: 'pi pi-money-bill', color: 'green'},
+    {value: MetodoPagamentoEnum.CARTAO_CREDITO, icon: 'pi pi-credit-card', color: 'blue'},
+    {value: MetodoPagamentoEnum.CARTAO_DEBITO, icon: 'pi pi-credit-card', color: 'blue'},
+    {value: MetodoPagamentoEnum.PIX, icon: 'pi pi-dollar', color: 'gray'}
+  ];
+  statusPagamentoItems = [
+    {value: StatusPagamentoEnum.PAGO, icon: 'pi pi-check-circle', color: 'green'},
+    // {value: StatusPagamentoEnum.EM_ABERTO, icon: 'pi pi-clock', color: 'orange'},
+    {value: StatusPagamentoEnum.CANCELADO, icon: 'pi pi-times-circle', color: 'red'}
+  ];
+  descontoAdicionado: Desconto = {valor: 0, descricao: ''};
 
   // Estatisticas
   QOrdens = signal(this.Ordens.length);
@@ -84,15 +101,22 @@ export class OrdemListaComponent implements OnInit {
 
   // Dialogos
   verDetalhesOrdem: boolean = false;
+  verPagamento: boolean = false;
 
   // Carregamento
   carregandoDados: boolean = true;
+  carregandoBotao: boolean = false;
 
-  constructor(private messageService: MessageService, private ordemService: OrdensService) {}
+  protected readonly Object = Object;
+  protected readonly MetodoPagamentoEnum = MetodoPagamentoEnum;
+  protected readonly StatusPagamentoEnum = StatusPagamentoEnum;
+  protected readonly StatusOrdemServicoEnum = StatusOrdemServicoEnum;
+
+  constructor(private messageService: MessageService, private ordemService: OrdensService) {
+  }
 
   ngOnInit() {
     this.carregarOrdens().then();
-
     // TODO: Corrigir uso dos gráficos
     // const documentStyle = getComputedStyle(document.documentElement);
     // const textColor = documentStyle.getPropertyValue('--text-color');
@@ -168,7 +192,13 @@ export class OrdemListaComponent implements OnInit {
   }
 
   abrirDetalhesOrdem(ordem: OrdemServico) {
-    this.ordemSelecionada = ordem;
+    this.ordemSelecionada = {
+      ...ordem,
+      pagamento: {
+        ...ordem.pagamento,
+        dataPagamento: ordem.pagamento.dataPagamento ? new Date(ordem.pagamento.dataPagamento) : null
+      }
+    }
     this.verDetalhesOrdem = true;
   }
 
@@ -188,7 +218,7 @@ export class OrdemListaComponent implements OnInit {
       produtosUtilizados: [],
       pagamento: {
         metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
-        statusPagamento: StatusPagamentoEnum.EM_ABERTO,
+        statusPagamento: null,
         observacoes: '',
         dataPagamento: null,
         descontos: [],
@@ -196,5 +226,61 @@ export class OrdemListaComponent implements OnInit {
       },
     }
     this.verDetalhesOrdem = false;
+  }
+
+  abrirVerPagamento() {
+    this.verPagamento = true;
+  }
+
+  fecharVerPagamento() {
+    this.verPagamento = false;
+  }
+
+  async salvarPagamento() {
+    this.carregandoBotao = true;
+    (await this.ordemService.updateOrdem(this.ordemSelecionada.id, this.ordemSelecionada)).subscribe(() => {
+      this.carregarOrdens();
+      this.estatisticaOrdens(this.Ordens);
+    });
+    setTimeout(() => {
+      this.carregandoBotao = false;
+      this.fecharVerPagamento();
+    }, 2000);
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Ordem de Serviço',
+      detail: 'Pagamento salvo'
+    });
+  }
+
+  adicionarDesconto() {
+    if (this.descontoAdicionado.descricao === '') {
+      this.descontoAdicionado.descricao = 'Desconto da loja';
+    }
+    this.ordemSelecionada.pagamento.descontos.push(this.descontoAdicionado);
+    this.ordemSelecionada.pagamento.descontoTotal += this.descontoAdicionado.valor;
+    this.ordemSelecionada.pagamento.descontos.sort((a, b) => a.valor - b.valor).reverse();
+    this.descontoAdicionado = {valor: 0, descricao: ''};
+
+    this.ordemSelecionada.valorTotal -= this.descontoAdicionado.valor;
+  }
+
+  deletarDesconto(desconto: Desconto) {
+    this.ordemSelecionada.pagamento.descontos = this.ordemSelecionada.pagamento.descontos.filter(d => d !== desconto);
+    this.ordemSelecionada.pagamento.descontoTotal -= desconto.valor;
+    this.ordemSelecionada.valorTotal += desconto.valor;
+  }
+
+  async statusOrdemServicoAtualizar(ordem: OrdemServico) {
+    (await this.ordemService.updateOrdem(ordem.id, ordem)).subscribe(() => {
+      this.carregarOrdens();
+      this.estatisticaOrdens(this.Ordens);
+    });
+
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Ordem de Serviço',
+      detail: 'Status atualizado: ' + ordem.status
+    });
   }
 }
