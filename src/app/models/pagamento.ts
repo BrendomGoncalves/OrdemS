@@ -5,7 +5,7 @@ import {Desconto} from './desconto';
 export interface Pagamento{
   dataPagamento: Date | null
   metodoPagamento: MetodoPagamentoEnum
-  statusPagamento: StatusPagamentoEnum
+  statusPagamento: StatusPagamentoEnum | null
   descontos: Desconto[]
   descontoTotal: number
   observacoes: string

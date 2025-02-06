@@ -76,7 +76,7 @@ export class OrdemServicoComponent implements OnInit {
     produtosUtilizados: [],
     pagamento: {
       metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
-      statusPagamento: StatusPagamentoEnum.EM_ABERTO,
+      statusPagamento: null,
       observacoes: '',
       dataPagamento: null,
       descontos: [],
@@ -97,7 +97,6 @@ export class OrdemServicoComponent implements OnInit {
   ];
   statusPagamentoItems = [
     {value: StatusPagamentoEnum.PAGO, icon: 'pi pi-check-circle', color: 'green'},
-    {value: StatusPagamentoEnum.EM_ABERTO, icon: 'pi pi-clock', color: 'orange'},
     {value: StatusPagamentoEnum.CANCELADO, icon: 'pi pi-times-circle', color: 'red'}
   ];
 
@@ -178,7 +177,7 @@ export class OrdemServicoComponent implements OnInit {
           produtosUtilizados: [],
           pagamento: {
             metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
-            statusPagamento: StatusPagamentoEnum.EM_ABERTO,
+            statusPagamento: null,
             observacoes: '',
             dataPagamento: null,
             descontos: [],
@@ -368,7 +367,7 @@ export class OrdemServicoComponent implements OnInit {
               produtosUtilizados: [],
               pagamento: {
                 metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
-                statusPagamento: StatusPagamentoEnum.EM_ABERTO,
+                statusPagamento: null,
                 observacoes: '',
                 dataPagamento: null,
                 descontos: [],
