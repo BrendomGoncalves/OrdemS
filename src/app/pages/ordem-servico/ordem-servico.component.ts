@@ -131,20 +131,19 @@ export class OrdemServicoComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     let id;
     let isEntradaEquipamento: boolean = false;
+    let isEdicao: boolean = false;
 
     this.activateRoute.url.subscribe(urlSegments => {
-      if (urlSegments.length > 1 && urlSegments[1].path !== null) {
-        if (urlSegments[1].path === 'entrada-equipamento') {
-          isEntradaEquipamento = true;
-          id = urlSegments[2].path;
-        } else {
-          isEntradaEquipamento = false;
-          id = urlSegments[1].path;
-        }
+      if (urlSegments[1].path! === 'entrada-equipamento') {
+        isEntradaEquipamento = true;
+        id = urlSegments[2].path;
+      } else if (urlSegments[1].path !== null) {
+        isEdicao = true;
+        id = urlSegments[1].path;
       }
     });
 
-    if (id && !isEntradaEquipamento) {
+    if (id && isEdicao) {
       (await this.ordensService.getOrdemById(id)).subscribe(ordem => {
         this.ordemServico = {
           ...ordem,
@@ -187,12 +186,13 @@ export class OrdemServicoComponent implements OnInit {
           }
         };
         this.clienteSelecionado = entradaEquipamento.cliente;
-        this.ordemServico.id = await this.ordensService.novoId();
+        this.ordemServico.id = await this.ordensService.novoId(); // TODO: Remover geração de ID
       });
-    } else {
+    } else if (!isEdicao && !isEntradaEquipamento) {
       this.ordemServico.id = await this.ordensService.novoId();
       this.ordemServico.dataAbertura = new Date();
     }
+
     (await this.empresaService.getEmpresa()).subscribe((empresa) => {
       this.ordemServico.empresa = {
         nome: empresa.nome,
@@ -215,6 +215,76 @@ export class OrdemServicoComponent implements OnInit {
     });
     (await this.categoriasService.getCategorias()).subscribe((categorias) => {
       this.listaCategorias = categorias;
+    });
+  }
+
+  async salvarOrdem() {
+    this.carregandoBotao = true;
+    (await this.ordensService.getOrdemById(this.ordemServico.id)).subscribe({
+      next: async () => {
+        (await this.ordensService.updateOrdem(this.ordemServico.id, this.ordemServico)).subscribe(() => {
+          setTimeout(() => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Ordem de serviço',
+              detail: 'Ordem de serviço atualizada',
+              life: 5000
+            });
+            this.carregandoBotao = false;
+            this.router.navigate(['/ordens']);
+          }, 2000);
+        });
+      },
+      error: async () => {
+        if (this.ordemServico !== undefined) {
+          if (this.ordemServico.empresa === undefined ||
+            this.ordemServico.cliente === undefined ||
+            this.ordemServico.equipamento === '' ||
+            this.ordemServico.descricaoProblema === '') {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Ordem de serviço',
+              detail: 'Preencha os campos obrigatórios',
+              life: 5000
+            });
+          } else {
+            (await this.ordensService.addOrdem(this.ordemServico)).subscribe(() => {
+              this.ordemServico = {
+                id: '',
+                empresa: {nome: '', cnpj: '', tecnico: '', telefone: '', endereco: '', celular: '', email: ''},
+                cliente: null,
+                equipamento: '',
+                dataAbertura: null,
+                dataConclusao: null,
+                descricaoProblema: '',
+                laudoTecnico: '',
+                status: StatusOrdemServicoEnum.EM_ANDAMENTO,
+                valorTotal: 0,
+                servicos: [],
+                produtosUtilizados: [],
+                pagamento: {
+                  metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
+                  statusPagamento: null,
+                  observacoes: '',
+                  dataPagamento: null,
+                  descontos: [],
+                  descontoTotal: 0
+                }
+              };
+              setTimeout(() => {
+                this.carregandoBotao = false;
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Ordem de serviço',
+                  detail: 'Ordem de serviço cadastrada',
+                  life: 5000
+                });
+                this.router.navigate(['/ordens']);
+              }, 2000);
+            });
+          }
+        }
+      }
     });
   }
 
@@ -316,78 +386,6 @@ export class OrdemServicoComponent implements OnInit {
           life: 5000
         });
         this.ordemServico.dataConclusao = this.ordemServico.dataAbertura;
-      }
-    }
-  }
-
-  async salvarOrdem() {
-    this.carregandoBotao = true;
-    let ordemBanco;
-    (await this.ordensService.getOrdemById(this.ordemServico.id)).subscribe(ordem => {
-      ordemBanco = ordem;
-    });
-
-    if (ordemBanco !== null) {
-      (await this.ordensService.updateOrdem(this.ordemServico.id, this.ordemServico)).subscribe(() => {
-        setTimeout(() => {
-          this.carregandoBotao = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Ordem de serviço',
-            detail: 'Ordem de serviço atualizada',
-            life: 5000
-          });
-          this.router.navigate(['/ordens']);
-        }, 2000);
-      });
-    } else {
-      if (this.ordemServico !== undefined) {
-        if (this.ordemServico.empresa === undefined ||
-          this.ordemServico.cliente === undefined ||
-          this.ordemServico.equipamento === '' ||
-          this.ordemServico.descricaoProblema === '') {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Ordem de serviço',
-            detail: 'Preencha os campos obrigatórios',
-            life: 5000
-          });
-        } else {
-          (await this.ordensService.addOrdem(this.ordemServico)).subscribe(() => {
-            this.ordemServico = {
-              id: '',
-              empresa: {nome: '', cnpj: '', tecnico: '', telefone: '', endereco: '', celular: '', email: ''},
-              cliente: null,
-              equipamento: '',
-              dataAbertura: null,
-              dataConclusao: null,
-              descricaoProblema: '',
-              laudoTecnico: '',
-              status: StatusOrdemServicoEnum.EM_ANDAMENTO,
-              valorTotal: 0,
-              servicos: [],
-              produtosUtilizados: [],
-              pagamento: {
-                metodoPagamento: MetodoPagamentoEnum.DINHEIRO,
-                statusPagamento: null,
-                observacoes: '',
-                dataPagamento: null,
-                descontos: [],
-                descontoTotal: 0
-              }
-            };
-            setTimeout(() => {
-              this.carregandoBotao = false;
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Ordem de serviço',
-                detail: 'Ordem de serviço cadastrada',
-                life: 5000
-              });
-              this.router.navigate(['/ordens']);
-            }, 2000);
-          });
-        }
       }
     }
   }

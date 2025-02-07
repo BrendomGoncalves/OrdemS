@@ -78,19 +78,25 @@ export class EntradaEquipamentoComponent implements OnInit {
   async ngOnInit() {
     this.activateRoute.paramMap.subscribe(async params => {
       const id = params.get('id');
-      if(id !== null){
-        (await this.entradaEquipamentoService.getEntradaEquipamentoById(id)).subscribe((entradaEquipamento) => {
-          this.entradaEquipamento = {
-            ...entradaEquipamento,
-            dataRecebimento: entradaEquipamento.dataRecebimento ? new Date(entradaEquipamento.dataRecebimento) : null
+      if (id) {
+        (await this.entradaEquipamentoService.getEntradaEquipamentoById(id)).subscribe({
+          next: async (entradaEquipamento) => {
+            this.entradaEquipamento = {
+              ...entradaEquipamento,
+              dataRecebimento: entradaEquipamento.dataRecebimento ? new Date(entradaEquipamento.dataRecebimento) : null
+            }
+            this.clienteSelecionado = entradaEquipamento.cliente;
+          },
+          error: async () => {
+            await this.router.navigate(['/entradas-equipamentos']);
           }
-          this.clienteSelecionado = entradaEquipamento.cliente;
         });
       } else {
-        this.entradaEquipamento.id = await this.entradaEquipamentoService.novoId()
+        this.entradaEquipamento.id = await this.entradaEquipamentoService.novoId();
         this.entradaEquipamento.dataRecebimento = new Date();
       }
     });
+
     (await this.empresaService.getEmpresa()).subscribe((empresa) => {
       this.entradaEquipamento.empresa = {
         nome: empresa.nome,
@@ -117,52 +123,23 @@ export class EntradaEquipamentoComponent implements OnInit {
 
   async salvarEntradaEquipamento() {
     this.carregandoBotao = true;
-    let entradaEquipamentoBanco;
-    (await this.entradaEquipamentoService.getEntradaEquipamentoById(this.entradaEquipamento.id)).subscribe(entradaEquipamento => {
-      entradaEquipamentoBanco = entradaEquipamento;
-    });
-
-    if (entradaEquipamentoBanco !== undefined) {
-      (await this.entradaEquipamentoService.updateEntradaEquipamento(this.entradaEquipamento.id, this.entradaEquipamento)).subscribe(() => {
-        setTimeout(() => {
-          this.carregandoBotao = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Entrada de Equipamento',
-            detail: 'Os dados foram atualizados',
-            life: 5000
+    (await this.entradaEquipamentoService.getEntradaEquipamentoById(this.entradaEquipamento.id)).subscribe({
+        next: async () => {
+          (await this.entradaEquipamentoService.updateEntradaEquipamento(this.entradaEquipamento.id, this.entradaEquipamento)).subscribe(() => {
+            setTimeout(() => {
+              this.carregandoBotao = false;
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Entrada de Equipamento',
+                detail: 'Os dados foram atualizados',
+                life: 5000
+              });
+              this.router.navigate(['/entradas-equipamentos']);
+            }, 2000);
           });
-          this.router.navigate(['/ordens']);
-        }, 2000);
-      });
-    } else {
-      if (this.entradaEquipamento !== undefined) {
-        if (this.entradaEquipamento.empresa === undefined || this.entradaEquipamento.cliente === undefined || this.entradaEquipamento.equipamento === '' || this.entradaEquipamento.dataRecebimento === null || this.entradaEquipamento.descricaoProblema === '') {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Entrada de Equipamento',
-            detail: 'Preencha os campos obrigatórios',
-            life: 5000
-          });
-        } else {
+        },
+        error: async () => {
           (await this.entradaEquipamentoService.addEntradaEquipamento(this.entradaEquipamento)).subscribe(() => {
-            this.entradaEquipamento = {
-              id: '',
-              empresa: {
-                nome: '',
-                cnpj: '',
-                tecnico: '',
-                telefone: '',
-                endereco: '',
-                celular: '',
-                email: ''
-              },
-              cliente: null,
-              equipamento: '',
-              dataRecebimento: null,
-              descricaoProblema: '',
-              observacoes: ''
-            }
             setTimeout(() => {
               this.carregandoBotao = false;
               this.messageService.add({
@@ -171,11 +148,28 @@ export class EntradaEquipamentoComponent implements OnInit {
                 detail: 'Dados cadastrados',
                 life: 5000
               });
+              this.entradaEquipamento = {
+                id: '',
+                empresa: {
+                  nome: '',
+                  cnpj: '',
+                  tecnico: '',
+                  telefone: '',
+                  endereco: '',
+                  celular: '',
+                  email: ''
+                },
+                cliente: null,
+                equipamento: '',
+                dataRecebimento: null,
+                descricaoProblema: '',
+                observacoes: ''
+              }
               this.router.navigate(['/entradas-equipamentos']);
             }, 2000);
           });
         }
       }
-    }
+    );
   }
 }

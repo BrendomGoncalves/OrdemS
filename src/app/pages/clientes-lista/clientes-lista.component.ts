@@ -295,21 +295,16 @@ export class ClientesListaComponent implements OnInit {
   // Salva a edição de um campo
   async salvarEdicao(campo: string) {
     const clienteEditado = this.clienteForm.value;
-    let clienteBanco: Cliente = this.Clientes.find(c => c.id === clienteEditado.id)!;
-    if (clienteEditado.nome !== clienteBanco.nome) {
-      (await this.clientesService.updateCliente(clienteEditado.id, clienteEditado)).subscribe(() => {
-          this.editando[campo] = false;
-          this.carregarClientes().then();
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Cliente',
-            detail: 'Cliente atualizado'
-          });
-        }
-      );
-    } else {
-      this.editando[campo] = false;
-    }
+    (await this.clientesService.updateCliente(clienteEditado.id, clienteEditado)).subscribe(() => {
+        this.editando[campo] = false;
+        this.carregarClientes().then();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Cliente',
+          detail: 'Cliente atualizado'
+        });
+      }
+    );
   }
 
   // Abre o modal de adicionar cliente

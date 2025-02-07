@@ -62,7 +62,6 @@ export class EntradasEquipamentosListaComponent implements OnInit {
 
   ngOnInit(): void {
     this.carregarEntradasEquipamentos().then();
-    this.carregandoDados = false;
   }
 
   async carregarEntradasEquipamentos() {
