@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
-import {map, Observable} from 'rxjs';
+import {catchError, map, Observable, throwError} from 'rxjs';
 import {EntradaEquipamento} from '../../models/entrada-equipamento';
 
 @Injectable({
@@ -45,20 +45,26 @@ export class EntradaEquipamentoService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  // REMOVER GERAÇÂO DE ID
-  async novoId() {
-    let lentradasEquipamentos: EntradaEquipamento[] = [];
-    (await this.getEntradasEquipamentos()).subscribe((entradasEquipamentos: any[]) => {
-      lentradasEquipamentos = entradasEquipamentos
-    })
-    if (lentradasEquipamentos.length > 0) {
-      return (
-        lentradasEquipamentos
-          .sort((a, b) => a.id
-            .localeCompare(b.id))[lentradasEquipamentos.length - 1]
-          .id + 1)
-        .toString();
-    }
-    return "1";
+  // TODO: REMOVER GERAÇÂO DE ID
+  async novoId(): Promise<string> {
+    return new Promise<string>(async (resolve) => {
+      (await this.getEntradasEquipamentos()).subscribe({
+        next: (entradasEquipamentos) => {
+          if (entradasEquipamentos.length > 0) {
+            const novoId = (
+              entradasEquipamentos
+                .sort((a, b) => a.id.localeCompare(b.id))[entradasEquipamentos.length - 1]
+                .id + 1
+            ).toString();
+            resolve(novoId);
+          } else {
+            resolve("1");
+          }
+        },
+        error: () => {
+          resolve("1");
+        }
+      });
+    });
   }
 }

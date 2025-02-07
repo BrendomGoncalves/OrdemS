@@ -55,21 +55,26 @@ export class ProdutosService {
     }));
   }
 
-  // REMOVER GERAÇÂO DE ID
-  async novoId() {
-    let lprodutos: Produto[] = [];
-    (await this.getProdutos()).subscribe((produtos: any[]) => {
-      lprodutos = produtos
-    })
-    if (lprodutos.length > 0) {
-      return (
-        lprodutos
-          .sort((a, b) => a.id
-            .localeCompare(b.id))[lprodutos.length - 1]
-          .id + 1)
-        .toString();
-    }
-    return "1";
+  async novoId(): Promise<string> {
+    return new Promise<string>(async (resolve) => {
+      (await this.getProdutos()).subscribe({
+        next: (produtos) => {
+          if (produtos.length > 0) {
+            const novoId = (
+              produtos
+                .sort((a, b) => a.id.localeCompare(b.id))[produtos.length - 1]
+                .id + 1
+            ).toString();
+            resolve(novoId);
+          } else {
+            resolve("1");
+          }
+        },
+        error: () => {
+          resolve("1");
+        }
+      });
+    });
   }
 }
 

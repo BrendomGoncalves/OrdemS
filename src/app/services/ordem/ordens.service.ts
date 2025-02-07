@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
@@ -10,9 +10,10 @@ import {OrdemServico} from '../../models/ordem-servico';
 export class OrdensService {
   private apiUrl = `${environment.apiUrl}/ordens`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
-  async getOrdens(): Promise<Observable<OrdemServico[]>>{
+  async getOrdens(): Promise<Observable<OrdemServico[]>> {
     return this.http.get<OrdemServico[]>(this.apiUrl).pipe(
       map(ordens => ordens.sort((a, b) => a.cliente!.nome.localeCompare(b.cliente!.nome)))
     );
@@ -25,7 +26,7 @@ export class OrdensService {
   async addOrdem(ordem: OrdemServico): Promise<Observable<OrdemServico>> {
     return this.http.post<OrdemServico>(this.apiUrl, ordem).pipe(
       map(ordemAdicionada => {
-        if(ordemAdicionada.id !== undefined) {
+        if (ordemAdicionada.id !== undefined) {
           ordemAdicionada.id = ordemAdicionada.id.toString();
         }
         return ordemAdicionada;
@@ -33,7 +34,7 @@ export class OrdensService {
     );
   }
 
-  async updateOrdem(id: string | undefined, ordem: OrdemServico): Promise<Observable<OrdemServico>>{
+  async updateOrdem(id: string | undefined, ordem: OrdemServico): Promise<Observable<OrdemServico>> {
     return this.http.put<OrdemServico>(`${this.apiUrl}/${id}`, ordem).pipe(
       map(ordemAtualizada => {
         return ordemAtualizada;
@@ -46,19 +47,25 @@ export class OrdensService {
   }
 
   // TODO: REMOVER GERAÇÂO DE ID
-  async novoId() {
-    let lordens: OrdemServico[] = [];
-    (await this.getOrdens()).subscribe((ordens: any[]) => {
-      lordens = ordens
-    })
-    if (lordens.length > 0) {
-      return (
-        lordens
-          .sort((a, b) => a.id
-            .localeCompare(b.id))[lordens.length - 1]
-          .id + 1)
-        .toString();
-    }
-    return "1";
+  async novoId(): Promise<string> {
+    return new Promise<string>(async (resolve) => {
+      (await this.getOrdens()).subscribe({
+        next: (ordens) => {
+          if (ordens.length > 0) {
+            const novoId = (
+              ordens
+                .sort((a, b) => a.id.localeCompare(b.id))[ordens.length - 1]
+                .id + 1
+            ).toString();
+            resolve(novoId);
+          } else {
+            resolve("1");
+          }
+        },
+        error: () => {
+          resolve("1");
+        }
+      });
+    });
   }
 }
