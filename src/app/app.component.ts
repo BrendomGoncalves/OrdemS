@@ -1,18 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {NavBarComponent} from './components/nav-bar/nav-bar.component';
-import {MessageService, PrimeNGConfig} from 'primeng/api';
+import {PrimeNGConfig} from 'primeng/api';
+import {ToastModule} from "primeng/toast";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavBarComponent],
+  imports: [RouterOutlet, NavBarComponent, ToastModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  providers: [MessageService,]
 })
 export class AppComponent implements OnInit {
-  title = 'OrdemS';
 
   constructor(public primengConfig: PrimeNGConfig) {}
 
