@@ -29,8 +29,8 @@
     </div>
     <div class="flex mt-3 gap-3 lg:mt-0">
       <button pButton
+              severity="danger"
               label="Voltar"
-              class="p-button-outlined p-button-warning"
               icon="pi pi-arrow-left"
               routerLink="/produtos">
       </button>
@@ -54,16 +54,16 @@
     <ng-template pTemplate="header">
       <tr>
         <th [style]="{'text-align': 'center', 'width': '20px'}"><i class="pi pi-eye" style="font-weight: bold"></i></th>
-        <th [style]="{'min-width': '250px'}">Data</th>
-        <th [style]="{'min-width': '200px'}">Cliente</th>
-        <th [style]="{'min-width': '140px'}">Quantidade de Produtos</th>
-        <th [style]="{'min-width': '100px'}">Total</th>
+        <th [style]="{'min-width': '250px'}" pSortableColumn="data">Data <p-sortIcon field="data"/></th>
+        <th [style]="{'min-width': '200px'}" pSortableColumn="nomeCliente">Cliente <p-sortIcon field="nomeCliente"/></th>
+        <th [style]="{'min-width': '140px'}" pSortableColumn="produtos.length">Quantidade de Produtos <p-sortIcon field="produtos.length"/></th>
+        <th [style]="{'min-width': '100px'}" pSortableColumn="total">Total <p-sortIcon field="total"/></th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-venda>
       <tr *ngIf="!carregandoDados">
         <td>
-          <p-button (onClick)="abrirDetalhesVenda(venda)" styleClass="bg-red-600 border-0 w-1rem h-2rem"
+          <p-button (onClick)="abrirDetalhesVenda(venda)" severity="danger" styleClass="border-0 w-1rem h-2rem"
                     [style]="{'display': 'flex', 'justify-content': 'center'}">
             <i class="pi pi-eye" [style]="{'font-size': '.9rem'}"></i>
           </p-button>

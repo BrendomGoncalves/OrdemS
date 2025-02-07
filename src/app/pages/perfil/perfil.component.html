@@ -103,25 +103,25 @@
   </form>
 </div>
 
-<div class="w-full flex flex-row gap-4">
-  <button pButton (click)="exportarDados()">Exportar Dados</button>
-  <p-fileUpload
-    mode="basic"
-    chooseLabel="Importar Dados"
-    chooseIcon="pi pi-upload"
-    name="demo[]"
-    url="https://www.primefaces.org/cdn/api/upload.php"
-    accept="application/json*"
-    maxFileSize="10000000"
-    invalidFileSizeMessageSummary="Tamanho de arquivo inválido"
-    invalidFileSizeMessageDetail="Tamanho do arquivo excede o limite de 1MB"
-    invalidFileTypeMessageSummary="Tipo de arquivo inválido"
-    invalidFileTypeMessageDetail="Apenas arquivos JSON são permitidos"
-    invalidFileLimitMessageDetail="Apenas um arquivo pode ser enviado"
-    invalidFileLimitMessageSummary="Limite de arquivo excedido"
-    auto="true"
-    (onUpload)="importarDados($event)"/>
-</div>
+<!--<div class="w-full flex flex-row gap-4">-->
+<!--  <button pButton (click)="exportarDados()">Exportar Dados</button>-->
+<!--  <p-fileUpload-->
+<!--    mode="basic"-->
+<!--    chooseLabel="Importar Dados"-->
+<!--    chooseIcon="pi pi-upload"-->
+<!--    name="demo[]"-->
+<!--    url="https://www.primefaces.org/cdn/api/upload.php"-->
+<!--    accept="application/json*"-->
+<!--    maxFileSize="10000000"-->
+<!--    invalidFileSizeMessageSummary="Tamanho de arquivo inválido"-->
+<!--    invalidFileSizeMessageDetail="Tamanho do arquivo excede o limite de 1MB"-->
+<!--    invalidFileTypeMessageSummary="Tipo de arquivo inválido"-->
+<!--    invalidFileTypeMessageDetail="Apenas arquivos JSON são permitidos"-->
+<!--    invalidFileLimitMessageDetail="Apenas um arquivo pode ser enviado"-->
+<!--    invalidFileLimitMessageSummary="Limite de arquivo excedido"-->
+<!--    auto="true"-->
+<!--    (onUpload)="importarDados($event)"/>-->
+<!--</div>-->
 
 <p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>
 

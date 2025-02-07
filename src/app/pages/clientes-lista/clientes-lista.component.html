@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="mt-3 lg:mt-0">
-      <button pButton label="Novo Cliente" class="p-button-outlined mr-2 p-button-danger" icon="pi pi-user-plus"
+      <button pButton label="Novo Cliente" class="mr-2 p-button-danger" icon="pi pi-user-plus"
               (click)="abrirAdicionarCliente()"></button>
     </div>
   </div>
@@ -45,14 +45,19 @@
     <ng-template pTemplate="header">
       <tr>
         <th [style]="{'text-align': 'center', 'width': '20px'}"><i class="pi pi-eye" style="font-weight: bold"></i></th>
-        <th [style]="{'min-width': '250px', 'max-width': '430px'}">Nome</th>
-        <th [style]="{'min-width': '160px'}">
+        <th [style]="{'min-width': '250px', 'max-width': '430px'}" pSortableColumn="nome">
+          Nome
+          <p-sortIcon field="nome"/>
+        </th>
+        <th [style]="{'min-width': '160px'}" pSortableColumn="celular">
           <i class="pi pi-phone mr-2" style="font-weight: bold"></i>
           Celular
+          <p-sortIcon field="celular"/>
         </th>
-        <th [style]="{'min-width': '150px'}">
+        <th [style]="{'min-width': '150px'}" pSortableColumn="email">
           <i class="pi pi-envelope mr-2" style="font-weight: bold"></i>
           Email
+          <p-sortIcon field="email"/>
         </th>
       </tr>
     </ng-template>
@@ -72,22 +77,46 @@
     </ng-template>
     <ng-template pTemplate="footer">
       <tr *ngIf="carregandoDados">
-        <td><p-skeleton size="3rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
       </tr>
       <tr *ngIf="carregandoDados">
-        <td><p-skeleton size="3rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
       </tr>
       <tr *ngIf="carregandoDados">
-        <td><p-skeleton size="3rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
-        <td><p-skeleton height="4rem"></p-skeleton></td>
+        <td>
+          <p-skeleton size="3rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
+        <td>
+          <p-skeleton height="4rem"></p-skeleton>
+        </td>
       </tr>
       <tr *ngIf="Clientes.length === 0 && !carregandoDados">
         <td colspan="4" class="text-center text-black-alpha-50">
