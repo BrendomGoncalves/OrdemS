@@ -19,6 +19,7 @@ import {MessageModule} from 'primeng/message';
 import {asyncValidator, generateUniqueId} from '../../ferramentas/utils';
 import {ToastModule} from 'primeng/toast';
 import {SkeletonModule} from 'primeng/skeleton';
+import {ChartModule} from 'primeng/chart';
 
 @Component({
   selector: 'app-categorias-lista',
@@ -37,7 +38,8 @@ import {SkeletonModule} from 'primeng/skeleton';
     MessageModule,
     ToastModule,
     FormsModule,
-    SkeletonModule
+    SkeletonModule,
+    ChartModule
   ],
   templateUrl: './categorias-lista.component.html',
   styleUrl: './categorias-lista.component.css'
@@ -70,7 +72,7 @@ export class CategoriasListaComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.carregarCategorias();
+    await this.carregarCategorias().then();
   }
 
   // Utiliza o serviço de categoria para carregar a lista de categorias
@@ -105,7 +107,7 @@ export class CategoriasListaComponent implements OnInit {
   }
 
   // Utiliza o serviço de cliente para adicionar um novo cliente
-  salvarCategoria() {
+  async salvarCategoria() {
     const novaCategoria: Categoria = this.categoriaForm.value;
     if (this.Categorias.find(c => c.nome === novaCategoria.nome)?.nome == novaCategoria.nome) {
       this.messageService.add({
@@ -119,7 +121,7 @@ export class CategoriasListaComponent implements OnInit {
       novaCategoria.id = generateUniqueId();
       let categoriaBanco: Categoria = this.Categorias.find(c => c.id === novaCategoria.id)!;
       if (categoriaBanco == undefined) {
-        this.categoriaService.addCategoria(novaCategoria).subscribe(() => {
+        (await this.categoriaService.addCategoria(novaCategoria)).subscribe(() => {
           this.carregarCategorias().then();
           this.estatisticaCategoria(this.Categorias);
           this.fecharAdicionarCategoria();
@@ -140,10 +142,10 @@ export class CategoriasListaComponent implements OnInit {
   }
 
   // Utiliza o serviço de cliente para deletar um cliente
-  deletarCategoria() {
+  async deletarCategoria() {
     const idDeletar = this.categoriaForm.get('id')?.value;
     if (this.Categorias.find(c => c.id === idDeletar)?.id == idDeletar) {
-      this.categoriaService.deleteCategoria(idDeletar).subscribe(() => {
+      (await this.categoriaService.deleteCategoria(idDeletar)).subscribe(() => {
         this.carregarCategorias().then();
         this.fecharDetalhesCategoria();
         this.messageService.add({
@@ -174,11 +176,11 @@ export class CategoriasListaComponent implements OnInit {
   }
 
   // Salva a edição de um campo
-  salvarEdicao(campo: string) {
+  async salvarEdicao(campo: string) {
     const categoriaEditado = this.categoriaForm.value;
     let categoriaBanco: Categoria = this.Categorias.find(c => c.id === categoriaEditado.id)!;
     if (categoriaBanco) {
-      this.categoriaService.updateCategoria(categoriaEditado.id, categoriaEditado).subscribe(() => {
+      (await this.categoriaService.updateCategoria(categoriaEditado.id, categoriaEditado)).subscribe(() => {
         this.editando[campo] = false;
         this.carregarCategorias().then();
         this.messageService.add({

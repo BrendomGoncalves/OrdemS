@@ -22,6 +22,7 @@ import {SkeletonModule} from 'primeng/skeleton';
 import {Categoria} from '../../models/categoria';
 import {CategoriasService} from '../../services/categoria/categorias.service';
 import {DropdownModule} from 'primeng/dropdown';
+import {ChartModule} from 'primeng/chart';
 
 @Component({
   selector: 'app-servico-lista',
@@ -42,7 +43,8 @@ import {DropdownModule} from 'primeng/dropdown';
     TabViewModule,
     ToastModule,
     SkeletonModule,
-    DropdownModule
+    DropdownModule,
+    ChartModule
   ],
   templateUrl: './servicos-lista.component.html',
   styleUrl: './servicos-lista.component.css'
@@ -89,7 +91,7 @@ export class ServicosListaComponent implements OnInit {
 
   // Utiliza o serviço de cliente para carregar a lista de cliente
   async carregarServicos() {
-    (await this.servicoService.getServicos()).subscribe(servicos => {
+    (await this.servicoService.getServicos()).subscribe(async servicos => {
       this.Servicos = servicos;
       setTimeout(() => {
         this.carregandoDados = false;
@@ -114,7 +116,7 @@ export class ServicosListaComponent implements OnInit {
   }
 
   // Utiliza o serviço de cliente para adicionar um novo cliente
-  salvarServico() {
+  async salvarServico() {
     let novoServico: Servico = this.servicoForm.value;
     if (this.Servicos.find(servico => servico.nome === novoServico.nome)?.nome === novoServico.nome) {
       this.messageService.add({
@@ -124,7 +126,7 @@ export class ServicosListaComponent implements OnInit {
       });
     } else if (this.servicoForm.valid) {
       novoServico.id = generateUniqueId();
-      this.servicoService.addServico(novoServico).subscribe(() => {
+      (await this.servicoService.addServico(novoServico)).subscribe(() => {
         this.carregarServicos().then();
         this.estatisticaServicos(this.Servicos);
         this.fecharAdicionarServico();
@@ -144,10 +146,10 @@ export class ServicosListaComponent implements OnInit {
   }
 
   // Utiliza o serviço de cliente para deletar um cliente
-  deletarServico() {
+  async deletarServico() {
     const idDeletar = this.servicoForm.get('id')?.value;
     if(this.Servicos.find(servico => servico.id === idDeletar)?.id === idDeletar) {
-      this.servicoService.deleteServico(idDeletar).subscribe(() => {
+      (await this.servicoService.deleteServico(idDeletar)).subscribe(() => {
         this.carregarServicos().then();
         this.estatisticaServicos(this.Servicos);
         this.fecharDetalhesServico();
@@ -179,11 +181,11 @@ export class ServicosListaComponent implements OnInit {
   }
 
   // Salva a edição de um campo
-  salvarEdicao(campo: string) {
+  async salvarEdicao(campo: string) {
     const servicoEditado = this.servicoForm.value;
     let servicoBanco: Servico = this.Servicos.find(c => c.id === servicoEditado.id)!;
     if (servicoEditado.nome !== servicoBanco.nome) {
-      this.servicoService.updateServico(servicoEditado.id, servicoEditado).subscribe(() => {
+      (await this.servicoService.updateServico(servicoEditado.id, servicoEditado)).subscribe(() => {
         this.editando[campo] = false;
         this.carregarServicos().then();
         this.messageService.add({

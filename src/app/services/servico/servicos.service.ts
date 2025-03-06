@@ -18,14 +18,14 @@ export class ServicosService {
     );
   }
 
-  getServicoById(id: string): Observable<Servico> {
+  async getServicoById(id: string): Promise<Observable<Servico>> {
     return this.http.get<Servico>(`${this.apiUrl}/${id}`);
   }
 
-  addServico(servico: Servico): Observable<Servico> {
+  async addServico(servico: Servico): Promise<Observable<Servico>> {
     return this.http.post<Servico>(this.apiUrl, servico).pipe(
       map(servicoAdicionado => {
-        if(servicoAdicionado.id !== undefined) {
+        if (servicoAdicionado.id !== undefined) {
           servicoAdicionado.id = servicoAdicionado.id.toString();
         }
         return servicoAdicionado;
@@ -33,7 +33,7 @@ export class ServicosService {
     )
   }
 
-  updateServico(id: number | undefined, servico: Servico): Observable<Servico>{
+  async updateServico(id: number | undefined, servico: Servico): Promise<Observable<Servico>> {
     return this.http.put<Servico>(`${this.apiUrl}/${id}`, servico).pipe(
       map(servicoAtualizado => {
         return servicoAtualizado;
@@ -41,7 +41,7 @@ export class ServicosService {
     );
   }
 
-  deleteServico(id: number): Observable<void> {
+  async deleteServico(id: number): Promise<Observable<void>> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

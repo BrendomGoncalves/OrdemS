@@ -18,14 +18,14 @@ export class CategoriasService {
     );
   }
 
-  getCategoriaById(id: string): Observable<Categoria> {
+  async getCategoriaById(id: string): Promise<Observable<Categoria>> {
     return this.http.get<Categoria>(`${this.apiUrl}/${id}`);
   }
 
-  addCategoria(categoria: Categoria): Observable<Categoria> {
+  async addCategoria(categoria: Categoria): Promise<Observable<Categoria>> {
     return this.http.post<Categoria>(this.apiUrl, categoria).pipe(
       map(categoriaAdicionado => {
-        if(categoriaAdicionado.id !== undefined) {
+        if (categoriaAdicionado.id !== undefined) {
           categoriaAdicionado.id = categoriaAdicionado.id.toString();
         }
         return categoriaAdicionado;
@@ -33,7 +33,7 @@ export class CategoriasService {
     )
   }
 
-  updateCategoria(id: number | undefined, categoria: Categoria): Observable<Categoria>{
+  async updateCategoria(id: number | undefined, categoria: Categoria): Promise<Observable<Categoria>> {
     return this.http.put<Categoria>(`${this.apiUrl}/${id}`, categoria).pipe(
       map(categoriaAtualizado => {
         return categoriaAtualizado;
@@ -41,7 +41,7 @@ export class CategoriasService {
     );
   }
 
-  deleteCategoria(id: number): Observable<void> {
+  async deleteCategoria(id: number): Promise<Observable<void>> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
