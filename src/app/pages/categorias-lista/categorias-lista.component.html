@@ -101,7 +101,7 @@
           <strong>Nome:</strong>
           <input formControlName="nome" placeholder="Digite o novo nome"/>
         </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="salvarEdicao('nome')">
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="editarCategoria('nome')">
           <i class="pi pi-save" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -119,7 +119,7 @@
           <strong>Descrição:</strong>
           <input formControlName="descricao" placeholder="Digite a nova descrição"/>
         </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="salvarEdicao('descricao')">
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="editarCategoria('descricao')">
           <i class="pi pi-save" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -166,4 +166,4 @@
   </form>
 </p-dialog>
 
-<p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>
+<!--<p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>-->

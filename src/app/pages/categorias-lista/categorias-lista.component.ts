@@ -5,7 +5,7 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import {Categoria} from '../../models/categoria';
+import {Categoria} from '../../models/categoria/categoria';
 import {CategoriasService} from '../../services/categoria/categorias.service';
 import {Button, ButtonDirective} from 'primeng/button';
 import {RouterLink} from '@angular/router';
@@ -16,10 +16,11 @@ import {MessageService, PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
-import {asyncValidator, generateUniqueId} from '../../ferramentas/utils';
+import {asyncValidator, hasNullProperties} from '../../ferramentas/utils';
 import {ToastModule} from 'primeng/toast';
 import {SkeletonModule} from 'primeng/skeleton';
 import {ChartModule} from 'primeng/chart';
+import {CategoriaCreateDto} from '../../models/categoria/categoriaCreateDto';
 
 @Component({
   selector: 'app-categorias-lista',
@@ -58,13 +59,15 @@ export class CategoriasListaComponent implements OnInit {
   verAdicionarCategoria: boolean = false; // Dialogo para adicionar um
 
   // Carregamento
-  carregandoDados = true; // Controla o carregamento de dados
+  carregandoDados: boolean = true; // Controla o carregamento de dados
 
   constructor(private categoriaService: CategoriasService,
               private fb: FormBuilder,
               private messageService: MessageService) {
     this.categoriaForm = this.fb.group({
-      id: [''],
+      id: [0], // ID do serviço,
+      createdAt: [new Date()], // Data de criação do serviço
+      updatedAt: [new Date()], // Data de atualização do serviço
       nome: ['', [Validators.required, Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
       descricao: ['', [Validators.minLength(3)], [asyncValidator()]] // Deve ter no mínimo 3 caracteres
     });
@@ -78,60 +81,83 @@ export class CategoriasListaComponent implements OnInit {
   // Utiliza o serviço de categoria para carregar a lista de categorias
   async carregarCategorias() {
     (await this.categoriaService.getCategorias()).subscribe({
-      next: categorias => {
+      next: (categorias) => {
         this.Categorias = categorias;
         setTimeout(() => {
           this.carregandoDados = false;
           this.estatisticaCategoria(categorias);
         }, 1000);
       },
-      error: () => {
+      error: (err) => {
         this.carregandoDados = false;
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Categorias',
+          detail: `${err.error.message}`
+        });
       }
     });
   }
 
-  // Atualiza as estatisticas de cliente
-  estatisticaCategoria(categorias: Categoria[]) {
-    this.QCategorias.set(categorias.length);
-  }
-
-  // Filtra os clientes por nome
-  get categoriasFiltrados(): Categoria[] {
-    if (!this.filtro) {
-      return this.Categorias;
-    }
-    return this.Categorias.filter(categoria =>
-      categoria.nome.toLowerCase().includes(this.filtro.toLowerCase())
-    );
-  }
-
   // Utiliza o serviço de cliente para adicionar um novo cliente
   async salvarCategoria() {
-    const novaCategoria: Categoria = this.categoriaForm.value;
-    if (this.Categorias.find(c => c.nome === novaCategoria.nome)?.nome == novaCategoria.nome) {
-      this.messageService.add({
-        severity: 'info',
-        summary: 'Categoria',
-        detail: 'Já existe essa categoria'
-      });
-      return;
-    } else if (this.categoriaForm.value.nome != '' && this.categoriaForm.value.descricao != '') {
-      const novaCategoria: Categoria = this.categoriaForm.value;
-      novaCategoria.id = generateUniqueId();
-      let categoriaBanco: Categoria = this.Categorias.find(c => c.id === novaCategoria.id)!;
-      if (categoriaBanco == undefined) {
-        (await this.categoriaService.addCategoria(novaCategoria)).subscribe(() => {
+    const novaCategoria: CategoriaCreateDto = {
+      nome: this.categoriaForm.get('nome')?.value,
+      descricao: this.categoriaForm.get('descricao')?.value,
+    };
+
+    if (!hasNullProperties(novaCategoria)) {
+      (await this.categoriaService.addCategoria(novaCategoria)).subscribe({
+        next: (categoria) => {
           this.carregarCategorias().then();
           this.estatisticaCategoria(this.Categorias);
           this.fecharAdicionarCategoria();
           this.messageService.add({
             severity: 'success',
             summary: 'Categoria',
-            detail: 'Categoria adicionada'
+            detail: `${categoria.nome} adicionada.`
           });
-        });
-      }
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Categoria',
+            detail: `${err.error.message}`
+          });
+        }
+      })
+    } else {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Categoria Inválida',
+        detail: 'Verifique se os campos estão preenchidos corretamente.'
+      });
+    }
+  }
+
+  // Utiliza o serviço de cliente para deletar um cliente
+  async deletarCategoria() {
+    const idDeleteCategoria = this.categoriaForm.get('id')?.value;
+
+    if (idDeleteCategoria) {
+      (await this.categoriaService.deleteCategoria(idDeleteCategoria)).subscribe({
+        next: () => {
+          this.carregarCategorias().then();
+          this.fecharDetalhesCategoria();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Categoria',
+            detail: `Categoria deletada`
+          });
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Categoria',
+            detail: `${err.error.message}`
+          });
+        }
+      });
     } else {
       this.messageService.add({
         severity: 'info',
@@ -141,26 +167,42 @@ export class CategoriasListaComponent implements OnInit {
     }
   }
 
-  // Utiliza o serviço de cliente para deletar um cliente
-  async deletarCategoria() {
-    const idDeletar = this.categoriaForm.get('id')?.value;
-    if (this.Categorias.find(c => c.id === idDeletar)?.id == idDeletar) {
-      (await this.categoriaService.deleteCategoria(idDeletar)).subscribe(() => {
-        this.carregarCategorias().then();
-        this.fecharDetalhesCategoria();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Categoria',
-          detail: 'Categoria deletada'
-        });
+  // Salva a edição de um campo
+  async editarCategoria(campo: string) {
+    const categoriaEditada = this.categoriaForm.value;
+
+    if (!hasNullProperties(categoriaEditada)) {
+      (await this.categoriaService.updateCategoria(categoriaEditada.id, categoriaEditada)).subscribe({
+        next: () => {
+          this.editando[campo] = false;
+          this.carregarCategorias().then();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Categoria',
+            detail: 'Categoria editada'
+          });
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Categoria',
+            detail: `${err.error.message}`
+          });
+        }
       });
     } else {
+      this.editando[campo] = false;
       this.messageService.add({
         severity: 'info',
-        summary: 'Categoria',
-        detail: 'Categoria não encontrada'
+        summary: 'Categoria Inválida',
+        detail: 'Verifique se os campos estão preenchidos corretamente'
       });
     }
+  }
+
+  // Atualiza as estatisticas de cliente
+  estatisticaCategoria(categorias: Categoria[]) {
+    this.QCategorias.set(categorias.length);
   }
 
   // Reseta o objeto de edição
@@ -173,25 +215,6 @@ export class CategoriasListaComponent implements OnInit {
   // Ativa a edição de um campo
   ativarEdicao(campo: string) {
     this.editando[campo] = true;
-  }
-
-  // Salva a edição de um campo
-  async salvarEdicao(campo: string) {
-    const categoriaEditado = this.categoriaForm.value;
-    let categoriaBanco: Categoria = this.Categorias.find(c => c.id === categoriaEditado.id)!;
-    if (categoriaBanco) {
-      (await this.categoriaService.updateCategoria(categoriaEditado.id, categoriaEditado)).subscribe(() => {
-        this.editando[campo] = false;
-        this.carregarCategorias().then();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Categoria',
-          detail: 'Categoria editada'
-        })
-      });
-    } else {
-      this.editando[campo] = false;
-    }
   }
 
   // Abre o modal de adicionar cliente
@@ -219,5 +242,15 @@ export class CategoriasListaComponent implements OnInit {
     this.categoriaForm.reset();
     this.resetarEdicao();
     this.verDetalhesCategoria = false;
+  }
+
+  // Filtra os clientes por nome
+  get categoriasFiltrados(): Categoria[] {
+    if (!this.filtro) {
+      return this.Categorias;
+    }
+    return this.Categorias.filter(categoria =>
+      categoria.nome.toLowerCase().includes(this.filtro.toLowerCase())
+    );
   }
 }
