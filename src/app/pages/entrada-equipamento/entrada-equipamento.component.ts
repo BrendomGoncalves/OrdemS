@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Cliente} from '../../models/cliente';
+import {Cliente} from '../../models/cliente/cliente';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {ButtonDirective} from 'primeng/button';
 import {StepperModule} from 'primeng/stepper';
