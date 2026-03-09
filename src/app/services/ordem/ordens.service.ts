@@ -3,6 +3,7 @@ import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {OrdemServico} from '../../models/ordem-servico';
+import {Servico} from '../../models/servico/servico';
 
 @Injectable({
   providedIn: 'root'
@@ -67,5 +68,31 @@ export class OrdensService {
         }
       });
     });
+  }
+
+  async chartCalcularMaisVendidos(): Promise<[Servico, number][]> {
+    return new Promise(async (resolve, reject) => {
+      (await this.getOrdens()).subscribe({
+        next: (ordens) => {
+          const maisVendidos = this.getServicosOrdens(ordens).slice(0, 3).sort((a, b) => b[1] - a[1]);
+          resolve(maisVendidos);
+        },
+        error: (err) => {
+          reject(err);
+        }
+      });
+    });
+  }
+
+  private getServicosOrdens(ordens: OrdemServico[]): [Servico, number][] {
+    return ordens.map(ordem => ordem.servicos).flat().reduce<[Servico, number][]>((acc, servico) => {
+      const index = acc.findIndex(item => item[0].id === servico.id);
+      if (index !== -1) {
+        acc[index][1]++;
+      } else {
+        acc.push([servico as Servico, 1]);
+      }
+      return acc;
+    }, []);
   }
 }
