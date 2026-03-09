@@ -1,8 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ToolbarModule} from 'primeng/toolbar';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {SidebarModule} from 'primeng/sidebar';
-import {Button} from 'primeng/button';
 import {TooltipModule} from 'primeng/tooltip';
 
 @Component({
@@ -12,13 +11,10 @@ import {TooltipModule} from 'primeng/tooltip';
     ToolbarModule,
     RouterLink,
     SidebarModule,
-    Button,
     RouterLinkActive,
     TooltipModule
   ],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.scss'
 })
-export class NavBarComponent{
-  // sidebarVisible3: boolean = false;
-}
+export class NavBarComponent{}
