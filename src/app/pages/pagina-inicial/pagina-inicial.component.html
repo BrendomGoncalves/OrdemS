@@ -1,1 +1,116 @@
-
+<div class="p-5">
+  <div class="px-5 w-full flex flex-row justify-content-between align-items-center text-black-alpha-80">
+    <img src="assets/logoWhite.svg" alt="Logo" width="120"/>
+    <h2>{{ empresa?.nome?.toUpperCase() }}</h2>
+  </div>
+  <div class="tiles">
+    <article class="tile">
+      <div class="tile-header">
+        <i class="pi pi-file-edit"></i>
+        <h3>
+          <span>
+            {{ QOrdens().toString().padStart(2, '0') }}
+            {{ QOrdens() > 1 ? 'Ordens' : 'Ordem' }}
+          </span>
+          <span>Ordem de Serviço</span>
+        </h3>
+      </div>
+      <a [routerLink]="['/ordens']">
+        <span>Ver mais</span>
+        <span class="icon-button">
+          <i class="pi pi-angle-right"></i>
+        </span>
+      </a>
+    </article>
+    <article class="tile">
+      <div class="tile-header">
+        <i class="pi pi-file-check"></i>
+        <h3>
+          <span>
+            {{ QEntradaEquipamento().toString().padStart(2, '0') }}
+            {{ QEntradaEquipamento() > 1 ? 'Entradas' : 'Entrada' }}
+          </span>
+          <span>Entrada de Equipamento</span>
+        </h3>
+      </div>
+      <a [routerLink]="['/entradas-equipamentos']">
+        <span>Ver mais</span>
+        <span class="icon-button">
+          <i class="pi pi-angle-right"></i>
+        </span>
+      </a>
+    </article>
+    <article class="tile">
+      <div class="tile-header">
+        <i class="pi pi-box"></i>
+        <h3>
+          <span>
+            {{ QProdutos().toString().padStart(2, '0') }}
+            {{ QProdutos() > 1 ? 'Produtos' : 'Produto' }}
+          </span>
+          <span>Lista de Produtos</span>
+        </h3>
+      </div>
+      <a [routerLink]="['/produtos']">
+        <span>Ver mais</span>
+        <span class="icon-button">
+          <i class="pi pi-angle-right"></i>
+        </span>
+      </a>
+    </article>
+    <article class="tile">
+      <div class="tile-header">
+        <i class="pi pi-users"></i>
+        <h3>
+          <span>
+            {{ QClientes().toString().padStart(2, '0') }}
+            {{ QClientes() > 1 ? 'Clientes' : 'Cliente' }}
+          </span>
+          <span>Lista de Clientes</span>
+        </h3>
+      </div>
+      <a [routerLink]="['/clientes']">
+        <span>Ver mais</span>
+        <span class="icon-button">
+          <i class="pi pi-angle-right"></i>
+        </span>
+      </a>
+    </article>
+    <article class="tile">
+      <div class="tile-header">
+        <i class="pi pi-desktop"></i>
+        <h3>
+          <span>
+            {{ QServicos().toString().padStart(2, '0') }}
+            {{ QServicos() > 1 ? 'Serviços' : 'Serviço' }}
+          </span>
+          <span>Lista de Serviços</span>
+        </h3>
+      </div>
+      <a [routerLink]="['/servicos']">
+        <span>Ver mais</span>
+        <span class="icon-button">
+          <i class="pi pi-angle-right"></i>
+        </span>
+      </a>
+    </article>
+    <article class="tile">
+      <div class="tile-header">
+        <i class="pi pi-tags"></i>
+        <h3>
+          <span>
+            {{ QCategorias().toString().padStart(2, '0') }}
+            {{ QCategorias() > 1 ? 'Categorias' : 'Categoria' }}
+          </span>
+          <span>Lista de Categorias</span>
+        </h3>
+      </div>
+      <a [routerLink]="['/categorias']">
+        <span>Ver mais</span>
+        <span class="icon-button">
+          <i class="pi pi-angle-right"></i>
+        </span>
+      </a>
+    </article>
+  </div>
+</div>
