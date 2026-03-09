@@ -3,7 +3,6 @@ import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {Venda} from '../../models/venda';
-import {generateUniqueId} from '../../ferramentas/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +28,6 @@ export class VendasService {
   }
 
   addVenda(venda: Venda): Observable<Venda> {
-    venda.id = generateUniqueId();
     return this.http.post<Venda>(this.apiUrl, venda).pipe(
       map(vendaAdicionada => {
         if (vendaAdicionada.id !== undefined) {
