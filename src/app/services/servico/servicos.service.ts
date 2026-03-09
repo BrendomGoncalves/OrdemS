@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Servico} from '../../models/servico';
+import {Servico} from '../../models/servico/servico';
 import {map, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
+import {ServicoCreateDto} from '../../models/servico/servicoCreateDto';
+import {CategoriasService} from '../categoria/categorias.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +12,18 @@ import {HttpClient} from '@angular/common/http';
 export class ServicosService {
   private apiUrl = `${environment.apiUrl}/servicos`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private categoriasService: CategoriasService) {}
 
   async getServicos(): Promise<Observable<Servico[]>> {
     return this.http.get<Servico[]>(this.apiUrl).pipe(
-      map(servicos => servicos.sort((a, b) => a.nome.localeCompare(b.nome)))
+      map(servicos => {
+        servicos.forEach(async (servico: Servico) => {
+          (await this.categoriasService.getCategoriaById(servico.idCategoria)).subscribe(categoria => {
+            servico.categoria = categoria;
+          });
+        })
+        return servicos;
+      })
     );
   }
 
@@ -22,19 +31,16 @@ export class ServicosService {
     return this.http.get<Servico>(`${this.apiUrl}/${id}`);
   }
 
-  async addServico(servico: Servico): Promise<Observable<Servico>> {
-    return this.http.post<Servico>(this.apiUrl, servico).pipe(
+  async addServico(servico: ServicoCreateDto): Promise<Observable<ServicoCreateDto>> {
+    return this.http.post<ServicoCreateDto>(this.apiUrl, servico).pipe(
       map(servicoAdicionado => {
-        if (servicoAdicionado.id !== undefined) {
-          servicoAdicionado.id = servicoAdicionado.id.toString();
-        }
         return servicoAdicionado;
       })
     )
   }
 
-  async updateServico(id: number | undefined, servico: Servico): Promise<Observable<Servico>> {
-    return this.http.put<Servico>(`${this.apiUrl}/${id}`, servico).pipe(
+  async updateServico(id: number, servico: ServicoCreateDto): Promise<Observable<ServicoCreateDto>> {
+    return this.http.put<ServicoCreateDto>(`${this.apiUrl}/${id}`, servico).pipe(
       map(servicoAtualizado => {
         return servicoAtualizado;
       })
