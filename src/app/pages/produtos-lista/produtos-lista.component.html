@@ -23,6 +23,11 @@
     </div>
     <div class="flex mt-3 gap-3 lg:mt-0">
       <button pButton
+              label="Exportar PDF"
+              class="p-button-danger"
+              icon="pi pi-file-pdf"
+              (click)="exportarPDF()"></button>
+      <button pButton
               label="Vendas"
               class="p-button-danger"
               icon="pi pi-check-square"
@@ -370,4 +375,4 @@
   </form>
 </p-dialog>
 
-<p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>
+<!--<p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>-->
