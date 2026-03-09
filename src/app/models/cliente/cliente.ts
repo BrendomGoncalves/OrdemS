@@ -14,5 +14,6 @@ export interface Cliente {
   cidade: string;
   observacoes: string;
   tipoCliente: 'PF' | 'PJ';
-  dataCadastro: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
