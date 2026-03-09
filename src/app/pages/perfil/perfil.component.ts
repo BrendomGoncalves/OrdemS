@@ -92,7 +92,7 @@ export class PerfilComponent implements OnInit {
       this.carregarEmpresa().then();
       this.messageService.add({
         severity: 'success',
-        summary: 'Categoria',
+        summary: 'Perfil',
         detail: 'Perfil editado'
       })
     });
