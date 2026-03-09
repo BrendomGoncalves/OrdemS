@@ -29,20 +29,6 @@
   </div>
 </div>
 
-<!--ESTATISTICAS-->
-<!--<div class="flex flex-row flex-wrap justify-content-around align-items-center p-4">-->
-<!--  <p-chart type="pie"-->
-<!--           [data]="dadosPie"-->
-<!--           [options]="opcoesPie"/>-->
-<!--  <div class="bg-white border-3 border-gray-400 border-round-2xl p-1 w-15rem h-8rem">-->
-<!--    <div class="flex flex-row align-items-center gap-2">-->
-<!--      <i class="pi pi-wallet text-green-600"></i>-->
-<!--      <h3 class="text-green-600">FATURADO</h3>-->
-<!--    </div>-->
-<!--    <p class="">{{ valorTotalOrdens | currency: 'BRL':'symbol':'1.2-2':'pt-BR'}}</p>-->
-<!--  </div>-->
-<!--</div>-->
-
 <!--TABELA DE ORDENS-->
 <div class="tabela">
   <div class="p-inputgroup">
@@ -106,7 +92,7 @@
             [(ngModel)]="ordem.status"
             (onChange)="statusOrdemServicoAtualizar(ordem)"
             styleClass="{{ ordem.status === 'EM ANDAMENTO' ? 'bg-orange-400' : ordem.status === 'CONCLUIDO' ? 'bg-green-600' : ordem.status === 'AGUARDANDO PEÇAS' ? 'bg-blue-400' : 'bg-red-400' }}"
-            [style]="{ width: 'auto', height: '2.5rem' }">
+            [style]="{ width: '200px', height: '2.5rem' }">
             <ng-template let-status pTemplate="selectedItem">
               @switch (status) {
                 @case ('EM ANDAMENTO') {
@@ -141,23 +127,6 @@
             </ng-template>
           </p-dropdown>
         </td>
-        <!--        @switch (ordem.status) {-->
-        <!--          @case ('EM ANDAMENTO') {-->
-        <!--            <td class="justify-content-center flex">-->
-        <!--              <p class="w-9rem bg-orange-400 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>-->
-        <!--            </td>-->
-        <!--          }-->
-        <!--          @case ('CONCLUIDO') {-->
-        <!--            <td class="justify-content-center flex">-->
-        <!--              <p class="w-9rem bg-green-600 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>-->
-        <!--            </td>-->
-        <!--          }-->
-        <!--          @case ('CANCELADO') {-->
-        <!--            <td class="justify-content-center flex">-->
-        <!--              <p class="w-9rem bg-red-400 text-white font-bold p-1 border-round text-center">{{ ordem.status }}</p>-->
-        <!--            </td>-->
-        <!--          }-->
-        <!--        }-->
         <td class="text-center">{{ ordem.valorTotal | currency: 'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
       </tr>
     </ng-template>
@@ -499,5 +468,3 @@
     <p-button label="Voltar" severity="danger" (onClick)="fecharVerPagamento()"/>
   </div>
 </p-dialog>
-
-<p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>

@@ -16,14 +16,11 @@ import {DialogModule} from 'primeng/dialog';
 import {AccordionModule} from 'primeng/accordion';
 import {PanelModule} from 'primeng/panel';
 import {ChartModule} from 'primeng/chart';
-import {Chart, registerables} from 'chart.js';
 import {SkeletonModule} from 'primeng/skeleton';
 import {ToastModule} from 'primeng/toast';
 import {CalendarModule} from 'primeng/calendar';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {Desconto} from '../../models/desconto';
-
-Chart.register(...registerables);
 
 @Component({
   selector: 'app-ordem-lista',
