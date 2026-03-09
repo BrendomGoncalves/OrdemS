@@ -1,5 +1,5 @@
 <!--HEADER DA PÁGINA-->
-<div class="surface-section px-4 py-5 md:px-6 lg:px-8">
+<div class="surface-section px-4 py-3 md:px-6 lg:px-8">
   <ul class="list-none p-0 m-0 flex align-items-center font-medium mb-3">
     <li>
       <a class="text-500 no-underline line-height-3 cursor-pointer" routerLink="/pagina-inicial">Página Inicial</a>
@@ -23,7 +23,7 @@
     </div>
     <div class="mt-3 lg:mt-0">
       <button pButton label="Novo Serviço" class="mr-2 p-button-danger" icon="pi pi-user-plus"
-              (click)="abrirAdicionarServico()"></button>
+        (click)="abrirAdicionarServico()"></button>
     </div>
   </div>
 </div>
@@ -34,25 +34,21 @@
     <span class="p-inputgroup-addon">
       <i class="pi pi-search"></i>
     </span>
-    <input
-      type="text"
-      pInputText
-      placeholder="Pesquise o nome do serviço"
-      [(ngModel)]="filtro"
-    />
+    <input type="text" pInputText placeholder="Pesquise o nome do serviço" [(ngModel)]="filtro" />
   </div>
   <p-table [value]="servicosFiltrados" [paginator]="true" [rows]="10">
     <ng-template pTemplate="header">
       <tr>
         <th [style]="{'text-align': 'center', 'width': '20px'}"><i class="pi pi-eye" style="font-weight: bold"></i></th>
-        <th [style]="{'min-width': '250px', 'max-width': '430px'}" pSortableColumn="nome">Nome <p-sortIcon field="nome"/></th>
+        <th [style]="{'min-width': '250px', 'max-width': '430px'}" pSortableColumn="nome">Nome <p-sortIcon
+            field="nome" /></th>
         <th [style]="{'min-width': '160px'}" pSortableColumn="categoria.nome">
           <i class="pi pi-tags mr-2" style="font-weight: bold"></i>
           Categoria
-          <p-sortIcon field="categoria.nome"/>
+          <p-sortIcon field="categoria.nome" />
         </th>
         <th [style]="{'min-width': '150px'}" pSortableColumn="precoVenda">
-          R$ Preço Venda <p-sortIcon field="precoVenda"/>
+          R$ Preço Venda <p-sortIcon field="precoVenda" />
         </th>
       </tr>
     </ng-template>
@@ -60,7 +56,7 @@
       <tr *ngIf="!carregandoDados">
         <td>
           <p-button (onClick)="abrirDetalhesServico(servico)" styleClass="bg-red-600 border-0 w-1rem h-2rem"
-                    [style]="{'display': 'flex', 'justify-content': 'center'}">
+            [style]="{'display': 'flex', 'justify-content': 'center'}">
             <i class="pi pi-eye" [style]="{'font-size': '.9rem'}"></i>
           </p-button>
         </td>
@@ -124,7 +120,7 @@
 
 <!--DETALHES SERVIÇO-->
 <p-dialog header="Detalhes Serviço" [closable]="false" [modal]="true" [(visible)]="verDetalhesServico"
-          [style]="{ width: '30rem', 'min-height': '500px' }">
+  [style]="{ width: '30rem', 'min-height': '500px' }">
   <form [formGroup]="servicoForm">
     <div class="flex flex-column gap-2">
       <div *ngIf="!editando['nome']" class="campo-editar">
@@ -132,17 +128,17 @@
           <strong>Nome:</strong> {{ servicoForm.get('nome')?.value }}
         </div>
         <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
-                  (onClick)="ativarEdicao('nome')">
+          (onClick)="ativarEdicao('nome')">
           <i class="pi pi-pencil" style="font-size: 1rem;"></i>
         </p-button>
       </div>
       <div *ngIf="editando['nome']" class="campo-editar">
         <div class="campo-editar-valor">
           <strong>Nome:</strong>
-          <input formControlName="nome" placeholder="Digite o novo nome"/>
+          <input formControlName="nome" placeholder="Digite o novo nome" />
         </div>
         <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
-                  (onClick)="salvarEdicao('nome')">
+          (onClick)="editarServico('nome')">
           <i class="pi pi-save" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -152,17 +148,17 @@
           <strong>Preço Venda:</strong> {{ servicoForm.get('precoVenda')?.value | currency: 'BRL' }}
         </div>
         <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
-                  (onClick)="ativarEdicao('precoVenda')">
+          (onClick)="ativarEdicao('precoVenda')">
           <i class="pi pi-pencil" style="font-size: 1rem;"></i>
         </p-button>
       </div>
       <div *ngIf="editando['precoVenda']" class="campo-editar">
         <div class="campo-editar-valor">
           <strong>Preço Venda:</strong>
-          <input formControlName="precoVenda" placeholder="Digite o novo preço de venda"/>
+          <input formControlName="precoVenda" placeholder="Digite o novo preço de venda" />
         </div>
         <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
-                  (onClick)="salvarEdicao('precoVenda')">
+          (onClick)="editarServico('precoVenda')">
           <i class="pi pi-save" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -172,7 +168,8 @@
         <div class="campo-editar-valor">
           <strong>Categoria:</strong> {{ servicoForm.get('categoria')?.value }}
         </div>
-        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}" (onClick)="ativarEdicao('categoria')">
+        <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
+          (onClick)="ativarEdicao('categoria')">
           <i class="pi pi-pencil" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -180,11 +177,10 @@
         <div class="campo-editar-valor">
           <strong>Categoria:</strong>
           <p-dropdown formControlName="categoria" [options]="listaCategorias" optionLabel="nome"
-                      placeholder="Selecione uma categoria"
-                      [showClear]="true"></p-dropdown>
+            placeholder="Selecione uma categoria" [showClear]="true"></p-dropdown>
         </div>
         <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
-                  (onClick)="salvarEdicao('categoria')">
+          (onClick)="editarServico('categoria')">
           <i class="pi pi-save" style="font-size: 1rem;"></i>
         </p-button>
       </div>
@@ -195,80 +191,71 @@
           <strong>Observações:</strong> {{ servicoForm.get('observacoes')?.value }}
         </div>
         <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
-                  (onClick)="ativarEdicao('observacoes')">
+          (onClick)="ativarEdicao('observacoes')">
           <i class="pi pi-pencil" style="font-size: 1rem;"></i>
         </p-button>
       </div>
       <div *ngIf="editando['observacoes']" class="campo-editar">
         <div class="campo-editar-valor">
           <strong>Observações:</strong>
-          <input formControlName="observacoes" placeholder="Digite as novas observações"/>
+          <input formControlName="observacoes" placeholder="Digite as novas observações" />
         </div>
         <p-button styleClass="w-1rem h-2rem" [style]="{'display': 'flex', 'justify-content': 'center'}"
-                  (onClick)="salvarEdicao('observacoes')">
+          (onClick)="editarServico('observacoes')">
           <i class="pi pi-save" style="font-size: 1rem;"></i>
         </p-button>
       </div>
 
       <!-- Botões de ação -->
       <div class="flex justify-content-center gap-2">
-        <p-button label="Deletar" severity="danger" (onClick)="deletarServico()"/>
-        <p-button label="Cancelar" severity="secondary" (onClick)="fecharDetalhesServico()"/>
+        <p-button label="Deletar" severity="danger" (onClick)="deletarServico()" />
+        <p-button label="Cancelar" severity="secondary" (onClick)="fecharDetalhesServico()" />
       </div>
     </div>
   </form>
 </p-dialog>
 
 <!--ADICIONAR SERVIÇO-->
-<p-dialog
-  header="Adicionar Serviço"
-  [closable]="false"
-  [modal]="true"
-  [(visible)]="verAdicionarServico"
-  [style]="{width: '40rem'}"
-  [breakpoints]="{'900px': '60vw', '700px': '80vw','500px': '100vw'}">
+<p-dialog header="Adicionar Serviço" [closable]="false" [modal]="true" [(visible)]="verAdicionarServico"
+  [style]="{width: '40rem'}" [breakpoints]="{'900px': '60vw', '700px': '80vw','500px': '100vw'}">
   <form [formGroup]="servicoForm">
     <!--Nome-->
     <div class="campo-salvar">
       <div class="campo-salvar-valor">
         <strong>Nome:</strong>
-        <input formControlName="nome" placeholder="Digite o nome" autofocus/>
+        <input formControlName="nome" placeholder="Digite o nome" autofocus />
         <p-message *ngIf="servicoForm.get('nome')?.invalid" severity="info"
-                   text="Precisa ter ao mesno 3 caracteres"></p-message>
+          text="Precisa ter ao mesno 3 caracteres"></p-message>
       </div>
     </div>
     <div class="campo-salvar">
       <div class="campo-salvar-valor">
         <strong>Categoria:</strong>
         <p-dropdown formControlName="categoria" [options]="listaCategorias" optionLabel="nome"
-                    placeholder="Selecione uma categoria"
-                    [showClear]="true"></p-dropdown>
+          placeholder="Selecione uma categoria" [showClear]="true"></p-dropdown>
         <p-message *ngIf="servicoForm.get('categoria')?.invalid" severity="info"
-                   text="Precisa ter ao mesno 3 caracteres"></p-message>
+          text="Precisa ter ao mesno 3 caracteres"></p-message>
       </div>
     </div>
     <div class="campo-salvar">
       <div class="campo-salvar-valor">
         <strong>Preço:</strong>
-        <input formControlName="precoVenda" placeholder="Digite o preço" autofocus/>
+        <input formControlName="precoVenda" placeholder="Digite o preço" autofocus />
         <p-message *ngIf="servicoForm.get('precoVenda')?.invalid" severity="info"
-                   text="Precisa ser maior ou igual a 0"></p-message>
+          text="Precisa ser maior ou igual a 0"></p-message>
       </div>
     </div>
     <div class="campo-salvar">
       <div class="campo-salvar-valor">
         <strong>Observações:</strong>
-        <input formControlName="observacoes" placeholder="Digite as observações" autofocus/>
+        <input formControlName="observacoes" placeholder="Digite as observações" autofocus />
         <p-message *ngIf="servicoForm.get('observacoes')?.invalid" severity="info"
-                   text="Precisa ter ao mesno 3 caracteres"></p-message>
+          text="Precisa ter ao mesno 3 caracteres"></p-message>
       </div>
     </div>
     <div class="flex justify-content-center gap-2">
-      <p-button label="Salvar" severity="success" (onClick)="salvarServico()"/>
-      <p-button label="Fechar" severity="secondary" (onClick)="fecharAdicionarServico()"/>
+      <p-button label="Salvar" severity="success" (onClick)="salvarServico()" />
+      <p-button label="Fechar" severity="secondary" (onClick)="fecharAdicionarServico()" />
     </div>
   </form>
 </p-dialog>
-
-<!--MENSAGENS-->
-<p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>

@@ -1,28 +1,30 @@
-import {Component, OnInit, signal} from '@angular/core';
-import {Button, ButtonDirective} from 'primeng/button';
-import {RouterLink} from '@angular/router';
-import {Servico} from '../../models/servico';
+import { Component, OnInit, signal } from '@angular/core';
+import { Button, ButtonDirective } from 'primeng/button';
+import { RouterLink } from '@angular/router';
+import { Servico } from '../../models/servico/servico';
 import {
   FormBuilder,
   FormGroup, FormsModule,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import {ServicosService} from '../../services/servico/servicos.service';
-import {InputTextModule} from 'primeng/inputtext';
-import {MessageService, PrimeTemplate} from 'primeng/api';
-import {TableModule} from 'primeng/table';
-import {CurrencyPipe, NgIf} from '@angular/common';
-import {DialogModule} from 'primeng/dialog';
-import {MessageModule} from 'primeng/message';
-import {TabViewModule} from 'primeng/tabview';
-import {asyncValidator, generateUniqueId} from '../../ferramentas/utils';
-import {ToastModule} from 'primeng/toast';
-import {SkeletonModule} from 'primeng/skeleton';
-import {Categoria} from '../../models/categoria';
-import {CategoriasService} from '../../services/categoria/categorias.service';
-import {DropdownModule} from 'primeng/dropdown';
-import {ChartModule} from 'primeng/chart';
+import { ServicosService } from '../../services/servico/servicos.service';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageService, PrimeTemplate } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { CurrencyPipe, NgIf } from '@angular/common';
+import { DialogModule } from 'primeng/dialog';
+import { MessageModule } from 'primeng/message';
+import { TabViewModule } from 'primeng/tabview';
+import { asyncValidator } from '../../ferramentas/utils';
+import { ToastModule } from 'primeng/toast';
+import { SkeletonModule } from 'primeng/skeleton';
+import { Categoria } from '../../models/categoria/categoria';
+import { CategoriasService } from '../../services/categoria/categorias.service';
+import { DropdownModule } from 'primeng/dropdown';
+import { ChartModule } from 'primeng/chart';
+import { ServicoCreateDto } from '../../models/servico/servicoCreateDto';
+import { OrdensService } from '../../services/ordem/ordens.service';
 
 @Component({
   selector: 'app-servico-lista',
@@ -67,16 +69,18 @@ export class ServicosListaComponent implements OnInit {
   carregandoDados: boolean = true; // Indica se os dados estão sendo carregados
 
   constructor(private servicoService: ServicosService,
-              private fb: FormBuilder,
-              private categoriasService: CategoriasService,
-              private messageService: MessageService) {
+    private fb: FormBuilder,
+    private categoriasService: CategoriasService,
+    private messageService: MessageService,
+    private ordensService: OrdensService) {
     this.servicoForm = this.fb.group({
-      id: [''],
+      id: [''], // ID do serviço
+      createdAt: [''], // Data de criação
+      updatedAt: [''], // Data de atualização
       nome: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
       categoria: [''],
       precoVenda: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
       observacoes: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
-      dataCadastro: [''],
       quantidadeVenda: ['']
     });
     this.resetarEdicao();
@@ -86,72 +90,72 @@ export class ServicosListaComponent implements OnInit {
     await this.carregarServicos();
     (await this.categoriasService.getCategorias()).subscribe((categorias) => {
       this.listaCategorias = categorias
-    })
-  }
-
-  // Utiliza o serviço de cliente para carregar a lista de cliente
-  async carregarServicos() {
-    (await this.servicoService.getServicos()).subscribe(async servicos => {
-      this.Servicos = servicos;
-      setTimeout(() => {
-        this.carregandoDados = false;
-        this.estatisticaServicos(servicos);
-      }, 1000);
     });
   }
 
-  // Atualiza as estatisticas de cliente
-  estatisticaServicos(servicos: Servico[]) {
-    this.QServicos.set(servicos.length);
-  }
-
-  // Filtra os clientes por nome
-  get servicosFiltrados(): Servico[] {
-    if (!this.filtro) {
-      return this.Servicos;
-    }
-    return this.Servicos.filter(servico =>
-      servico.nome.toLowerCase().includes(this.filtro.toLowerCase())
-    );
-  }
-
-  // Utiliza o serviço de cliente para adicionar um novo cliente
-  async salvarServico() {
-    let novoServico: Servico = this.servicoForm.value;
-    if (this.Servicos.find(servico => servico.nome === novoServico.nome)?.nome === novoServico.nome) {
-      this.messageService.add({
-        severity: 'info',
-        summary: 'Serviço',
-        detail: 'Esse serviço já existe'
-      });
-    } else if (this.servicoForm.valid) {
-      novoServico.id = generateUniqueId();
-      (await this.servicoService.addServico(novoServico)).subscribe(() => {
-        this.carregarServicos().then();
-        this.estatisticaServicos(this.Servicos);
-        this.fecharAdicionarServico();
+  async carregarServicos() {
+    (await this.servicoService.getServicos()).subscribe({
+      next: (servicos) => {
+        this.Servicos = servicos;
+        setTimeout(() => {
+          this.carregandoDados = false;
+          this.estatisticaServicos(servicos);
+        }, 1000);
+      },
+      error: (err) => {
+        this.carregandoDados = false;
         this.messageService.add({
-          severity: 'success',
-          summary: 'Serviço',
-          detail: 'Serviço adicionado'
+          severity: 'info',
+          summary: 'Serviços',
+          detail: `${err.error.message}`
         });
+      }
+    });
+  }
+
+  async salvarServico() {
+    let novoServico: ServicoCreateDto = {
+      nome: this.servicoForm.get('nome')?.value,
+      idCategoria: this.servicoForm.get('categoria')?.value,
+      precoVenda: this.servicoForm.get('precoVenda')?.value,
+      observacoes: this.servicoForm.get('observacoes')?.value,
+      quantidadeVenda: this.servicoForm.get('quantidadeVenda')?.value
+    };
+
+    if (this.servicoForm.valid) {
+      (await this.servicoService.addServico(novoServico)).subscribe({
+        next: (servico) => {
+          this.carregarServicos().then();
+          this.fecharAdicionarServico();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Serviço',
+            detail: 'Serviço adicionado'
+          });
+        },
+        error: (err) => {
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Serviço',
+            detail: `${err.error.message}`
+          });
+        }
       });
     } else {
       this.messageService.add({
-        severity: 'error',
+        severity: 'info',
         summary: 'Serviço',
         detail: 'Verifique se os campos estão preenchidos corretamente'
       });
     }
   }
 
-  // Utiliza o serviço de cliente para deletar um cliente
   async deletarServico() {
-    const idDeletar = this.servicoForm.get('id')?.value;
-    if(this.Servicos.find(servico => servico.id === idDeletar)?.id === idDeletar) {
-      (await this.servicoService.deleteServico(idDeletar)).subscribe(() => {
+    const idDeletarServico = this.servicoForm.get('id')?.value;
+
+    if (this.Servicos.find(servico => servico.id === idDeletarServico)?.id === idDeletarServico) {
+      (await this.servicoService.deleteServico(idDeletarServico)).subscribe(() => {
         this.carregarServicos().then();
-        this.estatisticaServicos(this.Servicos);
         this.fecharDetalhesServico();
         this.messageService.add({
           severity: 'success',
@@ -162,65 +166,92 @@ export class ServicosListaComponent implements OnInit {
     } else {
       this.messageService.add({
         severity: 'error',
-        summary: 'Serviço',
-        detail: 'Esse serviço não existe'
+        summary: 'Serviço inválido',
+        detail: 'Verfique se os campos estão preenchidos corretamente'
       });
     }
   }
 
-  // Reseta o objeto de edição
+  async editarServico(campo: string) {
+    const servicoEditado = this.servicoForm.value;
+
+    if (this.servicoForm.valid) {
+      (await this.servicoService.updateServico(servicoEditado.id, servicoEditado)).subscribe({
+        next: () => {
+          this.editando[campo] = false;
+          this.carregarServicos().then();
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Serviço',
+            detail: 'Serviço atualizado'
+          });
+        },
+        error: (err) => {
+          this.editando[campo] = false;
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Serviço',
+            detail: `${err.error.message}`
+          });
+        }
+      });
+    } else {
+      this.editando[campo] = false;
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Serviço inválido',
+        detail: 'Verifique se os campos estão preenchidos corretamente'
+      })
+    }
+  }
+
+  estatisticaServicos(servicos: Servico[]) {
+    this.QServicos.set(servicos.length);
+  }
+
+  get servicosFiltrados(): Servico[] {
+    if (!this.filtro) {
+      return this.Servicos;
+    }
+    return this.Servicos.filter(servico =>
+      servico.nome.toLowerCase().includes(this.filtro.toLowerCase())
+    );
+  }
+
   resetarEdicao() {
     Object.keys(this.servicoForm.controls).forEach(key => {
       this.editando[key] = false;
     });
   }
 
-  // Ativa a edição de um campo
   ativarEdicao(campo: string) {
     this.editando[campo] = true;
   }
 
-  // Salva a edição de um campo
-  async salvarEdicao(campo: string) {
-    const servicoEditado = this.servicoForm.value;
-    let servicoBanco: Servico = this.Servicos.find(c => c.id === servicoEditado.id)!;
-    if (servicoEditado.nome !== servicoBanco.nome) {
-      (await this.servicoService.updateServico(servicoEditado.id, servicoEditado)).subscribe(() => {
-        this.editando[campo] = false;
-        this.carregarServicos().then();
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Serviço',
-          detail: 'Serviço atualizado'
-        });
-      });
-    } else {
-      this.editando[campo] = false;
-    }
-  }
-
-  // Abre o modal de adicionar cliente
   abrirAdicionarServico() {
     this.servicoForm.reset();
     this.verAdicionarServico = true;
   }
 
-  // Fecha o modal de adicionar cliente
   fecharAdicionarServico() {
     this.servicoForm.reset();
     this.verAdicionarServico = false;
   }
 
-  // Abre o modal de detalhes do cliente
   abrirDetalhesServico(servico: Servico) {
-    this.servicoForm.setValue({
-      ...servico,
-      categoria: servico.categoria.nome,
+    this.servicoForm.patchValue({
+      id: servico.id || '',
+      createdAt: servico.createdAt || '',
+      updatedAt: servico.updatedAt || '',
+      nome: servico.nome || '',
+      categoria: servico.categoria?.nome || '',
+      precoVenda: servico.precoVenda || 0,
+      observacoes: servico.observacoes || '',
+      quantidadeVenda: servico.quantidadeVenda || 0
     });
     this.verDetalhesServico = true;
   }
 
-  // Fecha o modal de detalhes do cliente
   fecharDetalhesServico() {
     this.servicoForm.reset();
     this.resetarEdicao();
