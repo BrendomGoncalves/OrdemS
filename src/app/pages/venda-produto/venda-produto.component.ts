@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router, RouterLink} from '@angular/router';
 import {SplitterModule} from 'primeng/splitter';
 import {Produto} from '../../models/produto';
-import {Cliente} from '../../models/cliente';
+import {Cliente} from '../../models/cliente/cliente';
 import {ProdutosService} from '../../services/produto/produtos.service';
 import {ClientesService} from '../../services/cliente/clientes.service';
 import {StepperModule} from 'primeng/stepper';
@@ -51,7 +51,6 @@ export class VendaProdutoComponent implements OnInit {
     celular: "",
     cidade: "",
     cnpj: "",
-    dataCadastro: new Date(),
     fantasia: "",
     ie: "",
     numero: "",
@@ -62,7 +61,9 @@ export class VendaProdutoComponent implements OnInit {
     email: '',
     telefone: '',
     endereco: '',
-    observacoes: ''
+    observacoes: '',
+    createdAt: new Date(),
+    updatedAt: new Date()
   }
 
   totalVenda: number = 0;
@@ -95,7 +96,6 @@ export class VendaProdutoComponent implements OnInit {
       celular: "",
       cidade: "",
       cnpj: "",
-      dataCadastro: new Date(),
       fantasia: "",
       ie: "",
       numero: "",
@@ -106,7 +106,9 @@ export class VendaProdutoComponent implements OnInit {
       email: '',
       telefone: '',
       endereco: '',
-      observacoes: ''
+      observacoes: '',
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   }
 
@@ -173,7 +175,6 @@ export class VendaProdutoComponent implements OnInit {
             celular: "",
             cidade: "",
             cnpj: "",
-            dataCadastro: new Date(),
             fantasia: "",
             ie: "",
             numero: "",
@@ -184,7 +185,9 @@ export class VendaProdutoComponent implements OnInit {
             email: '',
             telefone: '',
             endereco: '',
-            observacoes: ''
+            observacoes: '',
+            createdAt: new Date(),
+            updatedAt: new Date()
           }
           this.totalVenda = 0;
           this.router.navigate(['/vendas']).then(() => {
