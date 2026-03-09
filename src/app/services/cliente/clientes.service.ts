@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {map, Observable} from 'rxjs';
-import {Cliente} from '../../models/cliente';
+import {Cliente} from '../../models/cliente/cliente';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
+import {ClienteCreateDto} from '../../models/cliente/clienteCreateDto';
 
 @Injectable({
   providedIn: 'root',
@@ -10,11 +11,14 @@ import {HttpClient} from '@angular/common/http';
 export class ClientesService {
   private apiUrl = `${environment.apiUrl}/clientes`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
   async getClientes(): Promise<Observable<Cliente[]>> {
     return this.http.get<Cliente[]>(this.apiUrl).pipe(
-      map(clientes => clientes.sort((a, b) => a.nome.localeCompare(b.nome)))
+      map(clientes => {
+        return clientes;
+      })
     );
   }
 
@@ -30,13 +34,14 @@ export class ClientesService {
     return this.http.get<Cliente>(`${this.apiUrl}?cnpj=${cnpj}`);
   }
 
-  async addCliente(cliente: Cliente): Promise<Observable<Cliente>> {
-    return this.http.post<Cliente>(this.apiUrl, cliente).pipe(
-      map(clienteAdicionado => {
-        if (clienteAdicionado.id !== undefined) {
-          clienteAdicionado.id = clienteAdicionado.id.toString();
-        }
-        return clienteAdicionado;
+  async getClienteByIe(ie: string): Promise<Observable<Cliente>> {
+    return this.http.get<Cliente>(`${this.apiUrl}?ie=${ie}`);
+  }
+
+  async addCliente(cliente: ClienteCreateDto): Promise<Observable<ClienteCreateDto>> {
+    return this.http.post<ClienteCreateDto>(this.apiUrl, cliente).pipe(
+      map(clienteCriado => {
+        return clienteCriado;
       })
     );
   }
