@@ -2,15 +2,6 @@ import {AbstractControl, AsyncValidatorFn, ValidationErrors} from '@angular/form
 import {delay, map, Observable, of} from 'rxjs';
 
 /**
- * Gera uma string como id unico.
- * @example const id = generateUniqueId();
- * @returns Um id unico.
- */
-export function generateUniqueId(): string {
-  return Math.random().toString(36).slice(2, 9).toUpperCase();
-}
-
-/**
  * Função assíncrona que valida um campo.
  * @example nome: ['', [Validators.required], [asyncValidator()]]
  * @returns Um observable com o resultado da validação.
@@ -24,4 +15,18 @@ export function asyncValidator(): AsyncValidatorFn {
       })
     );
   };
+}
+
+/**
+ * Verifica se um objeto possui propriedades com valores nulos ou indefinidos.
+ * @param obj Objeto a ser verificado.
+ * @returns true se o objeto possui propriedades com valores nulos ou indefinidos, false caso contrário.
+ */
+export function hasNullProperties(obj: Record<string, any>): boolean {
+  for (const key in obj) {
+    if (obj[key] == null || obj[key] === '') { // null ou undefined
+      return true;
+    }
+  }
+  return false;
 }
