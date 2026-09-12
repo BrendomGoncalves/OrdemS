@@ -1,5 +1,40 @@
+.app-layout {
+  display: flex;
+  width: 100%;
+}
+
+.app-content {
+  width: calc(100% - 6.6rem);
+  min-width: 0;
+  margin-left: 6.6rem;
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .app-content {
+    width: calc(100% - 5.25rem);
+    margin-left: 5.25rem;
+  }
+}
+
 @media print {
-  #navbar{
+  #navbar {
     display: none;
+  }
+
+  .app-content {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-layout {
+    display: block;
+    padding-bottom: 3.75rem;
+  }
+
+  .app-content {
+    width: 100%;
+    margin-left: 0;
   }
 }

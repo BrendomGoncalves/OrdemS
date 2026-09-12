@@ -1,10 +1,11 @@
-<div class="flex flex-row w-full">
-  <div>
-    <app-nav-bar id="navbar"></app-nav-bar>
-  </div>
-  <div style="margin-left: 6.6rem;width: calc(100% - 6.5rem);">
+<div class="app-layout">
+  <app-nav-bar id="navbar"></app-nav-bar>
+  <main class="app-content">
     <router-outlet></router-outlet>
-  </div>
+  </main>
 </div>
 
-<p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>
+<p-toast
+  styleClass="mt-8"
+  [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' } }"
+></p-toast>
