@@ -17,7 +17,7 @@
   font-family: "Poppins", sans-serif;
   padding: 1rem;
   border-radius: 8px;
-  background-color: #ff4d4d;
+  background-color: var(--background-secondary);
   min-height: 150px;
   display: flex;
   flex-direction: column;
@@ -27,14 +27,17 @@
 
   &:hover {
     transform: translateY(-5px);
-  }
-
-  &:focus-within {
-    box-shadow: 0 0 0 2px #1f1f1f, 0 0 0 4px #e3ffa8;
+    a {
+      transition: all 0.25s ease;
+      color: var(--text-primary);
+      opacity: 1;
+    }
   }
 
   a {
-    color: darkred;
+    color: var(--text-tertiary);
+    opacity: 0.5;
+    transition: all 0.25s ease;
     font-size: 1.2em;
     text-decoration: none;
     display: flex;
@@ -45,10 +48,9 @@
     .icon-button {
       color: inherit;
       border-color: inherit;
-      i{
+      i {
         font-size: 1.5em;
       }
-      &:hover,
       &:focus {
         background-color: transparent;
         i {
@@ -77,7 +79,7 @@
 .tile-header {
   display: flex;
   align-items: center;
-  color: white;
+  color: var(--text-primary);
 
   i {
     font-size: 2.8em;
@@ -97,7 +99,7 @@
     }
 
     span:last-child {
-      font-size: .9em;
+      font-size: 0.9em;
       font-weight: 200;
     }
   }
