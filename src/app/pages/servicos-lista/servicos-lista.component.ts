@@ -16,14 +16,12 @@ import { CurrencyPipe, NgIf } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 import { TabViewModule } from 'primeng/tabview';
-import { asyncValidator } from '../../ferramentas/utils';
 import { ToastModule } from 'primeng/toast';
 import { SkeletonModule } from 'primeng/skeleton';
 import { Categoria } from '../../models/categoria/categoria';
 import { CategoriasService } from '../../services/categoria/categorias.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { ChartModule } from 'primeng/chart';
-import { ServicoCreateDto } from '../../models/servico/servicoCreateDto';
 import { OrdensService } from '../../services/ordem/ordens.service';
 
 @Component({
@@ -77,10 +75,10 @@ export class ServicosListaComponent implements OnInit {
       id: [''], // ID do serviço
       createdAt: [''], // Data de criação
       updatedAt: [''], // Data de atualização
-      nome: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
+      nome: ['', [Validators.minLength(3)]], // Deve ter no mínimo 3 caracteres
       categoria: [''],
-      precoVenda: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
-      observacoes: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
+      precoVenda: ['', [Validators.min(0)]], // Deve ser maior ou igual a 0
+      observacoes: ['', [Validators.minLength(3)]], // Deve ter no mínimo 3 caracteres
       quantidadeVenda: ['']
     });
     this.resetarEdicao();
@@ -114,12 +112,22 @@ export class ServicosListaComponent implements OnInit {
   }
 
   async salvarServico() {
-    let novoServico: ServicoCreateDto = {
+    let novoServico: Servico = {
+      id: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
       nome: this.servicoForm.get('nome')?.value,
       idCategoria: this.servicoForm.get('categoria')?.value,
       precoVenda: this.servicoForm.get('precoVenda')?.value,
       observacoes: this.servicoForm.get('observacoes')?.value,
-      quantidadeVenda: this.servicoForm.get('quantidadeVenda')?.value
+      quantidadeVenda: this.servicoForm.get('quantidadeVenda')?.value,
+      categoria: this.listaCategorias.find(categoria => categoria.id === this.servicoForm.get('categoria')?.value) || {
+        id: 0,
+        nome: '',
+        descricao: '',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
     };
 
     if (this.servicoForm.valid) {

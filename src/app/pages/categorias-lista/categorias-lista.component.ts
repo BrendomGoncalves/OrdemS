@@ -16,11 +16,9 @@ import {MessageService, PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {DialogModule} from 'primeng/dialog';
 import {MessageModule} from 'primeng/message';
-import {asyncValidator, hasNullProperties} from '../../ferramentas/utils';
 import {ToastModule} from 'primeng/toast';
 import {SkeletonModule} from 'primeng/skeleton';
 import {ChartModule} from 'primeng/chart';
-import {CategoriaCreateDto} from '../../models/categoria/categoriaCreateDto';
 
 @Component({
   selector: 'app-categorias-lista',
@@ -68,8 +66,8 @@ export class CategoriasListaComponent implements OnInit {
       id: [0], // ID do serviço,
       createdAt: [new Date()], // Data de criação do serviço
       updatedAt: [new Date()], // Data de atualização do serviço
-      nome: ['', [Validators.required, Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
-      descricao: ['', [Validators.minLength(3)], [asyncValidator()]] // Deve ter no mínimo 3 caracteres
+                  nome: ['', [Validators.required, Validators.minLength(3)]], // Deve ter no mínimo 3 caracteres
+                  descricao: ['', [Validators.required, Validators.minLength(3)]] // Deve ter no mínimo 3 caracteres
     });
     this.resetarEdicao();
   }
@@ -101,12 +99,15 @@ export class CategoriasListaComponent implements OnInit {
 
   // Utiliza o serviço de cliente para adicionar um novo cliente
   async salvarCategoria() {
-    const novaCategoria: CategoriaCreateDto = {
+    const novaCategoria: Categoria = {
+      id: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
       nome: this.categoriaForm.get('nome')?.value,
       descricao: this.categoriaForm.get('descricao')?.value,
     };
 
-    if (!hasNullProperties(novaCategoria)) {
+    if (this.categoriaForm.valid) {
       (await this.categoriaService.addCategoria(novaCategoria)).subscribe({
         next: (categoria) => {
           this.carregarCategorias().then();
@@ -171,7 +172,7 @@ export class CategoriasListaComponent implements OnInit {
   async editarCategoria(campo: string) {
     const categoriaEditada = this.categoriaForm.value;
 
-    if (!hasNullProperties(categoriaEditada)) {
+    if (this.categoriaForm.valid) {
       (await this.categoriaService.updateCategoria(categoriaEditada.id, categoriaEditada)).subscribe({
         next: () => {
           this.editando[campo] = false;

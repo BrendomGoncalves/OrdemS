@@ -15,7 +15,6 @@ import { MessageService, PrimeTemplate } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
-import { asyncValidator } from '../../ferramentas/utils';
 import { ToastModule } from 'primeng/toast';
 import { SkeletonModule } from 'primeng/skeleton';
 import { DropdownModule } from 'primeng/dropdown';
@@ -68,13 +67,13 @@ export class ProdutosListaComponent implements OnInit {
     private messageService: MessageService) {
     this.produtoForm = this.fb.group({
       id: [''],
-      nome: ['', [Validators.required, Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres
-      precoCompra: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
-      precoVenda: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
-      lucro: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
-      estoque: ['', [Validators.min(0)], [asyncValidator()]], // Deve ser maior ou igual a 0
+      nome: ['', [Validators.required, Validators.minLength(3)]], // Deve ter no mínimo 3 caracteres
+      precoCompra: ['', [Validators.min(0)]], // Deve ser maior ou igual a 0
+      precoVenda: ['', [Validators.min(0)]], // Deve ser maior ou igual a 0
+      lucro: ['', [Validators.min(0)]], // Deve ser maior ou igual a 0
+      estoque: ['', [Validators.min(0)]], // Deve ser maior ou igual a 0
       quantidadeVenda: [''], // Não precisa de validação
-      observacoes: ['', [Validators.minLength(3)], [asyncValidator()]] // Deve ter no mínimo 3 caracteres
+      observacoes: ['', [Validators.minLength(3)]] // Deve ter no mínimo 3 caracteres
     });
     this.resetarEdicao();
   }

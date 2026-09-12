@@ -12,11 +12,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TabViewModule } from 'primeng/tabview';
-import { asyncValidator } from '../../ferramentas/utils';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
-import { ClienteCreateDto } from '../../models/cliente/clienteCreateDto';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -184,18 +182,18 @@ export class ClientesListaComponent implements OnInit {
       id: [0], // ID do serviço,
       createdAt: [new Date()], // Data de criação do serviço
       updatedAt: [new Date()], // Data de atualização do serviço
-      nome: ['', [Validators.required, Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres, é obrigatório,
-      fantasia: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres,
-      cnpj: ['', [Validators.minLength(18), Validators.pattern(/^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$/)], [asyncValidator()]], // Deve ter no mínimo 14 caracteres,
-      ie: ['', [Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)], [asyncValidator()]], // Deve ter no mínimo 9 caracteres,
-      cpf: ['', [Validators.minLength(11), Validators.maxLength(11), Validators.pattern(/^[0-9]{3}[0-9]{3}[0-9]{3}[0-9]{2}$/)], [asyncValidator()]], // Deve ter no mínimo 11 caracteres,
-      celular: ['', [Validators.minLength(11), Validators.maxLength(11), Validators.pattern(/^[1-9]{2}9[0-9]{4}[0-9]{4}$/)], [asyncValidator()]], // Deve ter no mínimo 11 caracteres,
-      telefone: ['', [Validators.minLength(12), Validators.maxLength(12), Validators.pattern(/^[1-9]{2}[0-9]{4}[0-9]{4}$/)], [asyncValidator()]], // Deve ter no mínimo 10 caracteres,
-      email: ['', [Validators.email], [asyncValidator()]], // Deve ser um endereço eletrónico válido,
-      endereco: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres,
-      numero: ['', [Validators.minLength(1)], [asyncValidator()]], // Deve ter no mínimo 1 caractere,
-      bairro: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres,
-      cidade: ['', [Validators.minLength(3)], [asyncValidator()]], // Deve ter no mínimo 3 caracteres,
+        nome: ['', [Validators.required, Validators.minLength(3)]], // Deve ter no mínimo 3 caracteres, é obrigatório,
+        fantasia: ['', [Validators.minLength(3)]], // Deve ter no mínimo 3 caracteres,
+        cnpj: ['', [Validators.minLength(18), Validators.pattern(/^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$/)]], // Deve ter no mínimo 14 caracteres,
+      ie: ['', [Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[0-9]{10}$/)]], // Deve ter no mínimo 9 caracteres,
+      cpf: ['', [Validators.minLength(11), Validators.maxLength(11), Validators.pattern(/^[0-9]{3}[0-9]{3}[0-9]{3}[0-9]{2}$/)]], // Deve ter no mínimo 11 caracteres,
+      celular: ['', [Validators.minLength(11), Validators.maxLength(11), Validators.pattern(/^[1-9]{2}9[0-9]{4}[0-9]{4}$/)]], // Deve ter no mínimo 11 caracteres,
+      telefone: ['', [Validators.minLength(12), Validators.maxLength(12), Validators.pattern(/^[1-9]{2}[0-9]{4}[0-9]{4}$/)]], // Deve ter no mínimo 10 caracteres,
+      email: ['', [Validators.email]], // Deve ser um endereço eletrónico válido,
+      endereco: ['', [Validators.minLength(3)]], // Deve ter no mínimo 3 caracteres,
+      numero: ['', [Validators.minLength(1)]], // Deve ter no mínimo 1 caractere,
+      bairro: ['', [Validators.minLength(3)]], // Deve ter no mínimo 3 caracteres,
+      cidade: ['', [Validators.minLength(3)]], // Deve ter no mínimo 3 caracteres,
       observacoes: [''],
       tipoCliente: ['PF', [Validators.required]] // Tipo de cliente (PF ou PJ)
     });
@@ -231,7 +229,10 @@ export class ClientesListaComponent implements OnInit {
   async salvarCliente() {
     this.clienteForm.get('tipoCliente')?.setValue(this.tipoPF_PJ);
 
-    const novoCliente: ClienteCreateDto = {
+    const novoCliente: Cliente = {
+      id: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
       nome: this.clienteForm.get('nome')?.value,
       fantasia: this.clienteForm.get('fantasia')?.value,
       cnpj: this.clienteForm.get('cnpj')?.value,

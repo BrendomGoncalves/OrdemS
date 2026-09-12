@@ -1,17 +1,17 @@
-import {Component, OnInit, signal} from '@angular/core';
-import {EntradaEquipamento} from '../../models/entrada-equipamento';
-import {MessageService, PrimeTemplate} from 'primeng/api';
-import {EntradaEquipamentoService} from '../../services/entrada-equipamento/entrada-equipamento.service';
-import {Button, ButtonDirective} from 'primeng/button';
-import {RouterLink} from '@angular/router';
-import {DatePipe, NgIf} from '@angular/common';
-import {InputTextModule} from 'primeng/inputtext';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SkeletonModule} from 'primeng/skeleton';
-import {TableModule} from 'primeng/table';
-import {ToastModule} from 'primeng/toast';
-import {DialogModule} from 'primeng/dialog';
-import {PanelModule} from 'primeng/panel';
+import { Component, OnInit, signal } from '@angular/core';
+import { EntradaEquipamento } from '../../models/entrada-equipamento/entrada-equipamento';
+import { MessageService, PrimeTemplate } from 'primeng/api';
+import { EntradaEquipamentoService } from '../../services/entrada-equipamento/entrada-equipamento.service';
+import { Button, ButtonDirective } from 'primeng/button';
+import { RouterLink } from '@angular/router';
+import { DatePipe, NgIf } from '@angular/common';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   selector: 'app-entradas-equipamentos-lista',
@@ -30,22 +30,32 @@ import {PanelModule} from 'primeng/panel';
     FormsModule,
     ToastModule,
     DialogModule,
-    PanelModule
+    PanelModule,
   ],
   templateUrl: './entradas-equipamentos-lista.component.html',
-  styleUrl: './entradas-equipamentos-lista.component.css'
+  styleUrl: './entradas-equipamentos-lista.component.css',
 })
 export class EntradasEquipamentosListaComponent implements OnInit {
   ListaEntradasEquipamentos: EntradaEquipamento[] = [];
   entradaEquipamentoSelecionada: EntradaEquipamento = {
-    id: '',
-    empresa: {nome: '', cnpj: '', endereco: '', tecnico: '', telefone: '', celular: '', email: ''},
+    id: 0,
+    idempresa: 0,
+    idcliente: 0,
+    empresa: {
+      nome: '',
+      cnpj: '',
+      endereco: '',
+      tecnico: '',
+      telefone: '',
+      celular: '',
+      email: '',
+    },
     cliente: null,
     equipamento: '',
     dataRecebimento: null,
     descricaoProblema: '',
-    observacoes: ''
-  }
+    observacoes: '',
+  };
   filtro: string = '';
 
   // Estatisticas
@@ -57,21 +67,25 @@ export class EntradasEquipamentosListaComponent implements OnInit {
   // Carregamento
   carregandoDados: boolean = true;
 
-  constructor(private messageService: MessageService, private entradaEquipamentoService: EntradaEquipamentoService) {
-  }
+  constructor(
+    private messageService: MessageService,
+    private entradaEquipamentoService: EntradaEquipamentoService,
+  ) {}
 
   ngOnInit(): void {
     this.carregarEntradasEquipamentos().then();
   }
 
   async carregarEntradasEquipamentos() {
-    (await this.entradaEquipamentoService.getEntradasEquipamentos()).subscribe(entradasEquipamentos => {
-      this.ListaEntradasEquipamentos = entradasEquipamentos;
-      setTimeout(() => {
-        this.carregandoDados = false;
-        this.estatisticaEntradasEquipamentos(entradasEquipamentos);
-      }, 1000);
-    })
+    (await this.entradaEquipamentoService.getEntradasEquipamentos()).subscribe(
+      (entradasEquipamentos) => {
+        this.ListaEntradasEquipamentos = entradasEquipamentos;
+        setTimeout(() => {
+          this.carregandoDados = false;
+          this.estatisticaEntradasEquipamentos(entradasEquipamentos);
+        }, 1000);
+      },
+    );
   }
 
   estatisticaEntradasEquipamentos(entradasEquipamentos: EntradaEquipamento[]) {
@@ -82,29 +96,37 @@ export class EntradasEquipamentosListaComponent implements OnInit {
     if (!this.filtro) {
       return this.ListaEntradasEquipamentos;
     }
-    return this.ListaEntradasEquipamentos.filter(entradaEquipamento => {
-      entradaEquipamento.cliente?.nome.toLowerCase().includes(this.filtro.toLowerCase())
-    })
+    return this.ListaEntradasEquipamentos.filter((entradaEquipamento) => {
+      entradaEquipamento.cliente?.nome
+        .toLowerCase()
+        .includes(this.filtro.toLowerCase());
+    });
   }
 
-  async deletarEntradaEquipamento(idDelete: string) {
-    if (this.ListaEntradasEquipamentos.find(entradaEquipamento => entradaEquipamento.id === idDelete)?.id === idDelete) {
-      (await this.entradaEquipamentoService.deleteEntradaEquipamento(idDelete)).subscribe(() => {
+  async deletarEntradaEquipamento(idDelete: number) {
+    if (
+      this.ListaEntradasEquipamentos.find(
+        (entradaEquipamento) => entradaEquipamento.id === idDelete,
+      )?.id === idDelete
+    ) {
+      (
+        await this.entradaEquipamentoService.deleteEntradaEquipamento(idDelete)
+      ).subscribe(() => {
         this.carregarEntradasEquipamentos();
         this.estatisticaEntradasEquipamentos(this.ListaEntradasEquipamentos);
         this.fecharDetalhesEntradaEquipamento();
         this.messageService.add({
           severity: 'success',
           summary: 'Entrada de Equipamento',
-          detail: 'Entrada de equipamento deletada'
+          detail: 'Entrada de equipamento deletada',
         });
       });
     } else {
       this.messageService.add({
         severity: 'error',
         summary: 'Entrada de Equipamento',
-        detail: 'Essa entrada de equipamento não existe'
-      })
+        detail: 'Essa entrada de equipamento não existe',
+      });
     }
   }
 
@@ -115,14 +137,24 @@ export class EntradasEquipamentosListaComponent implements OnInit {
 
   fecharDetalhesEntradaEquipamento() {
     this.entradaEquipamentoSelecionada = {
-      id: '',
-      empresa: {nome: '', cnpj: '', endereco: '', tecnico: '', telefone: '', celular: '', email: ''},
+      id: 0,
+      idempresa: 0,
+      idcliente: 0,
+      empresa: {
+        nome: '',
+        cnpj: '',
+        endereco: '',
+        tecnico: '',
+        telefone: '',
+        celular: '',
+        email: '',
+      },
       cliente: null,
       equipamento: '',
       dataRecebimento: null,
       descricaoProblema: '',
-      observacoes: ''
-    }
+      observacoes: '',
+    };
     this.verDetalhesEntradaEquipamento = false;
   }
 }

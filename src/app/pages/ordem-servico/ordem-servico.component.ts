@@ -292,7 +292,7 @@ export class OrdemServicoComponent implements OnInit {
     this.clienteSelecionado = null;
   }
 
-  aumentarQuantidadeServico(servicoId: string) {
+  aumentarQuantidadeServico(servicoId: number) {
     this.servicosSelecionados.forEach(servico => {
       if (servico.id === servicoId) {
         if (servico.quantidadeVenda === undefined) {
@@ -304,7 +304,7 @@ export class OrdemServicoComponent implements OnInit {
     this.calcularTotalServicos();
   }
 
-  diminuirQuantidadeServico(servicoId: string) {
+  diminuirQuantidadeServico(servicoId: number) {
     this.servicosSelecionados.forEach(servico => {
       if (servico.id === servicoId) {
         if (servico.quantidadeVenda === undefined) {

@@ -1,23 +1,23 @@
-import {Component, OnInit} from '@angular/core';
-import {Cliente} from '../../models/cliente/cliente';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {ButtonDirective} from 'primeng/button';
-import {StepperModule} from 'primeng/stepper';
-import {DropdownModule} from 'primeng/dropdown';
-import {FormsModule} from '@angular/forms';
-import {AccordionModule} from 'primeng/accordion';
-import {DatePipe, NgIf} from '@angular/common';
-import {InputTextareaModule} from 'primeng/inputtextarea';
-import {CalendarModule} from 'primeng/calendar';
-import {ListboxModule} from 'primeng/listbox';
-import {InputNumberModule} from 'primeng/inputnumber';
-import {TableModule} from 'primeng/table';
-import {EntradaEquipamento} from '../../models/entrada-equipamento';
-import {ToastModule} from 'primeng/toast';
-import {ClientesService} from '../../services/cliente/clientes.service';
-import {EmpresaService} from '../../services/empresa/empresa.service';
-import {EntradaEquipamentoService} from '../../services/entrada-equipamento/entrada-equipamento.service';
-import {MessageService} from 'primeng/api';
+import { Component, OnInit } from '@angular/core';
+import { Cliente } from '../../models/cliente/cliente';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ButtonDirective } from 'primeng/button';
+import { StepperModule } from 'primeng/stepper';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
+import { AccordionModule } from 'primeng/accordion';
+import { DatePipe, NgIf } from '@angular/common';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { CalendarModule } from 'primeng/calendar';
+import { ListboxModule } from 'primeng/listbox';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { TableModule } from 'primeng/table';
+import { EntradaEquipamento } from '../../models/entrada-equipamento/entrada-equipamento';
+import { ToastModule } from 'primeng/toast';
+import { ClientesService } from '../../services/cliente/clientes.service';
+import { EmpresaService } from '../../services/empresa/empresa.service';
+import { EntradaEquipamentoService } from '../../services/entrada-equipamento/entrada-equipamento.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-entrada-equipamento',
@@ -36,14 +36,16 @@ import {MessageService} from 'primeng/api';
     InputNumberModule,
     TableModule,
     ToastModule,
-    DatePipe
+    DatePipe,
   ],
   templateUrl: './entrada-equipamento.component.html',
-  styleUrl: './entrada-equipamento.component.css'
+  styleUrl: './entrada-equipamento.component.css',
 })
 export class EntradaEquipamentoComponent implements OnInit {
   entradaEquipamento: EntradaEquipamento = {
-    id: '',
+    id: 0,
+    idempresa: 0,
+    idcliente: 0,
     empresa: {
       nome: '',
       cnpj: '',
@@ -51,14 +53,14 @@ export class EntradaEquipamentoComponent implements OnInit {
       telefone: '',
       endereco: '',
       celular: '',
-      email: ''
+      email: '',
     },
     cliente: null,
     equipamento: '',
     dataRecebimento: null,
     descricaoProblema: '',
-    observacoes: ''
-  }
+    observacoes: '',
+  };
   clienteSelecionado: Cliente | null = null;
 
   // Listas
@@ -72,27 +74,30 @@ export class EntradaEquipamentoComponent implements OnInit {
     private messageService: MessageService,
     private entradaEquipamentoService: EntradaEquipamentoService,
     private empresaService: EmpresaService,
-    private clientesService: ClientesService) {
-  }
+    private clientesService: ClientesService,
+  ) {}
 
   async ngOnInit() {
-    this.activateRoute.paramMap.subscribe(async params => {
+    this.activateRoute.paramMap.subscribe(async (params) => {
       const id = params.get('id');
       if (id) {
-        (await this.entradaEquipamentoService.getEntradaEquipamentoById(id)).subscribe({
+        (
+          await this.entradaEquipamentoService.getEntradaEquipamentoById(Number(id))
+        ).subscribe({
           next: async (entradaEquipamento) => {
             this.entradaEquipamento = {
               ...entradaEquipamento,
-              dataRecebimento: entradaEquipamento.dataRecebimento ? new Date(entradaEquipamento.dataRecebimento) : null
-            }
+              dataRecebimento: entradaEquipamento.dataRecebimento
+                ? new Date(entradaEquipamento.dataRecebimento)
+                : null,
+            };
             this.clienteSelecionado = entradaEquipamento.cliente;
           },
           error: async () => {
             await this.router.navigate(['/entradas-equipamentos']);
-          }
+          },
         });
       } else {
-        this.entradaEquipamento.id = await this.entradaEquipamentoService.novoId();
         this.entradaEquipamento.dataRecebimento = new Date();
       }
     });
@@ -105,7 +110,7 @@ export class EntradaEquipamentoComponent implements OnInit {
         telefone: empresa.telefone,
         endereco: empresa.endereco,
         celular: empresa.celular,
-        email: empresa.email
+        email: empresa.email,
       };
     });
     (await this.clientesService.getClientes()).subscribe((clientes) => {
@@ -123,53 +128,67 @@ export class EntradaEquipamentoComponent implements OnInit {
 
   async salvarEntradaEquipamento() {
     this.carregandoBotao = true;
-    (await this.entradaEquipamentoService.getEntradaEquipamentoById(this.entradaEquipamento.id)).subscribe({
-        next: async () => {
-          (await this.entradaEquipamentoService.updateEntradaEquipamento(this.entradaEquipamento.id, this.entradaEquipamento)).subscribe(() => {
-            setTimeout(() => {
-              this.carregandoBotao = false;
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Entrada de Equipamento',
-                detail: 'Os dados foram atualizados',
-                life: 5000
-              });
-              this.router.navigate(['/entradas-equipamentos']);
-            }, 2000);
-          });
-        },
-        error: async () => {
-          (await this.entradaEquipamentoService.addEntradaEquipamento(this.entradaEquipamento)).subscribe(() => {
-            setTimeout(() => {
-              this.carregandoBotao = false;
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Entrada de Equipamento',
-                detail: 'Dados cadastrados',
-                life: 5000
-              });
-              this.entradaEquipamento = {
-                id: '',
-                empresa: {
-                  nome: '',
-                  cnpj: '',
-                  tecnico: '',
-                  telefone: '',
-                  endereco: '',
-                  celular: '',
-                  email: ''
-                },
-                cliente: null,
-                equipamento: '',
-                dataRecebimento: null,
-                descricaoProblema: '',
-                observacoes: ''
-              }
-              this.router.navigate(['/entradas-equipamentos']);
-            }, 2000);
-          });
-        }
-      }
-    );
+    (
+      await this.entradaEquipamentoService.getEntradaEquipamentoById(
+        this.entradaEquipamento.id,
+      )
+    ).subscribe({
+      next: async () => {
+        (
+          await this.entradaEquipamentoService.updateEntradaEquipamento(
+            this.entradaEquipamento.id,
+            this.entradaEquipamento,
+          )
+        ).subscribe(() => {
+          setTimeout(() => {
+            this.carregandoBotao = false;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Entrada de Equipamento',
+              detail: 'Os dados foram atualizados',
+              life: 5000,
+            });
+            this.router.navigate(['/entradas-equipamentos']);
+          }, 2000);
+        });
+      },
+      error: async () => {
+        (
+          await this.entradaEquipamentoService.addEntradaEquipamento(
+            this.entradaEquipamento,
+          )
+        ).subscribe(() => {
+          setTimeout(() => {
+            this.carregandoBotao = false;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Entrada de Equipamento',
+              detail: 'Dados cadastrados',
+              life: 5000,
+            });
+            this.entradaEquipamento = {
+              id: 0,
+              idempresa: 0,
+              empresa: {
+                nome: '',
+                cnpj: '',
+                tecnico: '',
+                telefone: '',
+                endereco: '',
+                celular: '',
+                email: '',
+              },
+              idcliente: 0,
+              cliente: null,
+              equipamento: '',
+              dataRecebimento: null,
+              descricaoProblema: '',
+              observacoes: '',
+            };
+            this.router.navigate(['/entradas-equipamentos']);
+          }, 2000);
+        });
+      },
+    });
   }
 }

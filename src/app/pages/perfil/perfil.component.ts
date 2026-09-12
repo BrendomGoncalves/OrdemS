@@ -6,7 +6,6 @@ import {EmpresaService} from '../../services/empresa/empresa.service';
 import {Empresa} from '../../models/empresa';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MessageService} from 'primeng/api';
-import {asyncValidator} from '../../ferramentas/utils';
 import {NgIf} from '@angular/common';
 import {PaginatorModule} from 'primeng/paginator';
 import {ChipsModule} from 'primeng/chips';
@@ -50,13 +49,13 @@ export class PerfilComponent implements OnInit {
     private messageService: MessageService
   ) {
     this.perfilForm = this.fb.group({
-      nome: ['', [Validators.required, Validators.minLength(3)], [asyncValidator()]],
-      tecnico: ['', [Validators.required, Validators.minLength(3)], [asyncValidator()]],
-      endereco: ['', [Validators.required, Validators.minLength(3)], [asyncValidator()]],
-      email: ['', [Validators.required, Validators.email], [asyncValidator()]],
-      telefone: ['', [Validators.minLength(12), Validators.maxLength(12), Validators.pattern(/^\([1-9]{2}\)[0-9]{4}[0-9]{4}$/)], [asyncValidator()]],
-      celular: ['', [Validators.minLength(13), Validators.maxLength(13), Validators.pattern(/^\([1-9]{2}\)9[0-9]{4}[0-9]{4}$/)], [asyncValidator()]],
-      cnpj: ['', [Validators.minLength(18), Validators.pattern(/^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$/)], [asyncValidator()]],
+      nome: ['', [Validators.required, Validators.minLength(3)]],
+      tecnico: ['', [Validators.required, Validators.minLength(3)]],
+      endereco: ['', [Validators.required, Validators.minLength(3)]],
+      email: ['', [Validators.required, Validators.email]],
+      telefone: ['', [Validators.minLength(12), Validators.maxLength(12), Validators.pattern(/^\([1-9]{2}\)[0-9]{4}[0-9]{4}$/)]],
+      celular: ['', [Validators.minLength(13), Validators.maxLength(13), Validators.pattern(/^\([1-9]{2}\)9[0-9]{4}[0-9]{4}$/)]],
+      cnpj: ['', [Validators.minLength(18), Validators.pattern(/^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}-[0-9]{2}$/)]],
     });
     this.resetarEdicao();
   }
