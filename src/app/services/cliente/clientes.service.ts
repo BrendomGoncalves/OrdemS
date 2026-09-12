@@ -3,7 +3,6 @@ import {map, Observable} from 'rxjs';
 import {Cliente} from '../../models/cliente/cliente';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
-import {ClienteCreateDto} from '../../models/cliente/clienteCreateDto';
 
 @Injectable({
   providedIn: 'root',
@@ -38,8 +37,8 @@ export class ClientesService {
     return this.http.get<Cliente>(`${this.apiUrl}?ie=${ie}`);
   }
 
-  async addCliente(cliente: ClienteCreateDto): Promise<Observable<ClienteCreateDto>> {
-    return this.http.post<ClienteCreateDto>(this.apiUrl, cliente).pipe(
+  async addCliente(cliente: Cliente): Promise<Observable<Cliente>> {
+    return this.http.post<Cliente>(this.apiUrl, cliente).pipe(
       map(clienteCriado => {
         return clienteCriado;
       })

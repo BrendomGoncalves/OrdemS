@@ -3,7 +3,6 @@ import {Servico} from '../../models/servico/servico';
 import {map, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
-import {ServicoCreateDto} from '../../models/servico/servicoCreateDto';
 import {CategoriasService} from '../categoria/categorias.service';
 
 @Injectable({
@@ -31,16 +30,16 @@ export class ServicosService {
     return this.http.get<Servico>(`${this.apiUrl}/${id}`);
   }
 
-  async addServico(servico: ServicoCreateDto): Promise<Observable<ServicoCreateDto>> {
-    return this.http.post<ServicoCreateDto>(this.apiUrl, servico).pipe(
+  async addServico(servico: Servico): Promise<Observable<Servico>> {
+    return this.http.post<Servico>(this.apiUrl, servico).pipe(
       map(servicoAdicionado => {
         return servicoAdicionado;
       })
     )
   }
 
-  async updateServico(id: number, servico: ServicoCreateDto): Promise<Observable<ServicoCreateDto>> {
-    return this.http.put<ServicoCreateDto>(`${this.apiUrl}/${id}`, servico).pipe(
+  async updateServico(id: number, servico: Servico): Promise<Observable<Servico>> {
+    return this.http.put<Servico>(`${this.apiUrl}/${id}`, servico).pipe(
       map(servicoAtualizado => {
         return servicoAtualizado;
       })
