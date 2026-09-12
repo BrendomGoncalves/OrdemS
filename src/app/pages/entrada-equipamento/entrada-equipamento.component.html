@@ -1,14 +1,25 @@
 <!--HEADER DA PÁGINA-->
-<div class="surface-section px-4 py-5 md:px-6 lg:px-8" xmlns="http://www.w3.org/1999/html">
+<div
+  class="surface-section px-4 py-5 md:px-6 lg:px-8"
+  xmlns="http://www.w3.org/1999/html"
+>
   <ul class="list-none p-0 m-0 flex align-items-center font-medium mb-3">
     <li>
-      <a class="text-500 no-underline line-height-3 cursor-pointer" routerLink="/pagina-inicial">Página Inicial</a>
+      <a
+        class="text-500 no-underline line-height-3 cursor-pointer"
+        routerLink="/pagina-inicial"
+        >Página Inicial</a
+      >
     </li>
     <li class="px-2">
       <i class="pi pi-angle-right text-500 line-height-3"></i>
     </li>
     <li>
-      <span class="text-900 line-height-3 cursor-pointer" routerLink="/entradas-equipamentos">Lista de Entradas de Equipamentos</span>
+      <span
+        class="text-900 line-height-3 cursor-pointer"
+        routerLink="/entradas-equipamentos"
+        >Lista de Entradas de Equipamentos</span
+      >
     </li>
     <li class="px-2">
       <i class="pi pi-angle-right text-500 line-height-3"></i>
@@ -17,19 +28,20 @@
       <span class="line-height-3 font-bold">Entrada de Equipamento</span>
     </li>
   </ul>
-  <div class="flex align-items-start flex-column md:justify-content-between md:flex-row">
+  <div
+    class="flex align-items-start flex-column md:justify-content-between md:flex-row"
+  >
     <div>
-      <div class="font-medium text-3xl text-900">
-        ENTRADA DE EQUIPAMENTO
-      </div>
+      <div class="font-medium text-3xl text-900">ENTRADA DE EQUIPAMENTO</div>
     </div>
     <div class="flex mt-3 gap-3 lg:mt-0">
-      <button pButton
-              label="Voltar"
-              class="p-button-outlined p-button-warning"
-              icon="pi pi-arrow-left"
-              routerLink="/entradas-equipamentos">
-      </button>
+      <button
+        pButton
+        label="Voltar"
+        class="p-button-outlined p-button-warning"
+        icon="pi pi-arrow-left"
+        routerLink="/entradas-equipamentos"
+      ></button>
     </div>
   </div>
 </div>
@@ -39,11 +51,17 @@
   <p-stepper [linear]="true">
     <p-stepperPanel header="CLIENTE">
       <ng-template pTemplate="content" let-nextCallback="nextCallback">
-        <div class="flex flex-column h-full" style="width: calc(100vw - 100px);max-width: 1400px">
+        <div
+          class="flex flex-column h-full"
+          style="width: calc(100vw - 100px); max-width: 1400px"
+        >
           <div
-            class="border-2 border-dashed surface-border border-round surface-ground p-4 flex flex-column justify-content-center gap-5 lg:flex-row">
+            class="border-2 border-dashed surface-border border-round surface-ground p-4 flex flex-column justify-content-center gap-5 lg:flex-row"
+          >
             <div class="flex flex-column w-full">
-              <p style="font-size: 1.2rem" class="m-0 mb-2">Cliente Selecionado:</p>
+              <p style="font-size: 1.2rem" class="m-0 mb-2">
+                Cliente Selecionado:
+              </p>
               <p-dropdown
                 [options]="listaClientes"
                 [(ngModel)]="clienteSelecionado"
@@ -53,7 +71,8 @@
                 filterBy="nome"
                 [showClear]="true"
                 styleClass="w-full h-3rem align-items-center"
-                placeholder="Selecione o cliente">
+                placeholder="Selecione o cliente"
+              >
                 <ng-template pTemplate="selectedItem" let-opcaoSelecionada>
                   <div class="flex align-items-center gap-2">
                     <div>{{ opcaoSelecionada.nome }}</div>
@@ -67,92 +86,153 @@
               </p-dropdown>
               <div class="card w-full p-3">
                 <p-accordion>
-                  <p-accordionTab [header]="clienteSelecionado.nome" *ngIf="clienteSelecionado != null">
+                  <p-accordionTab
+                    [header]="clienteSelecionado.nome"
+                    *ngIf="clienteSelecionado != null"
+                  >
                     <div class="flex flex-column">
-                      <div class="flex flex-row align-items-center gap-2"
-                           *ngIf="clienteSelecionado.tipoCliente == 'PJ'">
-                        <label class="text-black font-bold bg-gray-200 p-2 border-round">Nome Fantasia:</label>
+                      <div
+                        class="flex flex-row align-items-center gap-2"
+                        *ngIf="clienteSelecionado.tipoCliente == 'PJ'"
+                      >
+                        <label
+                          class="text-black font-bold bg-gray-200 p-2 border-round"
+                          >Nome Fantasia:</label
+                        >
                         <p>{{ clienteSelecionado.fantasia }}</p>
                       </div>
-                      <div class="flex flex-row align-items-center gap-2"
-                           *ngIf="clienteSelecionado?.tipoCliente == 'PJ'">
-                        <label class="font-bold bg-gray-200 p-2 border-round">CNPJ:</label>
+                      <div
+                        class="flex flex-row align-items-center gap-2"
+                        *ngIf="clienteSelecionado.tipoCliente == 'PJ'"
+                      >
+                        <label class="font-bold bg-gray-200 p-2 border-round"
+                          >CNPJ:</label
+                        >
                         <p>{{ clienteSelecionado.cnpj }}</p>
                       </div>
-                      <div class="flex flex-row align-items-center gap-2"
-                           *ngIf="clienteSelecionado?.tipoCliente == 'PJ'">
-                        <label class="font-bold bg-gray-200 p-2 border-round">IE:</label>
+                      <div
+                        class="flex flex-row align-items-center gap-2"
+                        *ngIf="clienteSelecionado.tipoCliente == 'PJ'"
+                      >
+                        <label class="font-bold bg-gray-200 p-2 border-round"
+                          >IE:</label
+                        >
                         <p>{{ clienteSelecionado.ie }}</p>
                       </div>
-                      <div class="flex flex-row align-items-center gap-2"
-                           *ngIf="clienteSelecionado.tipoCliente == 'PF'">
-                        <label class="font-bold bg-gray-200 p-2 border-round">CPF:</label>
+                      <div
+                        class="flex flex-row align-items-center gap-2"
+                        *ngIf="clienteSelecionado.tipoCliente == 'PF'"
+                      >
+                        <label class="font-bold bg-gray-200 p-2 border-round"
+                          >CPF:</label
+                        >
                         <p>{{ clienteSelecionado.cpf }}</p>
                       </div>
                       <div class="flex flex-row align-items-center gap-2">
-                        <label class="font-bold bg-gray-200 p-2 border-round">Celular:</label>
+                        <label class="font-bold bg-gray-200 p-2 border-round"
+                          >Celular:</label
+                        >
                         <p>{{ clienteSelecionado.celular }}</p>
                       </div>
                       <div class="flex flex-row align-items-center gap-2">
-                        <label class="font-bold bg-gray-200 p-2 border-round">Telefone:</label>
+                        <label class="font-bold bg-gray-200 p-2 border-round"
+                          >Telefone:</label
+                        >
                         <p>{{ clienteSelecionado.telefone }}</p>
                       </div>
                       <div class="flex flex-row align-items-center gap-2">
-                        <label class="font-bold bg-gray-200 p-2 border-round">E-mail:</label>
+                        <label class="font-bold bg-gray-200 p-2 border-round"
+                          >E-mail:</label
+                        >
                         <p>{{ clienteSelecionado.email }}</p>
                       </div>
                       <div class="flex flex-row align-items-center gap-2">
-                        <label class="font-bold bg-gray-200 p-2 border-round">Endereço:</label>
+                        <label class="font-bold bg-gray-200 p-2 border-round"
+                          >Endereço:</label
+                        >
                         <p>{{ clienteSelecionado.endereco }}</p>
                       </div>
                       <div class="flex flex-row align-items-center gap-2">
-                        <label class="font-bold bg-gray-200 p-2 border-round">Número:</label>
+                        <label class="font-bold bg-gray-200 p-2 border-round"
+                          >Número:</label
+                        >
                         <p>{{ clienteSelecionado.numero }}</p>
                       </div>
                       <div class="flex flex-row align-items-center gap-2">
-                        <label class="font-bold bg-gray-200 p-2 border-round">Cidade:</label>
+                        <label class="font-bold bg-gray-200 p-2 border-round"
+                          >Cidade:</label
+                        >
                         <p>{{ clienteSelecionado.cidade }}</p>
                       </div>
                       <div class="flex flex-row align-items-center gap-2">
-                        <label class="font-bold bg-gray-200 p-2 border-round">Observações:</label>
+                        <label class="font-bold bg-gray-200 p-2 border-round"
+                          >Observações:</label
+                        >
                         <p>{{ clienteSelecionado.observacoes }}</p>
                       </div>
                     </div>
                   </p-accordionTab>
                 </p-accordion>
-                <p *ngIf="clienteSelecionado == null" class="text-black-alpha-50 text-center" style="font-size: 1.2rem">
-                  Nenhum cliente selecionado</p>
+                <p
+                  *ngIf="clienteSelecionado == null"
+                  class="text-black-alpha-50 text-center"
+                  style="font-size: 1.2rem"
+                >
+                  Nenhum cliente selecionado
+                </p>
               </div>
             </div>
-            <hr>
+            <hr />
             <div class="flex flex-column gap-4">
               <!--EQUIPAMENTO-->
               <div class="flex flex-column w-full">
-                <p style="font-size: 1.1rem" class="m-0 mb-2">Equipamento(s):</p>
-                <textarea pInputTextarea style="font-size: 1.1rem" rows="4" cols="50"
-                          [(ngModel)]="entradaEquipamento.equipamento"></textarea>
+                <p style="font-size: 1.1rem" class="m-0 mb-2">
+                  Equipamento(s):
+                </p>
+                <textarea
+                  pInputTextarea
+                  style="font-size: 1.1rem"
+                  rows="4"
+                  cols="50"
+                  [(ngModel)]="entradaEquipamento.equipamento"
+                ></textarea>
               </div>
               <!--DEFEITOS RELATADOS-->
               <div class="flex flex-column w-full">
-                <p style="font-size: 1.1rem" class="m-0 mb-2">Defeitos Relatados:</p>
-                <textarea pInputTextarea style="font-size: 1.1rem" rows="4" cols="50"
-                          [(ngModel)]="entradaEquipamento.descricaoProblema"></textarea>
+                <p style="font-size: 1.1rem" class="m-0 mb-2">
+                  Defeitos Relatados:
+                </p>
+                <textarea
+                  pInputTextarea
+                  style="font-size: 1.1rem"
+                  rows="4"
+                  cols="50"
+                  [(ngModel)]="entradaEquipamento.descricaoProblema"
+                ></textarea>
               </div>
               <!--OBSERVAÇÕES-->
               <div class="flex flex-column w-full">
                 <p style="font-size: 1.1rem" class="m-0 mb-2">Observações:</p>
-                <textarea pInputTextarea style="font-size: 1.1rem" rows="4" cols="50"
-                          [(ngModel)]="entradaEquipamento.observacoes"></textarea>
+                <textarea
+                  pInputTextarea
+                  style="font-size: 1.1rem"
+                  rows="4"
+                  cols="50"
+                  [(ngModel)]="entradaEquipamento.observacoes"
+                ></textarea>
               </div>
               <!--DATA RECEBIMENTO-->
               <div class="flex flex-column">
-                <p style="font-size: 1.1rem" class="m-0 mb-2">Data da Entrega:</p>
+                <p style="font-size: 1.1rem" class="m-0 mb-2">
+                  Data da Entrega:
+                </p>
                 <p-calendar
                   styleClass="w-10rem"
                   [(ngModel)]="entradaEquipamento.dataRecebimento"
                   [showIcon]="true"
                   dateFormat="dd/mm/yy"
-                  [showOnFocus]="false"/>
+                  [showOnFocus]="false"
+                />
               </div>
             </div>
           </div>
@@ -161,29 +241,54 @@
               label="Próximo"
               icon="pi pi-arrow-right"
               iconPos="right"
-              [disabled]="clienteSelecionado == null || entradaEquipamento.equipamento == '' || entradaEquipamento.descricaoProblema == '' || entradaEquipamento.dataRecebimento == null"
-              (onClick)="nextCallback.emit(); entradaEquipamento.cliente = clienteSelecionado"/>
+              [disabled]="
+                clienteSelecionado == null ||
+                entradaEquipamento.equipamento == '' ||
+                entradaEquipamento.descricaoProblema == '' ||
+                entradaEquipamento.dataRecebimento == null
+              "
+              (onClick)="
+                nextCallback.emit();
+                entradaEquipamento.cliente = clienteSelecionado
+              "
+            />
           </div>
         </div>
       </ng-template>
     </p-stepperPanel>
     <p-stepperPanel header="RESUMO">
       <ng-template pTemplate="content" let-prevCallback="prevCallback">
-        <div class="h-full" style="width: calc(100vw - 100px);max-width: 1400px;">
+        <div
+          class="h-full"
+          style="width: calc(100vw - 100px); max-width: 1400px"
+        >
           <div
-            class="border-2 border-dashed surface-border border-round surface-ground flex-column flex gap-5 justify-content-center align-items-center font-medium pt-4 pb-4">
-            <div id="ordem-servico-print" class="ordem-servico text-black-alpha-90 m-0 p-4 bg-white">
+            class="border-2 border-dashed surface-border border-round surface-ground flex-column flex gap-5 justify-content-center align-items-center font-medium pt-4 pb-4"
+          >
+            <div
+              id="ordem-servico-print"
+              class="ordem-servico text-black-alpha-90 m-0 p-4 bg-white"
+            >
               <!--LOGOTIPO E INFORMAÇÕES DA EMPRESA-->
-              <header class="os-header flex flex-row justify-content-between mb-3">
+              <header
+                class="os-header flex flex-row justify-content-between mb-3"
+              >
                 <!-- <img alt="Logo da Empresa" src="assets/logoGeneric.png"> -->
                 <h2>Logotipo</h2>
                 <!--DIV INFORMAÇÕES DA EMPRESA-->
-                <div class="p-2 flex flex-column justify-content-center align-items-end">
-                  <h2 class="m-0 mt-1 mb-1">{{ entradaEquipamento.empresa.nome.toUpperCase() }}</h2>
+                <div
+                  class="p-2 flex flex-column justify-content-center align-items-end"
+                >
+                  <h2 class="m-0 mt-1 mb-1">
+                    {{ entradaEquipamento.empresa.nome.toUpperCase() }}
+                  </h2>
                   <p class="m-0">{{ entradaEquipamento.empresa.tecnico }}</p>
                   <p class="m-0">{{ entradaEquipamento.empresa.endereco }}</p>
-                  <p class="m-0">{{ entradaEquipamento.empresa.telefone }} / {{ entradaEquipamento.empresa.celular }}
-                    / {{ entradaEquipamento.empresa.email }}</p>
+                  <p class="m-0">
+                    {{ entradaEquipamento.empresa.telefone }} /
+                    {{ entradaEquipamento.empresa.celular }} /
+                    {{ entradaEquipamento.empresa.email }}
+                  </p>
                   <p class="m-0">CNPJ: {{ entradaEquipamento.empresa.cnpj }}</p>
                 </div>
               </header>
@@ -192,53 +297,88 @@
                 <h2 class="text-center">ENTRADA DE EQUIPAMENTO</h2>
                 <div class="flex flex-row justify-content-around mt-4">
                   <p><strong>NÚMERO:</strong> #{{ entradaEquipamento.id }}</p>
-                  <p><strong>DATA DO RECEBIMENTO:</strong> {{ entradaEquipamento.dataRecebimento | date: 'dd/MM/yyyy' }}
+                  <p>
+                    <strong>DATA DO RECEBIMENTO:</strong>
+                    {{
+                      entradaEquipamento.dataRecebimento | date: "dd/MM/yyyy"
+                    }}
                   </p>
                 </div>
               </section>
               <!--DADOS DO CLIENTE, EQUIPAMENTOS E DEFEITOS RELATADOS-->
               <section class="w-full flex flex-row">
-                <div class="border" style="width:40%;">
-                  <h4 class="m-0 text-center border-bottom-1 border-black-alpha-30">DADOS DO CLIENTE</h4>
-                  <p class="ml-2 mt-2 m-0">
-                    <strong>Nome:</strong> {{ entradaEquipamento.cliente?.nome || 'Nenhum nome inserido' }}
-                  </p>
-                  <p class="ml-2 m-0">
-                    <strong>Contato:</strong>
-                    @if (entradaEquipamento.cliente?.celular != undefined && entradaEquipamento.cliente?.telefone != undefined) {
-                      {{ entradaEquipamento.cliente?.celular }} / {{ entradaEquipamento.cliente?.telefone }}
-                    } @else if (entradaEquipamento.cliente?.celular != undefined) {
-                      {{ entradaEquipamento.cliente?.celular }}
-                    } @else if (entradaEquipamento.cliente?.telefone != undefined) {
-                      {{ entradaEquipamento.cliente?.telefone }}
-                    } @else {
-                      Nenhum contato inserido
-                    }
-                  </p>
-                  <p class="ml-2 m-0">
-                    <strong>E-mail:</strong> {{ entradaEquipamento.cliente?.email || 'Nenhum e-mail inserido' }}
-                  </p>
+                <div class="border" style="width: 40%">
+                  <h4
+                    class="m-0 text-center border-bottom-1 border-black-alpha-30"
+                  >
+                    DADOS DO CLIENTE
+                  </h4>
+                  @if (entradaEquipamento.cliente; as cliente) {
+                    <p class="ml-2 mt-2 m-0">
+                      <strong>Nome:</strong>
+                      {{ cliente.nome || "Nenhum nome inserido" }}
+                    </p>
+                    <p class="ml-2 m-0">
+                      <strong>Contato:</strong>
+                      @if (cliente.celular && cliente.telefone) {
+                        {{ cliente.celular }} / {{ cliente.telefone }}
+                      } @else if (cliente.celular) {
+                        {{ cliente.celular }}
+                      } @else if (cliente.telefone) {
+                        {{ cliente.telefone }}
+                      } @else {
+                        Nenhum contato inserido
+                      }
+                    </p>
+                    <p class="ml-2 m-0">
+                      <strong>E-mail:</strong>
+                      {{ cliente.email || "Nenhum e-mail inserido" }}
+                    </p>
+                  } @else {
+                    <p class="m-2">Nenhum cliente selecionado</p>
+                  }
                 </div>
-                <div class="border-top-1 border-bottom-1 border-right-1" style="width:60%;">
+                <div
+                  class="border-top-1 border-bottom-1 border-right-1"
+                  style="width: 60%"
+                >
                   <div class="border-bottom-1">
-                    <h4 class="m-0 text-center border-bottom-1 border-black-alpha-30">EQUIPAMENTO(S)</h4>
+                    <h4
+                      class="m-0 text-center border-bottom-1 border-black-alpha-30"
+                    >
+                      EQUIPAMENTO(S)
+                    </h4>
                     <p class="mt-1 mb-1 m-0 ml-2">
-                      {{ entradaEquipamento.equipamento || 'Nenhum equipamento inserido' }}
+                      {{
+                        entradaEquipamento.equipamento ||
+                          "Nenhum equipamento inserido"
+                      }}
                     </p>
                   </div>
                   <div>
-                    <h4 class="m-0 text-center border-bottom-1 border-black-alpha-30">DEFEITO(S) RELATADO</h4>
+                    <h4
+                      class="m-0 text-center border-bottom-1 border-black-alpha-30"
+                    >
+                      DEFEITO(S) RELATADO
+                    </h4>
                     <p class="mt-1 mb-1 m-0 ml-2">
-                      {{ entradaEquipamento.descricaoProblema || 'Nenhum defeito relatado' }}
+                      {{
+                        entradaEquipamento.descricaoProblema ||
+                          "Nenhum defeito relatado"
+                      }}
                     </p>
                   </div>
                 </div>
               </section>
               <!--OBSERVAÇÕES-->
               <section class="w-full border mt-2">
-                <h4 class="m-0 text-center border-bottom-1 border-black-alpha-30">OBSERVAÇÕES</h4>
+                <h4
+                  class="m-0 text-center border-bottom-1 border-black-alpha-30"
+                >
+                  OBSERVAÇÕES
+                </h4>
                 <p class="mt-1 mb-1 m-0 ml-2 p-1">
-                  {{ entradaEquipamento.observacoes || 'Nenhuma observação.' }}
+                  {{ entradaEquipamento.observacoes || "Nenhuma observação." }}
                 </p>
               </section>
               <!--ASSINATURAS-->
@@ -246,11 +386,15 @@
                 <h1>AUTORIZAÇÃO DE SERVIÇO</h1>
                 <div class="signature-section">
                   <div class="signature-box">
-                    <p>_____________________________________________________________</p>
+                    <p>
+                      _____________________________________________________________
+                    </p>
                     <p>Assinatura do Cliente</p>
                   </div>
                   <div class="signature-box">
-                    <p>_____________________________________________________________</p>
+                    <p>
+                      _____________________________________________________________
+                    </p>
                     <p>Assinatura do Técnico da Empresa</p>
                   </div>
                 </div>
@@ -260,25 +404,30 @@
               </div>
             </div>
             <!--BOTÕES-->
-            <div class="flex pl-3 pr-3 pt-4 justify-content-between w-full no-print bg-transparent cursor-auto">
+            <div
+              class="flex pl-3 pr-3 pt-4 justify-content-between w-full no-print bg-transparent cursor-auto"
+            >
               <p-button
                 severity="danger"
                 label="VOLTAR"
                 icon="pi pi-arrow-left"
-                (onClick)="prevCallback.emit()"/>
+                (onClick)="prevCallback.emit()"
+              />
               <div class="flex flex-row justify-content-around w-18rem">
                 <p-button
                   outlined
                   severity="danger"
                   icon="pi pi-print"
                   (onClick)="imprimir()"
-                  label="IMPRIMIR"/>
+                  label="IMPRIMIR"
+                />
                 <p-button
                   label="SALVAR"
                   severity="danger"
                   icon="pi pi-check"
                   [loading]="carregandoBotao"
-                  (onClick)="salvarEntradaEquipamento()"/>
+                  (onClick)="salvarEntradaEquipamento()"
+                />
               </div>
             </div>
           </div>
@@ -287,7 +436,6 @@
     </p-stepperPanel>
   </p-stepper>
 </div>
-
 
 <!--MENSAGENS-->
 <!--<p-toast styleClass="mt-8" [breakpoints]="{ '768px': { width: '100%', right: '0', left: '0' }}"></p-toast>-->
